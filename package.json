@@ -1,0 +1,34 @@
+{
+  "name": "lilith",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 1997",
+    "build": "next build",
+    "start": "next start",
+    "devgrok": "ngrok http --domain=dev.eve.space 1997",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.0.17",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "18.14.2",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "autoprefixer": "^10.4.13",
+    "axios": "^1.4.0",
+    "eslint": "8.35.0",
+    "eslint-config-next": "13.2.3",
+    "lodash": "^4.17.21",
+    "next": "13.2.3",
+    "postcss": "^8.4.14",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-loader-spinner": "^5.3.4",
+    "react-query": "^3.39.3",
+    "styled-components": "^6.0.7",
+    "tailwindcss": "^3.2.7",
+    "typescript": "4.9.5"
+  },
+  "devDependencies": {}
+}
