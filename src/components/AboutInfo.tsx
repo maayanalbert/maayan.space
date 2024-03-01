@@ -37,10 +37,10 @@ export function AboutInfo() {
         href="https://www.google.com/travel/"
         page="ABOUT"
       />
-      and as founding engineer scaling
+      and as the first hire scaled
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      to 30 business partners and almost a billion rows of data processed, I'm
-      now building the AI diary
+      to more than 30 business clients and a team of a dozen, I'm now building
+      the AI diary
       <TextLink text="Eve." href="https://eve.space/" page="ABOUT" />
     </p>
   )
