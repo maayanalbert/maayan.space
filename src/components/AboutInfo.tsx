@@ -52,7 +52,7 @@ export function AboutInfo() {
       and classic hits like the
       <TextLink
         text="paperclip and zipper."
-        href="https://www.barnesandnoble.com/w/the-evolution-of-useful-things-henry-petroski/1112257387"
+        href="https://www.penguinrandomhouse.com/books/130244/the-evolution-of-useful-things-by-henry-petroski/"
         page="ABOUT"
       />
     </p>
