@@ -15,11 +15,11 @@ export function AboutInfo() {
       />
       where my
       <TextLink
-        text="thesis"
+        text="thesis,"
         href="https://paper.dropbox.com/doc/Stamper-An-Artboard-Oriented-Programming-Environment--Aur96RpoCsXsC76bFeRTFYSGAQ-QXtfMXshBFBNCu6iCtx2J"
         page="ABOUT"
       />
-      was accepted into the most prestigious
+      an IDE for creative technologists, was accepted into the most prestigious
       <TextLink
         text="HCI conference"
         href="https://en.wikipedia.org/wiki/Conference_on_Human_Factors_in_Computing_Systems"
@@ -37,11 +37,24 @@ export function AboutInfo() {
         href="https://www.google.com/travel/"
         page="ABOUT"
       />
-      and as the first hire scaled
+      and as first hire scaling
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
       to more than 30 business clients and a team of a dozen, I'm now building
       the AI diary
       <TextLink text="Eve." href="https://eve.space/" page="ABOUT" />
+      <br /> <br />
+      My focus is on building tools for humans. Inspirations include
+      <TextLink
+        text="the Macintosh"
+        href="https://folklore.org/0-index.html"
+        page="ABOUT"
+      />
+      and classic hits like the
+      <TextLink
+        text="paperclip and zipper."
+        href="https://www.barnesandnoble.com/w/the-evolution-of-useful-things-henry-petroski/1112257387"
+        page="ABOUT"
+      />
     </p>
   )
 }
