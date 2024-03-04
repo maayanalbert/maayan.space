@@ -19,7 +19,7 @@ export default function Home() {
     <>
       <div className="h-[85%] w-full flex flex-col justify-center sm:mt-0 -mt-8 sm:pl-28 pr-12">
         <p
-          className="font-bold sm:p-0 pl-8 sm:-mt-[46px] -mt-[252px] sm:text-9xl text-5xl leading-snug"
+          className="font-bold sm:p-0 pl-8 sm:-mt-[50px] -mt-[252px] sm:text-9xl text-5xl leading-snug"
           style={{ fontFamily: "Helvetica Neue" }}
         >
           Hi, <br className="sm:hidden" />
