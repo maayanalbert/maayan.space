@@ -42,19 +42,6 @@ export function AboutInfo() {
       to more than 30 business clients and a team of a dozen, I'm now building
       the AI diary
       <TextLink text="Eve." href="https://eve.space/" page="ABOUT" />
-      <br /> <br />
-      My focus is on building tools for humans. Inspirations include
-      <TextLink
-        text="the Macintosh"
-        href="https://folklore.org/0-index.html"
-        page="ABOUT"
-      />
-      and classic hits like the
-      <TextLink
-        text="paperclip and zipper."
-        href="https://www.penguinrandomhouse.com/books/130244/the-evolution-of-useful-things-by-henry-petroski/"
-        page="ABOUT"
-      />
     </p>
   )
 }

@@ -1,4 +1,4 @@
-export type Page = "ABOUT" | "PHILOSOPHY" | "CONTACT"
+export type Page = "ABOUT" | "PHILOSOPHY" | "CONTACT" | "DEFAULT"
 
 export function getPageColor(type: Page, text?: boolean) {
   switch (type) {
@@ -9,7 +9,7 @@ export function getPageColor(type: Page, text?: boolean) {
     case "CONTACT":
       return "rgb(0,151,254)"
     default:
-      return "gray"
+      return "rgb(150, 150, 150)"
   }
 }
 
