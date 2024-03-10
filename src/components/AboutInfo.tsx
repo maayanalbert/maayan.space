@@ -13,19 +13,20 @@ export function AboutInfo() {
         href="https://www.cmu.edu/"
         page="ABOUT"
       />
-      where my
+      where I built an
       <TextLink
-        text="thesis,"
+        text="IDE"
         href="https://paper.dropbox.com/doc/Stamper-An-Artboard-Oriented-Programming-Environment--Aur96RpoCsXsC76bFeRTFYSGAQ-QXtfMXshBFBNCu6iCtx2J"
         page="ABOUT"
       />
-      an IDE for creative technologists, was accepted into the most prestigious
+      that was accepted into the most prestigious
       <TextLink
         text="HCI conference"
         href="https://en.wikipedia.org/wiki/Conference_on_Human_Factors_in_Computing_Systems"
         page="ABOUT"
       />
-      in the world. <br className="sm:hidden" /> <br className="sm:hidden" />
+      in the world and went viral on twitter. <br className="sm:hidden" />{" "}
+      <br className="sm:hidden" />
       After working at
       <TextLink
         text="Apple,"
@@ -39,9 +40,9 @@ export function AboutInfo() {
       />
       and as first hire scaling
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      to more than 30 business clients and a team of a dozen, I'm now building
-      the AI diary
-      <TextLink text="Eve." href="https://eve.space/" page="ABOUT" />
+      to a team of a dozen and more than 30 business clients, I'm now building
+      <TextLink text="Eve," href="https://eve.space/" page="ABOUT" />a tool to
+      augment emotional intelligence.
     </p>
   )
 }
