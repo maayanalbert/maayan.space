@@ -25,8 +25,13 @@ export function AboutInfo() {
         href="https://en.wikipedia.org/wiki/Conference_on_Human_Factors_in_Computing_Systems"
         page="ABOUT"
       />
-      in the world and went viral on Twitter. <br className="sm:hidden" />{" "}
-      <br className="sm:hidden" />
+      in the world and
+      <TextLink
+        text="went viral"
+        href="https://twitter.com/supercgeek/status/1230163240815955968"
+        page="ABOUT"
+      />
+      on Twitter. <br className="sm:hidden" /> <br className="sm:hidden" />
       After working at
       <TextLink
         text="Apple,"
