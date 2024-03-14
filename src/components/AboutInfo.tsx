@@ -19,13 +19,13 @@ export function AboutInfo() {
         href="https://paper.dropbox.com/doc/Stamper-An-Artboard-Oriented-Programming-Environment--Aur96RpoCsXsC76bFeRTFYSGAQ-QXtfMXshBFBNCu6iCtx2J"
         page="ABOUT"
       />
-      that was featured at the most prestigious
+      that was featured at the world's premier
       <TextLink
         text="HCI conference"
         href="https://en.wikipedia.org/wiki/Conference_on_Human_Factors_in_Computing_Systems"
         page="ABOUT"
       />
-      in the world and
+      and
       <TextLink
         text="went viral"
         href="https://twitter.com/supercgeek/status/1230163240815955968"
