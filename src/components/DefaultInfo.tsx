@@ -18,7 +18,9 @@ export function DefaultInfo() {
         text="paperclip and zipper."
         href="https://www.penguinrandomhouse.com/books/130244/the-evolution-of-useful-things-by-henry-petroski/"
         page="DEFAULT"
-      />
+      />{" "}
+      Currently building
+      <TextLink text="Eve." href="https://www.eve.space/" page="DEFAULT" />
     </p>
   )
 }
