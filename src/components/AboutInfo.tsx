@@ -10,7 +10,7 @@ export function AboutInfo() {
       I studied Design & CS at
       <TextLink
         text="Carnegie Mellon,"
-        href="https://www.cmu.edu/"
+        href="https://maayan-albert.squarespace.com/"
         page="ABOUT"
       />
       where I built an
