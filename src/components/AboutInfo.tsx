@@ -7,18 +7,31 @@ import TextLink from "./TextLink"
 export function AboutInfo() {
   return (
     <p>
-      I have spent my career building novel interfaces human computer
-      interaction. I studied Design, HCI, Computer Science at Carnegie Mellon,
-      where my
+      I studied Design & CS at
       <TextLink
-        text="senior thesis"
+        text="Carnegie Mellon,"
+        href="https://maayan-albert.squarespace.com/"
+        page="ABOUT"
+      />
+      where I built an
+      <TextLink
+        text="IDE"
         href="https://paper.dropbox.com/doc/Stamper-An-Artboard-Oriented-Programming-Environment--Aur96RpoCsXsC76bFeRTFYSGAQ-QXtfMXshBFBNCu6iCtx2J"
         page="ABOUT"
       />
-      was published at
-      <TextLink text="CHI," href="https://chi2020.acm.org/" page="ABOUT" />
-      at the world's premier HCI conference.
-      <br className="sm:hidden" /> <br className="sm:hidden" />
+      that was featured at the world's premier
+      <TextLink
+        text="HCI conference"
+        href="https://en.wikipedia.org/wiki/Conference_on_Human_Factors_in_Computing_Systems"
+        page="ABOUT"
+      />
+      and
+      <TextLink
+        text="went viral"
+        href="https://twitter.com/supercgeek/status/1230163240815955968"
+        page="ABOUT"
+      />
+      on Twitter. <br className="sm:hidden" /> <br className="sm:hidden" />
       After working at
       <TextLink
         text="Apple,"
