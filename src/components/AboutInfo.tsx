@@ -7,7 +7,7 @@ import TextLink from "./TextLink"
 export function AboutInfo() {
   return (
     <p>
-      My focus is in tools for thought. I studied Design & CS at
+      I studied Design & CS at
       <TextLink
         text="Carnegie Mellon,"
         href="https://maayan-albert.squarespace.com/"
@@ -45,9 +45,8 @@ export function AboutInfo() {
       />
       and as first hire scaling
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      to a team of a dozen and more than 30 business clients, I'm now building
-      the AI emotional support companion
-      <TextLink text="Eve." href="https://eve.space/" page="ABOUT" />
+      to a team of a dozen and more than 30 business clients, I'm now exploring
+      community building tools for young people in a new venture.
     </p>
   )
 }

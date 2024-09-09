@@ -20,7 +20,7 @@ export default function Home() {
     <>
       <div className="h-[85%] w-full flex flex-col justify-center sm:mt-0 -mt-8 sm:pl-28 pr-12">
         <p
-          className="font-bold sm:p-0 pl-8 sm:-mt-4 -mt-44 sm:text-9xl text-5xl leading-snug"
+          className="font-bold sm:p-0 pl-8 sm:-mt-24 -mt-44 sm:text-9xl text-5xl leading-snug"
           style={{ fontFamily: "Helvetica Neue" }}
         >
           Hi, <br className="sm:hidden" />
@@ -28,8 +28,8 @@ export default function Home() {
         </p>
         <div className="relative w-full sm:ml-[10px] ml-[5px] flex sm:justify-start justify-center">
           <div
-            className="absolute w-full sm:text-[16px] text-[14px] sm:px-0 px-8 sm:pt-9 pt-6 leading-[1.7] sm:w-[900px]"
-            style={{ color: "rgb(36, 36, 36)" }}
+            className="absolute w-full sm:text-[24px] text-[18px] sm:px-0 px-8 sm:pt-9 pt-8 leading-[1.4] sm:w-[900px]"
+            style={{ color: "rgb(50, 50, 50)" }}
           >
             {curPage === "ABOUT" ? (
               <AboutInfo />
