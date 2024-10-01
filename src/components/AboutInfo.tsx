@@ -47,6 +47,7 @@ export function AboutInfo() {
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
       to a team of a dozen and more than 30 business clients. Most recently, I
       explored the space of AI therapy with
+      <TextLink text="Eve" href="https://www.eve.space/" page="ABOUT" />
     </p>
   )
 }
