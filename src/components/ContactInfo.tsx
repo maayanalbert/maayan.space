@@ -6,7 +6,7 @@ import TextLink from "./TextLink"
 
 export default function ContactInfo() {
   return (
-    <div className="flex sm:flex-row flex-col gap-5 sm:gap-10 sm:text-[28px] text-[24px]">
+    <div className="flex sm:flex-row flex-col gap-5 sm:gap-10 sm:text-[26px] text-[20px]">
       <TextLink
         text="maayan.albert@gmail.com"
         href="mailto:maayan.albert@gmail.com"

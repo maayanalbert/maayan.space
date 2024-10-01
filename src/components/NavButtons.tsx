@@ -8,7 +8,7 @@ export default function NavButtons() {
         <HomeButton />
         <PageButton page="ABOUT" />
         <PageButton page="CONTACT" />
-        <PageButton page="PHILOSOPHY" />
+        {/* <PageButton page="PHILOSOPHY" /> */}
       </div>
     </div>
   )

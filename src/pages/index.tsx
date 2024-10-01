@@ -28,16 +28,17 @@ export default function Home() {
         </p>
         <div className="relative w-full sm:ml-[10px] ml-[5px] flex sm:justify-start justify-center">
           <div
-            className="absolute w-full sm:text-[24px] text-[18px] sm:px-0 px-8 sm:pt-9 pt-8 leading-[1.4] sm:w-[900px]"
+            className="absolute w-full sm:text-[20px] text-[16px] sm:px-0 px-8 sm:pt-9 pt-8 leading-[1.4] sm:w-[900px]"
             style={{ color: "rgb(50, 50, 50)" }}
           >
             {curPage === "ABOUT" ? (
               <AboutInfo />
             ) : curPage === "CONTACT" ? (
               <ContactInfo />
-            ) : curPage === "PHILOSOPHY" ? (
-              <PhilosophyInfo />
             ) : (
+              //  : curPage === "PHILOSOPHY" ? (
+              //   <PhilosophyInfo />
+              // )
               <DefaultInfo />
             )}
           </div>

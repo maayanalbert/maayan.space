@@ -32,7 +32,7 @@ export function AboutInfo() {
         page="ABOUT"
       />
       on Twitter. <br className="sm:hidden" /> <br className="sm:hidden" />
-      After working at
+      I've worked at
       <TextLink
         text="Apple,"
         href="https://www.apple.com/iwork/"
@@ -45,8 +45,8 @@ export function AboutInfo() {
       />
       and as first hire scaling
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      to a team of a dozen and more than 30 business clients, I'm now exploring
-      community building tools for young people in a new venture.
+      to a team of a dozen and more than 30 business clients. Most recently, I
+      explored the space of AI therapy with
     </p>
   )
 }
