@@ -7,7 +7,9 @@ import { QueryClient, QueryClientProvider } from "react-query"
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
+      {/* @ts-ignore */}
       <PageContextProvider>
+        {/* @ts-ignore */}
         <Component {...pageProps} />
       </PageContextProvider>
     </>

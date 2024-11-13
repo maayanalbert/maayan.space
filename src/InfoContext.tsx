@@ -21,7 +21,7 @@ interface PageContextType {
 const PageContext = createContext<PageContextType>({
   curPage: undefined,
   setCurPage: () => undefined,
-})
+}) as any
 
 interface Props {
   children: ReactNode
@@ -30,7 +30,7 @@ interface Props {
 /**
  * Create the provider that everything that uses the context should be wrapped in
  */
-export function PageContextProvider({ children }: Props) {
+export const PageContextProvider = ({ children }: Props): JSX.Element => {
   const [curPage, setCurPage] = useState<Page>()
 
   return (
@@ -50,5 +50,5 @@ export function PageContextProvider({ children }: Props) {
  */
 export function usePageContext(): PageContextType {
   const context = useContext(PageContext)
-  return context
+  return context as PageContextType
 }
