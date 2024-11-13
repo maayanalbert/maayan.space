@@ -35,10 +35,9 @@ export default function Home() {
               <AboutInfo />
             ) : curPage === "CONTACT" ? (
               <ContactInfo />
+            ) : curPage === "PHILOSOPHY" ? (
+              <PhilosophyInfo />
             ) : (
-              //  : curPage === "PHILOSOPHY" ? (
-              //   <PhilosophyInfo />
-              // )
               <DefaultInfo />
             )}
           </div>
