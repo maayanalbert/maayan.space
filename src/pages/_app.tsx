@@ -5,25 +5,11 @@ import { useMemo } from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
 
 export default function App({ Component, pageProps }: AppProps) {
-  const queryClient = useMemo(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            retry: true,
-          },
-        },
-      }),
-    []
-  )
-
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <PageContextProvider>
-          <Component {...pageProps} />
-        </PageContextProvider>
-      </QueryClientProvider>
+      <PageContextProvider>
+        <Component {...pageProps} />
+      </PageContextProvider>
     </>
   )
 }
