@@ -59,7 +59,7 @@ function PageButton({ page }: PageButtonProps) {
         style={{ backgroundColor: getPageColor(page) }}
       />
       <p // TODO: find out why this shows up as below the background color when it's not absolute
-        className="top-0 h-full w-full"
+        className="top-0 h-full w-full font-light"
         style={{ color: "black" }}
       >
         {getPageName(page)}
