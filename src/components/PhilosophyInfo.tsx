@@ -14,7 +14,8 @@ export function PhilosophyInfo() {
         kamikaze walker,
       </a>{" "}
       because I learned how to walk by standing up, going as fast as I could,
-      falling, and getting back up again. Someone I admire{" "}
+      falling, and getting back up again.
+      <br className="sm:hidden" /> <br className="sm:hidden" /> Someone I admire{" "}
       <a
         href="https://www.youtube.com/watch?v=kYfNvmF0Bqw"
         target="_blank"
