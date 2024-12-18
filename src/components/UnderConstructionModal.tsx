@@ -1,37 +1,24 @@
 import React from "react"
 import { WrenchScrewdriverIcon, XMarkIcon } from "@heroicons/react/24/outline"
 
-interface UnderConstructionModalProps {
-  open: boolean
-  onClose: () => void
-}
-
-const UnderConstructionModal: React.FC<UnderConstructionModalProps> = ({
-  open,
-  onClose,
-}) => {
-  if (!open) return null
-
+const UnderConstructionBanner: React.FC = () => {
   return (
-    <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-40" />
-      <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 opacity-0 animate-fade-in">
-          <div className="p-6 text-center">
-            <WrenchScrewdriverIcon className="h-10 w-10 mx-auto mb-4 text-gray-300" />
-            <h2 className="text-xl font-semibold mb-2">
-              Page Under Construction
-            </h2>
-            <p className="text-gray-600">
-              This section is currently under construction. Please check back
-              later or contact Maayan at maayan.albert@gmail.com for more
-              information.
-            </p>
-          </div>
+    <div className="fixed inset-0 z-50 overflow-hidden pointer-events-none">
+      <div className="-mt-20 absolute w-[200%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[30deg] scale-[1.5]">
+        <div className="text-center">
+          <h2 className="text-9xl font-black text-gray-300 -ml-[650px]">
+            UNDER
+          </h2>
+          <h2 className="text-9xl font-black text-gray-300 ml-[200px]">
+            CONSTRUCTION
+          </h2>
+          <p className="text-xl text-gray-300 ml-[150px]">
+            Please check back later or contact Maayan
+          </p>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default UnderConstructionModal
+export default UnderConstructionBanner

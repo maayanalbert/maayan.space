@@ -4,15 +4,16 @@ interface Props {
   text: string
   href: string
   page: Page
+  newTab?: boolean
 }
 
-export default function TextLink({ text, href, page }: Props) {
+export default function TextLink({ text, href, page, newTab = true }: Props) {
   return (
     <>
       {" "}
       <a
         href={href}
-        target="_blank"
+        target={newTab ? "_blank" : undefined}
         className="hover:underline cursor-pointer"
         style={{ color: getPageColor(page, true) }}
       >

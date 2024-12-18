@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import UnderConstructionModal from "@/components/UnderConstructionModal"
 
-const MentalHealthPage: React.FC = () => {
+const ConsumerSocialPage: React.FC = () => {
   const [showConstruction, setShowConstruction] = useState(true)
 
   return (
@@ -11,4 +11,4 @@ const MentalHealthPage: React.FC = () => {
   )
 }
 
-export default MentalHealthPage
+export default ConsumerSocialPage
