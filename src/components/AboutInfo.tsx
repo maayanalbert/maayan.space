@@ -46,8 +46,11 @@ export function AboutInfo() {
       and as first hire scaling
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
       to a team of a dozen and more than 30 business clients. Most recently, I
-      explored the space of AI therapy with
-      <TextLink text="Eve." href="https://www.eve.space/" page="ABOUT" />
+      took time to explore various projects in the space of{" "}
+      <TextLink text="Mental Health," href="/mental-health" page="ABOUT" />
+      <TextLink text="Consumer Social," href="/consumer-social" page="ABOUT" />
+      and
+      <TextLink text="Ed Tech." href="/ed-tech" page="ABOUT" />
     </p>
   )
 }
