@@ -47,10 +47,20 @@ export function AboutInfo() {
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
       to a team of a dozen and more than 30 business clients. Most recently, I
       took time to explore various projects in the space of{" "}
-      <TextLink text="Mental Health," href="/mental-health" page="ABOUT" />
-      <TextLink text="Consumer Social," href="/consumer-social" page="ABOUT" />
+      <TextLink
+        text="Mental Health,"
+        href="/mental-health"
+        page="ABOUT"
+        newTab={false}
+      />
+      <TextLink
+        text="Consumer Social,"
+        href="/consumer-social"
+        page="ABOUT"
+        newTab={false}
+      />
       and
-      <TextLink text="Ed Tech." href="/ed-tech" page="ABOUT" />
+      <TextLink text="Ed Tech." href="/ed-tech" page="ABOUT" newTab={false} />
     </p>
   )
 }

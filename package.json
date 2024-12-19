@@ -6,7 +6,7 @@
     "dev": "next dev -p 1997",
     "build": "next build",
     "start": "next start",
-    "devgrok": "ngrok http --domain=dev.eve.space 3000",
+    "devgrok": "ngrok http --domain=dev.eve.space 1997",
     "lint": "next lint"
   },
   "dependencies": {

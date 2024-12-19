@@ -1,7 +1,27 @@
 import { usePageContext } from "@/InfoContext"
 import { Page as Page, getPageColor, getPageName } from "@/pageHelpers"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
 
 export default function NavButtons() {
+  const { setCurPage } = usePageContext()
+  const router = useRouter()
+
+  // Read initial page from URL params on mount
+  useEffect(() => {
+    const { page } = router.query
+    if (!page) {
+      setCurPage(undefined)
+    } else if (
+      typeof page === "string" &&
+      (page.toUpperCase() === "ABOUT" ||
+        page.toUpperCase() === "CONTACT" ||
+        page.toUpperCase() === "PHILOSOPHY")
+    ) {
+      setCurPage(page.toUpperCase() as Page)
+    }
+  }, [router.query]) // Changed dependency to router.query
+
   return (
     <div className="absolute w-full flex sm:justify-start justify-center sm:pl-28 sm:pb-[72px] pb-10 p-8 bottom-0">
       <div className="flex flex-row items-center justify-between gap-3 relative sm:w-fit w-full">
@@ -16,9 +36,11 @@ export default function NavButtons() {
 
 export function HomeButton() {
   const { curPage, setCurPage } = usePageContext()
+  const router = useRouter()
 
   const onPress = () => {
     setCurPage(undefined)
+    router.push("/", undefined, { shallow: true })
   }
 
   return (
@@ -43,9 +65,15 @@ interface PageButtonProps {
 
 function PageButton({ page }: PageButtonProps) {
   const { curPage, setCurPage } = usePageContext()
+  const router = useRouter()
 
   const onPress = () => {
     setCurPage(page)
+    router.push(
+      { pathname: "/", query: { page: page.toLowerCase() } },
+      undefined,
+      { shallow: true }
+    )
   }
   return (
     <div
