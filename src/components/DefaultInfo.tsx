@@ -7,7 +7,8 @@ import TextLink from "./TextLink"
 export function DefaultInfo() {
   return (
     <p className="sm:text-[26px] text-[22px]">
-      I build tools for humans. Inspirations include
+      I build simple, useful, and slightly magical tools for humans.
+      Inspirations include
       <TextLink
         text="the Macintosh"
         href="https://folklore.org/0-index.html"
