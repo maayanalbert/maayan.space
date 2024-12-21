@@ -20,7 +20,7 @@ export default function Home() {
     <>
       <div className="h-[85%] w-full flex flex-col justify-center sm:mt-0 -mt-8 sm:px-28">
         <p
-          className="font-bold sm:p-0 pl-8 sm:-mt-24 -mt-60 lg:text-8xl sm:text-7xl text-5xl leading-snug"
+          className="font-bold sm:p-0 pl-8 sm:-mt-24 -mt-60 lg:text-[120px] sm:text-7xl text-5xl leading-snug"
           style={{ fontFamily: "Helvetica Neue" }}
         >
           Hi, I'm Maayan
