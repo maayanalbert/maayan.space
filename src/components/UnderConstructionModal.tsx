@@ -111,6 +111,7 @@ function sketch(p5: P5CanvasInstance) {
     init(): void {
       this.elapsedT = 0
       this.fromSize = this.size
+      // @ts-ignore
       this.toSize = this.sizeMax * p5.random(0.5, 1.5)
       this.fromX = this.x
       this.toX =
@@ -162,6 +163,7 @@ function sketch(p5: P5CanvasInstance) {
           this.size = p5.lerp(0, this.sizeMax, n)
         } else if (this.actionPoints > 0) {
           if (this.animationType == 0) {
+            // @ts-ignore
             this.size = p5.lerp(this.fromSize, this.toSize, n)
           } else if (this.animationType == 1) {
             this.x = p5.lerp(this.fromX, this.toX, n)
