@@ -338,6 +338,19 @@
   resolved "https://registry.yarnpkg.com/@nolyfill/is-core-module/-/is-core-module-1.0.39.tgz#3dc35ba0f1e66b403c00b39344f870298ebb1c8e"
   integrity sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==
 
+"@p5-wrapper/next@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@p5-wrapper/next/-/next-1.0.3.tgz#c32f3454faa69bbe35734aa2a19235f6e3c3f8d4"
+  integrity sha512-7Ty2LDEye53xMFSi1hhf67KgnUt7g+KCR+cP6Vi0lJumvyN5buVwhDkuNk8NX03THkwghKN4LaV0NeHgh8qQjQ==
+
+"@p5-wrapper/react@^4.4.2":
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/@p5-wrapper/react/-/react-4.4.2.tgz#d25a44b45bc836d8bb63fc8925fed36714d2a3d8"
+  integrity sha512-jRUy0OAP54gYl84mhJPDoPc7DutQ1Gi2dq2AnFpswQwye+Rb0EVTc7JeAwcgYCs4+ZyDsKeN9GqpYE3RR3jMZQ==
+  dependencies:
+    microdiff "^1.4.0"
+    p5 "^1.9.4"
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
@@ -374,6 +387,11 @@
   version "18.14.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.2.tgz#c076ed1d7b6095078ad3cf21dfeea951842778b1"
   integrity sha512-1uEQxww3DaghA0RxqHx0O0ppVlo43pJhepY51OxuQIKHpjbnYLA7vcdwioNPzIqmC2u3I/dmylcqjlh0e7AyUA==
+
+"@types/p5@^1.7.6":
+  version "1.7.6"
+  resolved "https://registry.yarnpkg.com/@types/p5/-/p5-1.7.6.tgz#f2ec2bb3cddaa40922afa5bb54b7903ce7e509ed"
+  integrity sha512-6pLTOo0V3N5jZb5nTwjiv3lPHLK3Z/TjbhQUj8CTWXocUk1Z/f6OHTp3Pcwi1BhWnf5gqKUcyEb1gP0KIJuQgw==
 
 "@types/prop-types@*":
   version "15.7.14"
@@ -2107,6 +2125,11 @@ merge2@^1.3.0, merge2@^1.4.1:
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
+microdiff@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/microdiff/-/microdiff-1.4.0.tgz#d7fd98a6db602cd8d3ab4463ed7c0340ff9a6f2c"
+  integrity sha512-OBKBOa1VBznvLPb/3ljeJaENVe0fO0lnWl77lR4vhPlQD71UpjEoRV5P0KdQkcjbFlBu1Oy2mEUBMU3wxcBAGg==
+
 micromatch@^4.0.4, micromatch@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.8.tgz#d66fa18f3a47076789320b9b1af32bd86d9fa202"
@@ -2331,6 +2354,11 @@ p-locate@^5.0.0:
   integrity sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==
   dependencies:
     p-limit "^3.0.2"
+
+p5@^1.9.4:
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/p5/-/p5-1.11.2.tgz#3e3fc70fd20fc9e12135089b7f0f13e21acbf2df"
+  integrity sha512-kvtMTmxJexkbfuaVThg/1JE6iQyS8tTAqGE1UGbfApKUIzDc5hHM23hc08FV3jG0jlNS2En9kqZDb4FrJ8x+kg==
 
 package-json-from-dist@^1.0.0:
   version "1.0.1"
