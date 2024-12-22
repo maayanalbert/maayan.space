@@ -43,10 +43,10 @@ export function AboutInfo() {
         href="https://www.google.com/travel/"
         page="ABOUT"
       />
-      and as first hire scaling
+      and scaled
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      to a team of a dozen and more than 30 business clients. Most recently, I
-      took time to explore various projects in the space of{" "}
+      as their founding engineer. Most recently, I took time to explore various
+      projects in the space of{" "}
       <TextLink
         text="Mental Health,"
         href="/mental-health"

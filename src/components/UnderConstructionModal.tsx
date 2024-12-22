@@ -39,18 +39,6 @@ interface DynamicShape {
   run: () => void
 }
 
-export function getPageColor(type: Page, text?: boolean) {
-  switch (type) {
-    case "ABOUT":
-      return "rgb(255,70,100)"
-    case "PHILOSOPHY":
-      return text ? "#D9AE00" : "#EBC737"
-    case "CONTACT":
-      return "rgb(0,151,254)"
-    default:
-      return "rgb(150, 150, 150)"
-  }
-}
 function sketch(p5: P5CanvasInstance) {
   const colors = [
     "rgb(0,151,254)",
@@ -103,7 +91,7 @@ function sketch(p5: P5CanvasInstance) {
       this.actionPoints = this.maxActionPoints
       this.elapsedT = 0
       this.size = 0
-      this.sizeMax = p5.width * p5.random(0.01, 0.05)
+      this.sizeMax = p5.width * p5.random(0.002, 0.01)
       this.fromSize = 0
       this.isDead = false
       this.clr = p5.random(colors)
@@ -207,13 +195,15 @@ function sketch(p5: P5CanvasInstance) {
   }
 
   p5.setup = () => {
-    p5.createCanvas(900, 900)
+    p5.createCanvas(window.innerWidth - 100, window.innerHeight - 100)
     p5.rectMode(p5.CENTER)
+    p5.textAlign(p5.CENTER, p5.CENTER)
     objs.push(new DynamicShapeClass())
   }
 
   p5.draw = () => {
     p5.background(255)
+    // p5.scale(2)
 
     for (const obj of objs) {
       obj.run()
@@ -236,8 +226,22 @@ function sketch(p5: P5CanvasInstance) {
 
 export default function DynamicShapesCanvas() {
   return (
-    <div className="flex items-center justify-center w-full h-full min-h-screen">
+    <div className="flex items-center justify-center w-full h-full min-h-screen relative">
       <ReactP5Wrapper sketch={sketch} />
+      <div className="text-xl text-black origin-bottom-left absolute left-16 top-16 font-light bg-[rgba(255,255,255,0.5)] pr-1 pb-1 rounded-lg">
+        Site Under Construction
+      </div>
+      <div className="flex flex-col items-end text-lg text-black origin-bottom-left absolute right-16 bottom-16 font-light bg-[rgba(255,255,255,0.5)] pl-1 pt-1 rounded-lg">
+        <div>Please Check Back Later or Contact Maayan</div>
+        <a
+          href="https://openprocessing.org/sketch/2421742"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-gray-600 hover:underline"
+        >
+          P5 Sketch Forked From Okazz
+        </a>
+      </div>
     </div>
   )
 }
