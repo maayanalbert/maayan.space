@@ -199,7 +199,7 @@ function sketch(p5: P5CanvasInstance) {
   }
 
   p5.setup = () => {
-    p5.createCanvas(window.innerWidth - 150, window.innerHeight - 150)
+    p5.createCanvas((window.innerWidth * 2) / 3, (window.innerHeight * 2) / 3)
     p5.rectMode(p5.CENTER)
     p5.textAlign(p5.CENTER, p5.CENTER)
     objs.push(new DynamicShapeClass())
