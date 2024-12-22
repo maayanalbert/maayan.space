@@ -91,7 +91,9 @@ function sketch(p5: P5CanvasInstance) {
       this.actionPoints = this.maxActionPoints
       this.elapsedT = 0
       this.size = 0
-      this.sizeMax = p5.width * p5.random(0.002, 0.01)
+      this.sizeMax =
+        p5.width *
+        p5.random(p5.width < 768 ? 0.0075 : 0.002, p5.width < 768 ? 0.03 : 0.01)
       this.fromSize = 0
       this.isDead = false
       this.clr = p5.random(colors)
@@ -228,11 +230,15 @@ export default function DynamicShapesCanvas() {
   return (
     <div className="flex items-center justify-center w-full h-full min-h-screen relative">
       <ReactP5Wrapper sketch={sketch} />
-      <div className="text-xl text-black origin-bottom-left absolute left-16 top-16 font-light bg-[rgba(255,255,255,0.5)] pr-1 pb-1 rounded-lg">
+      <div className="text-xl text-black origin-bottom-left absolute left-10 top-10 sm:left-16 sm:top-16 font-light bg-[rgba(255,255,255,0.5)] pr-1 pb-1 rounded-lg">
         Site Under Construction
       </div>
-      <div className="flex flex-col items-end text-lg text-black origin-bottom-left absolute right-16 bottom-16 font-light bg-[rgba(255,255,255,0.5)] pl-1 pt-1 rounded-lg">
-        <div>Please Check Back Later or Contact Maayan</div>
+      <div className="flex flex-col items-end text-lg text-black origin-bottom-left absolute text-right right-10 bottom-10 sm:right-16 sm:bottom-16 font-light bg-[rgba(255,255,255,0.5)] pl-1 pt-1 rounded-lg">
+        <div>
+          Please check back later
+          <br className="sm:hidden" />
+          or contact Maayan
+        </div>
         <a
           href="https://openprocessing.org/sketch/2421742"
           target="_blank"
