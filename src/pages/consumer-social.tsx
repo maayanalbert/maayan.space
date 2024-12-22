@@ -4,11 +4,7 @@ import UnderConstructionModal from "@/components/UnderConstructionModal"
 const ConsumerSocialPage: React.FC = () => {
   const [showConstruction, setShowConstruction] = useState(true)
 
-  return (
-    <main className="min-h-screen">
-      <UnderConstructionModal />
-    </main>
-  )
+  return <UnderConstructionModal />
 }
 
 export default ConsumerSocialPage

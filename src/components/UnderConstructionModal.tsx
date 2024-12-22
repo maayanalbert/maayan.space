@@ -93,7 +93,7 @@ function sketch(p5: P5CanvasInstance) {
       this.size = 0
       this.sizeMax =
         p5.width *
-        p5.random(p5.width < 768 ? 0.0075 : 0.002, p5.width < 768 ? 0.03 : 0.01)
+        p5.random(p5.width < 768 ? 0.01 : 0.003, p5.width < 768 ? 0.03 : 0.01)
       this.fromSize = 0
       this.isDead = false
       this.clr = p5.random(colors)
@@ -199,7 +199,7 @@ function sketch(p5: P5CanvasInstance) {
   }
 
   p5.setup = () => {
-    p5.createCanvas(window.innerWidth - 100, window.innerHeight - 100)
+    p5.createCanvas(window.innerWidth - 150, window.innerHeight - 150)
     p5.rectMode(p5.CENTER)
     p5.textAlign(p5.CENTER, p5.CENTER)
     objs.push(new DynamicShapeClass())
@@ -230,22 +230,18 @@ function sketch(p5: P5CanvasInstance) {
 
 export default function DynamicShapesCanvas() {
   return (
-    <div className="flex items-center justify-center w-full h-full min-h-screen relative">
+    <div className="flex items-center justify-center w-full h-full relative">
       <ReactP5Wrapper sketch={sketch} />
-      <div className="text-xl text-black origin-bottom-left absolute left-10 top-10 sm:left-16 sm:top-16 font-light bg-[rgba(255,255,255,0.5)] pr-1 pb-1 rounded-lg">
+      <div className="text-xl text-gray-500 origin-bottom-left absolute left-5 top-5 sm:left-14 sm:top-14 font-light bg-[rgba(255,255,255,0.5)] pr-1 pb-1 rounded-lg">
         Site Under Construction
       </div>
-      <div className="flex flex-col items-end text-lg text-black origin-bottom-left absolute text-right right-10 bottom-10 sm:right-16 sm:bottom-16 font-light bg-[rgba(255,255,255,0.5)] pl-1 pt-1 rounded-lg">
-        <div>
-          Please check back later
-          <br className="sm:hidden" />
-          or contact Maayan
-        </div>
+      <div className="flex flex-col items-end text-lg text-gray-500 origin-bottom-left absolute text-right right-5 bottom-5 sm:right-14 sm:bottom-14 font-light bg-[rgba(255,255,255,0.5)] pl-1 pt-1 rounded-lg">
+        <div>Please check back later or contact Maayan</div>
         <a
           href="https://openprocessing.org/sketch/2421742"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-gray-600 hover:underline"
+          className="text-xs text-gray-400 hover:underline"
         >
           P5 Sketch Forked From Okazz
         </a>
