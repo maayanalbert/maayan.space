@@ -45,22 +45,8 @@ export function AboutInfo() {
       />
       and scaled
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      as their founding engineer. Most recently, I took time to explore various
-      projects in the space of{" "}
-      <TextLink
-        text="Mental Health,"
-        href="/mental-health"
-        page="ABOUT"
-        newTab={false}
-      />
-      <TextLink
-        text="Consumer Social,"
-        href="/consumer-social"
-        page="ABOUT"
-        newTab={false}
-      />
-      and
-      <TextLink text="Ed Tech." href="/ed-tech" page="ABOUT" newTab={false} />
+      as their founding engineer. Currently, I'm interested in finding ways to
+      close the gap between design and engineering.
     </p>
   )
 }
