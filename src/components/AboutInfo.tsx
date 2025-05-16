@@ -1,7 +1,3 @@
-import { useEffect } from "react"
-import NavButtons from "@/components/NavButtons"
-import { Item, Row } from "@/components/Item"
-import { getPageColor } from "@/pageHelpers"
 import TextLink from "./TextLink"
 
 export function AboutInfo() {
@@ -45,8 +41,14 @@ export function AboutInfo() {
       />
       and scaled
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      as their founding engineer. Currently, I'm interested in finding ways to
-      close the gap between design and engineering.
+      as their founding engineer. I recently spent some time
+      <TextLink
+        text="hacking"
+        href="https://www.tldraw.com/p/HFrtxo9YyXzDhVlVbFJ8F?d=v-1629.-1327.5286.3311.GELXZ5GWGZegoyQ0p-DLR"
+        page="ABOUT"
+      />
+      on several projects, and am now interested in finding ways to close the
+      gap between design, engineering, and emergent AI.
     </p>
   )
 }
