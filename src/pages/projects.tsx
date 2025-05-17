@@ -37,16 +37,11 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col  absolute top-[65svh] gap-32">
+      <div className="flex flex-col  absolute top-[65svh] gap-20">
         {projects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            title={project.title}
-            image={project.image}
-            description={project.description}
-            collaborators={project.collaborators}
-            link={project.link}
-          />
+          <div key={project.id} className="mb-40">
+            <ProjectCard project={project} />
+          </div>
         ))}
       </div>
     </div>

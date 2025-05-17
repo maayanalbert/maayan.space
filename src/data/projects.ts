@@ -3,8 +3,12 @@ export interface Project {
   title: string
   image: string
   description: string
-  collaborators?: Collaborator[]
+  collaborators: Collaborator[]
   link?: string
+  category: {
+    name: string
+    color: string
+  }
 }
 
 export interface Collaborator {
@@ -16,10 +20,10 @@ export interface Collaborator {
 export const projects: Project[] = [
   {
     id: "project-1",
-    title: "Cursor AI",
+    title: "InstaFrames",
     image: "/images/sample-image.png",
     description:
-      "A next-generation code editor that uses AI to help developers write better code faster. I designed the interface to make AI collaboration feel natural and integrated with existing developer workflows.",
+      "Soon, manually creating static interfaces will be a thing of the past. InstaFrames was an experiment into what a design workflow would look like where the AIs create live prototypes, and the designer simply refines the variants into a final, shippable design.",
     collaborators: [
       {
         name: "Amresh Subramaniam",
@@ -33,6 +37,10 @@ export const projects: Project[] = [
       },
     ],
     link: "https://cursor.sh",
+    category: {
+      name: "Design Tools",
+      color: "text-[rgb(255,70,100)]",
+    },
   },
   {
     id: "project-2",
@@ -47,13 +55,9 @@ export const projects: Project[] = [
         link: "https://example.com/sarah",
       },
     ],
-  },
-  {
-    id: "project-3",
-    title: "Spatial Notes",
-    image: "/images/sample-image.png",
-    description:
-      "A note-taking application that uses spatial memory to help users organize and recall information. Notes can be arranged in a 3D space, allowing for more intuitive connections between ideas and concepts.",
-    link: "https://spatialnotes.example.com",
+    category: {
+      name: "Productivity",
+      color: "text-green-500",
+    },
   },
 ]

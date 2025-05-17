@@ -1,25 +1,25 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Collaborator } from "../data/projects"
+import { Collaborator, Project } from "../data/projects"
 
-export interface ProjectCardProps {
-  title: string
-  image: string
-  description: string
-  collaborators?: Collaborator[]
-  link?: string
-}
+export interface ProjectCardProps extends Project {}
 
 export const ProjectCard = ({
-  title,
-  image,
-  description,
-  collaborators = [],
-  link,
-}: ProjectCardProps) => {
+  project: { title, image, description, collaborators, link, category },
+}: {
+  project: Project
+}) => {
   return (
     <div className="flex flex-col last:mb-0">
-      <h3 className="text-3xl font-bold sm:px-28 px-8">{title}</h3>
+      <div className="flex flex-row items-end gap-6 sm:px-28 px-8">
+        <h3 className="text-3xl font-bold">{title}</h3>
+
+        <div
+          className={`text-base rounded-md font-medium text-white ${category.color}`}
+        >
+          ({category.name})
+        </div>
+      </div>
 
       <div className="font-light mt-4 sm:px-28 px-8">
         <p className=" font-light w-full sm:text-[20px] text-[16px] sm:px-0 px-8 leading-[1.4] sm:w-[900px]">
@@ -50,7 +50,7 @@ export const ProjectCard = ({
           </div>
         )}
       </div>
-      <div className="flex flex-row gap-8 mt-10 overflow-x-auto pb-4 w-full hide-scrollbar">
+      <div className="flex flex-row gap-8 mt-12 overflow-x-auto pb-4 w-full hide-scrollbar">
         <div className="w-20 bg-black h-[400px] flex-shrink-0 bg-white"></div>
         <Image
           src={image}
