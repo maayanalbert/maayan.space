@@ -1,15 +1,32 @@
 export interface Project {
   id: string
   title: string
-  image: string
+  media: Media[]
   description: string
   collaborators: Collaborator[]
-  link?: string
+  stack: string[]
   category: {
     name: string
     color: string
   }
 }
+
+export type Media =
+  | {
+      type: "image"
+      src: string
+      alt?: string
+      width?: number
+      height?: number
+    }
+  | {
+      type: "video"
+      src: string
+      alt?: string
+      width?: number
+      height?: number
+    }
+  | { type: "iframe"; src: string; width?: number; height?: number }
 
 export interface Collaborator {
   name: string
@@ -21,9 +38,25 @@ export const projects: Project[] = [
   {
     id: "project-1",
     title: "InstaFrames",
-    image: "/images/sample-image.png",
+    media: [
+      {
+        type: "iframe",
+        src: "https://getdaemon.com",
+      },
+      {
+        type: "video",
+        src: "/assets/Daemon demo.mov",
+        alt: "InstaFrames demo",
+      },
+      // {
+      //   type: "image",
+      //   src: "/assets/sample-image.png",
+      //   alt: "InstaFrames interface",
+      // },
+    ],
     description:
       "Soon, manually creating static interfaces will be a thing of the past. InstaFrames was an experiment into what a design workflow would look like where the AIs create live prototypes, and the designer simply refines the variants into a final, shippable design.",
+    stack: ["React", "TypeScript", "TailwindCSS", "OpenAI API"],
     collaborators: [
       {
         name: "Amresh Subramaniam",
@@ -36,7 +69,6 @@ export const projects: Project[] = [
         link: "https://x.com/maayanalbert",
       },
     ],
-    link: "https://cursor.sh",
     category: {
       name: "Design Tools",
       color: "text-[rgb(255,70,100)]",
@@ -45,9 +77,27 @@ export const projects: Project[] = [
   {
     id: "project-2",
     title: "Mindful",
-    image: "/images/sample-image.png",
+    media: [
+      {
+        type: "image",
+        src: "/assets/sample-image.png",
+        alt: "Mindful app screenshot",
+      },
+      {
+        type: "video",
+        src: "/videos/mindful-demo.mp4",
+        alt: "Mindful app demo",
+      },
+      {
+        type: "iframe",
+        src: "https://www.youtube.com/embed/example",
+        width: 600,
+        height: 400,
+      },
+    ],
     description:
       "An experimental mobile app that helps users build mindfulness habits through micro-interactions throughout the day. The design focuses on subtle notifications and quick exercises that can be completed in under a minute.",
+    stack: ["React Native", "Redux", "Firebase"],
     collaborators: [
       {
         name: "Sarah Chen",

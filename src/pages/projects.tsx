@@ -37,9 +37,9 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col  absolute top-[65svh] gap-20">
+      <div className="flex flex-col  absolute top-[100svh]">
         {projects.map((project) => (
-          <div key={project.id} className="mb-40">
+          <div key={project.id} className="mb-36">
             <ProjectCard project={project} />
           </div>
         ))}
