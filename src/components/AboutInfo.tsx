@@ -3,7 +3,8 @@ import TextLink from "./TextLink"
 export function AboutInfo() {
   return (
     <p>
-      I studied Design & CS at
+      I'm a frontend leaning full stack engineer with a strong eye for design. I
+      studied Design & CS at
       <TextLink
         text="Carnegie Mellon,"
         href="https://maayan-albert.squarespace.com/"
@@ -44,11 +45,11 @@ export function AboutInfo() {
       as their founding engineer. I recently spent some time
       <TextLink
         text="hacking"
-        href="https://www.tldraw.com/p/HFrtxo9YyXzDhVlVbFJ8F?d=v-1629.-1327.5286.3311.GELXZ5GWGZegoyQ0p-DLR"
+        href="https://www.recentprojects.maayan.space/"
         page="ABOUT"
       />
       on several projects, and am now interested in finding ways to close the
-      gap between design, engineering, and emergent AI.
+      gap between design and engineering.
     </p>
   )
 }
