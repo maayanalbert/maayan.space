@@ -18,10 +18,7 @@ interface PageContextType {
 /**
  * Create the context
  */
-const PageContext = createContext<PageContextType>({
-  curPage: undefined,
-  setCurPage: () => undefined,
-}) as any
+const PageContext = createContext<PageContextType | undefined>(undefined)
 
 interface Props {
   children: ReactNode
@@ -50,5 +47,8 @@ export const PageContextProvider = ({ children }: Props): JSX.Element => {
  */
 export function usePageContext(): PageContextType {
   const context = useContext(PageContext)
-  return context as PageContextType
+  if (!context) {
+    throw new Error("usePageContext must be used within a PageContextProvider")
+  }
+  return context
 }
