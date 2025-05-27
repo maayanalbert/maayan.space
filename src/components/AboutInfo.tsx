@@ -45,7 +45,7 @@ export function AboutInfo() {
       as their founding engineer. I recently spent some time
       <TextLink
         text="hacking"
-        href="https://www.recentprojects.maayan.space/"
+        href="https://www.projects.maayan.space/"
         page="ABOUT"
       />
       on several projects, and am now interested in finding ways to close the
