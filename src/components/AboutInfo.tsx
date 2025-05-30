@@ -48,8 +48,8 @@ export function AboutInfo() {
         href="https://projects.maayan.space/"
         page="ABOUT"
       />
-      on several projects, and am now interested in finding ways to close the
-      gap between design and engineering.
+      on several projects, and am particularly interested in hybrid
+      design/developer tooling.
     </p>
   )
 }
