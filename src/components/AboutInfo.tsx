@@ -48,7 +48,7 @@ export function AboutInfo() {
         href="https://projects.maayan.space/"
         page="ABOUT"
       />
-     in several spaces, including mental health, ed tech, legacy software inplementation, and produtivity tooling. Of all the spaces I explored, the one that was most interesting to me was hybrid
+     in several spaces. Of all the spaces I explored, the one that excites me most to me is hybrid
       design/developer tooling.
     </p>
   )
