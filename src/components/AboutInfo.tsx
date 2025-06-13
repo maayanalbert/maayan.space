@@ -42,13 +42,13 @@ export function AboutInfo() {
       />
       and scaled
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      as their founding engineer. I recently spent some time
+      (acquired by Clay) as their founding engineer. I recently spent some time doing
       <TextLink
-        text="hacking"
+        text="AI experiments"
         href="https://projects.maayan.space/"
         page="ABOUT"
       />
-      on several projects, and am particularly interested in hybrid
+     in several spaces, including mental health, ed tech, legacy software inplementation, and produtivity tooling. Of all the spaces I explored, the one that was most interesting to me was hybrid
       design/developer tooling.
     </p>
   )
