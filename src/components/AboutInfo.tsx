@@ -48,7 +48,7 @@ export function AboutInfo() {
         href="https://projects.maayan.space/"
         page="ABOUT"
       />
-     in several spaces. Of all the spaces I explored, the one that excites me most to me is hybrid
+     in several spaces. Of the spaces I explored, the one that excites me most is hybrid
       design/developer tooling.
     </p>
   )
