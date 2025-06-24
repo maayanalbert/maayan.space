@@ -42,14 +42,15 @@ export function AboutInfo() {
       />
       and scaled
       <TextLink text="Avenue" href="https://avenue.app/" page="ABOUT" />
-      (acquired by Clay) as their founding engineer. I recently spent some time doing
+      (acquired by Clay) as their founding engineer. I recently spent some time
+      doing
       <TextLink
         text="AI experiments"
         href="https://projects.maayan.space/"
         page="ABOUT"
       />
-     in several spaces. Of the spaces I explored, the one that excites me most is hybrid
-      design/developer tooling.
+      in several spaces. Of the spaces I explored, the one that excites me most
+      is bridging the gap between design and developer tooling.
     </p>
   )
 }
