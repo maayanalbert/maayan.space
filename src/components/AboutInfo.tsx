@@ -49,8 +49,8 @@ export function AboutInfo() {
         href="https://projects.maayan.space/"
         page="ABOUT"
       />
-      in several spaces. Of the spaces I explored, the one that excites me most
-      is bridging the gap between design and developer tooling.
+      in several spaces. Of the spaces I've explored, the one that excites me
+      most is bridging the gap between design and developer tooling.
     </p>
   )
 }
