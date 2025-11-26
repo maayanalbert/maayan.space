@@ -58,7 +58,7 @@ export function HomeButton() {
 
   return (
     <div
-      className={`flex justify-start items-start py-1.5 cursor-pointer relative 
+      className={`flex justify-start items-start sm:py-1.5 py-2 cursor-pointer relative 
       sm:w-9 w-fit text-sm sm:text-base group`}
       onClick={onPress}
     >
@@ -92,7 +92,7 @@ function PageButton({ page }: PageButtonProps) {
   }
   return (
     <div
-      className={`text-center py-1.5 cursor-pointer relative 
+      className={`text-center sm:py-1.5 py-2 cursor-pointer relative 
       sm:w-28 w-fit text-base group select-none`}
       onClick={onPress}
     >
