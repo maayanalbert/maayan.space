@@ -23,8 +23,21 @@ export default function NavButtons() {
   }, [router.query]) // Changed dependency to router.query
 
   return (
-    <div className="absolute w-full flex sm:justify-start justify-center sm:pl-28 sm:pb-[72px] pb-10 p-8 bottom-0">
-      <div className="flex flex-row items-center justify-between gap-3 relative sm:w-fit w-full">
+    <div className="absolute w-full flex justify-start sm:pl-28 sm:pb-[72px] pb-14 p-4 bottom-0">
+      {/* Mobile layout - 2 separate rows */}
+      <div className="flex flex-col items-start gap-3 relative w-fit sm:hidden">
+        <div className="flex items-start gap-3">
+          <PageButton page="ABOUT" />
+
+          <PageButton page="PHILOSOPHY" />
+        </div>
+        <div className="flex items-start gap-3">
+          <HomeButton />
+          <PageButton page="CONTACT" />
+        </div>
+      </div>
+      {/* Desktop layout */}
+      <div className="hidden sm:flex sm:flex-row items-start justify-between gap-3 relative w-fit">
         <HomeButton />
         <PageButton page="ABOUT" />
         <PageButton page="CONTACT" />
@@ -45,8 +58,8 @@ export function HomeButton() {
 
   return (
     <div
-      className={`flex justify-start items-start sm:py-1.5 py-2 cursor-pointer relative 
-      sm:w-9 w-full text-sm sm:text-base group`}
+      className={`flex justify-start items-start py-1.5 cursor-pointer relative 
+      sm:w-9 w-fit text-sm sm:text-base group`}
       onClick={onPress}
     >
       <p
@@ -54,7 +67,9 @@ export function HomeButton() {
            transition-all ease-out group-hover:w-0`}
         style={{ backgroundColor: "black" }}
       />
-      <div className="flex h-full w-full justify-center items-center">M</div>
+      <div className="flex h-full w-full justify-center items-center px-3 sm:px-0">
+        M
+      </div>
     </div>
   )
 }
@@ -78,7 +93,7 @@ function PageButton({ page }: PageButtonProps) {
   return (
     <div
       className={`text-center py-1.5 cursor-pointer relative 
-      sm:w-28 w-full text-base group select-none`}
+      sm:w-28 w-fit text-base group select-none`}
       onClick={onPress}
     >
       <p
@@ -87,7 +102,7 @@ function PageButton({ page }: PageButtonProps) {
         style={{ backgroundColor: getPageColor(page) }}
       />
       <p // TODO: find out why this shows up as below the background color when it's not absolute
-        className="top-0 h-full w-full font-light"
+        className="top-0 h-full w-full sm:font-light text-sm sm:text-base px-3 sm:px-0"
         style={{ color: "black" }}
       >
         {getPageName(page)}
