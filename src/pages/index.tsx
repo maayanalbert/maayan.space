@@ -26,10 +26,7 @@ export default function Home() {
           Hi, I'm Maayan
         </p>
         <div className="relative w-full md:ml-[5px]  ml-[4px] flex sm:justify-start justify-center">
-          <div
-            className="absolute sm:font-light w-full sm:text-[20px] text-[16px] sm:px-0 px-4 sm:pt-9 pt-4 leading-[1.4] sm:max-w-[900px]"
-            style={{ color: "rgb(0, 0, 0)" }}
-          >
+          <div className="absolute text-gray-900 w-full sm:text-[20px] text-[16px] sm:px-0 px-4 sm:pt-9 pt-4 leading-[1.4] sm:max-w-[900px]">
             {curPage === "ABOUT" ? (
               <AboutInfo />
             ) : curPage === "CONTACT" ? (
