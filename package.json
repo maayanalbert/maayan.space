@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.17",
-    "@p5-wrapper/next": "^1.0.3",
-    "@p5-wrapper/react": "^4.4.2",
+    "@p5-wrapper/next": "2.0.0",
+    "@p5-wrapper/react": "5.0.0-rc.5",
     "@types/lodash": "^4.14.191",
     "@types/node": "18.14.2",
     "@types/react": "18.0.28",
@@ -23,6 +23,7 @@
     "eslint-config-next": "13.2.3",
     "lodash": "^4.17.21",
     "next": "^15.3.2",
+    "p5": "^2.1.1",
     "postcss": "^8.4.14",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

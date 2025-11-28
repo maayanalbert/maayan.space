@@ -1,15 +1,6 @@
 "use client"
 
-import dynamic from "next/dynamic"
-import type { P5CanvasInstance } from "@p5-wrapper/react"
-
-// Dynamically import ReactP5Wrapper with no SSR
-const ReactP5Wrapper = dynamic(
-  () => import("@p5-wrapper/react").then((mod) => mod.ReactP5Wrapper),
-  {
-    ssr: false,
-  }
-)
+import { useEffect, useRef } from "react"
 
 interface DynamicShape {
   x: number
@@ -39,7 +30,9 @@ interface DynamicShape {
   run: () => void
 }
 
-function sketch(p5: P5CanvasInstance) {
+type P5Instance = import("p5").default
+
+function sketch(p5: P5Instance) {
   const colors = [
     "rgb(0,151,254)",
     "#EBC737",
@@ -91,9 +84,7 @@ function sketch(p5: P5CanvasInstance) {
       this.actionPoints = this.maxActionPoints
       this.elapsedT = 0
       this.size = 0
-      this.sizeMax =
-        p5.width *
-        p5.random(p5.width < 768 ? 0.01 : 0.003, p5.width < 768 ? 0.03 : 0.01)
+      this.sizeMax = p5.random(10, 20)
       this.fromSize = 0
       this.isDead = false
       this.clr = p5.random(colors)
@@ -199,7 +190,9 @@ function sketch(p5: P5CanvasInstance) {
   }
 
   p5.setup = () => {
-    p5.createCanvas((window.innerWidth * 2) / 3, (window.innerHeight * 2) / 3)
+    const canvasWidth = (window.innerWidth * 2) / 3
+    const canvasHeight = (window.innerHeight * 2) / 3
+    p5.createCanvas(canvasWidth, canvasHeight)
     p5.rectMode(p5.CENTER)
     p5.textAlign(p5.CENTER, p5.CENTER)
     objs.push(new DynamicShapeClass())
@@ -229,9 +222,30 @@ function sketch(p5: P5CanvasInstance) {
 }
 
 export default function DynamicShapesCanvas() {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    let instance: P5Instance | null = null
+    let cancelled = false
+
+    const load = async () => {
+      const { default: P5 } = await import("p5")
+      P5.disableFriendlyErrors = true
+      if (cancelled || !containerRef.current) return
+      instance = new P5(sketch, containerRef.current)
+    }
+
+    load()
+
+    return () => {
+      cancelled = true
+      instance?.remove()
+    }
+  }, [])
+
   return (
     <div className="flex items-center justify-center w-full h-full relative">
-      <ReactP5Wrapper sketch={sketch} />
+      <div ref={containerRef} className="w-full h-full" />
       <div className="text-xl text-gray-500 origin-bottom-left absolute left-5 top-5 sm:left-14 sm:top-14 font-light bg-[rgba(255,255,255,0.5)] pr-1 pb-1 rounded-lg">
         Site Under Construction
       </div>
