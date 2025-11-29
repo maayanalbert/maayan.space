@@ -18,6 +18,11 @@ export default function Home() {
 
   return (
     <>
+      <div
+        aria-hidden="true"
+        className="fixed -top-2 -right-2 h-8 w-8 rounded-full bg-[rgb(255,70,100)] z-40 origin-center transition-transform duration-200 ease-out hover:scale-125 motion-reduce:transition-none motion-reduce:transform-none"
+        style={{ willChange: "transform" }}
+      />
       <div className="h-[85%] w-full flex flex-col justify-center sm:mt-0 -mt-8 sm:px-28">
         <p
           className="font-bold sm:px-0 px-4 sm:-mt-24 -mt-60 lg:text-8xl sm:text-7xl text-4xl leading-snug"
