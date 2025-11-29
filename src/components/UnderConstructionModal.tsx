@@ -33,12 +33,8 @@ interface DynamicShape {
 type P5Instance = import("p5").default
 
 function sketch(p5: P5Instance) {
-  const colors = [
-    "rgb(0,151,254)",
-    "#EBC737",
-    "rgb(255,70,100)",
-    "rgb(50, 50, 50)",
-  ]
+  const colors = ["rgb(0,151,254)", "#EBC737", "rgb(255,70,100)"]
+  const layerOrder = ["#EBC737", "rgb(0,151,254)", "rgb(255,70,100)"]
   const objs: DynamicShape[] = []
 
   function easeInOutExpo(x: number): number {
@@ -202,8 +198,17 @@ function sketch(p5: P5Instance) {
     p5.background(255)
     // p5.scale(2)
 
+    // Draw colors in layers so yellow sits under blue which sits under pink.
+    for (const clr of layerOrder) {
+      for (const obj of objs) {
+        if (obj.clr === clr) {
+          obj.show()
+        }
+      }
+    }
+
     for (const obj of objs) {
-      obj.run()
+      obj.move()
     }
 
     if (p5.frameCount % p5.int(p5.random([15, 30])) == 0) {
