@@ -59,7 +59,7 @@ export function AboutInfo() {
       prototyped some
       <TextLink
         text="AI experiments"
-        href="https://projects.maayan.space/"
+        href="https://giving-tests-459153.framer.app/"
         page="ABOUT"
       />
       in several spaces. My newest hobby is hosting
