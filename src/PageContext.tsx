@@ -12,22 +12,15 @@ export const Pages = ["ABOUT", "CONTACT", "GEOGRAPHY"]
 
 interface PageContextType {
   curPage?: Page
-  curIndex: number // -1 - 2
   setCurPage: (page?: Page) => void
-  curHoverIndex?: number // -1 - 2 or undefined
-  setCurHoverIndex: (index?: number) => void
+  shapesActive: boolean
+  setShapesActive: (active: boolean) => void
 }
 
 /**
  * Create the context
  */
-const PageContext = createContext<PageContextType>({
-  curPage: undefined,
-  curIndex: 0,
-  setCurPage: () => undefined,
-  curHoverIndex: undefined,
-  setCurHoverIndex: () => undefined,
-})
+const PageContext = createContext<PageContextType | undefined>(undefined)
 
 interface Props {
   children: ReactNode
@@ -36,27 +29,17 @@ interface Props {
 /**
  * Create the provider that everything that uses the context should be wrapped in
  */
-export function PageContextProvider({ children }: Props) {
+export const PageContextProvider = ({ children }: Props): JSX.Element => {
   const [curPage, setCurPage] = useState<Page>()
-  const [curIndex, setCurIndex] = useState(0)
-  const [curHoverIndex, setCurHoverIndex] = useState<number>()
+  const [shapesActive, setShapesActive] = useState(false)
 
   return (
     <PageContext.Provider
       value={{
-        curIndex: curIndex,
         curPage,
-        curHoverIndex,
-        setCurHoverIndex,
-        setCurPage: (page) => {
-          if (page) {
-            setCurPage(page)
-            setCurIndex(Pages.indexOf(page))
-          } else {
-            setCurPage(undefined)
-            setCurIndex(-1)
-          }
-        },
+        setCurPage,
+        shapesActive,
+        setShapesActive,
       }}
     >
       {children}
@@ -69,5 +52,8 @@ export function PageContextProvider({ children }: Props) {
  */
 export function usePageContext(): PageContextType {
   const context = useContext(PageContext)
+  if (!context) {
+    throw new Error("usePageContext must be used within a PageContextProvider")
+  }
   return context
 }

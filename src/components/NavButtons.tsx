@@ -1,4 +1,4 @@
-import { usePageContext } from "@/InfoContext"
+import { usePageContext } from "@/PageContext"
 import { Page as Page, getPageColor, getPageName } from "@/pageHelpers"
 import { useRouter } from "next/router"
 import { useEffect } from "react"

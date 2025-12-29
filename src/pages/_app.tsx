@@ -1,4 +1,4 @@
-import { PageContextProvider } from "@/InfoContext"
+import { PageContextProvider } from "@/PageContext"
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import { useMemo } from "react"

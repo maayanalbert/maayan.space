@@ -1,9 +1,10 @@
-import { usePageContext } from "@/InfoContext"
+import { usePageContext } from "@/PageContext"
 import { AboutInfo } from "@/components/AboutInfo"
 import ContactInfo from "@/components/ContactInfo"
 import { PhilosophyInfo } from "@/components/PhilosophyInfo"
 import NavButtons from "@/components/NavButtons"
 import DynamicShapesCanvas from "@/components/DynamicShapes"
+import { InitialShapeTrigger } from "@/components/InitialShapeTrigger"
 import { useEffect, useState } from "react"
 import { DefaultInfo } from "@/components/DefaultInfo"
 
@@ -15,7 +16,8 @@ export default function Home() {
     document.title = "Maayan"
   }, [])
 
-  const { curPage } = usePageContext()
+  const { curPage, shapesActive, setShapesActive } = usePageContext()
+  const [startShapes, setStartShapes] = useState<(() => void) | null>(null)
 
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== "undefined" ? window.innerWidth : 1000,
@@ -44,9 +46,16 @@ export default function Home() {
           width={windowSize.width}
           height={windowSize.height}
           autoStart={false}
+          onStart={() => setShapesActive(true)}
+          onReset={() => setShapesActive(false)}
+          onReady={({ start }) => setStartShapes(() => start)}
           className="pointer-events-none w-full h-full"
         />
       </div>
+      <InitialShapeTrigger
+        hidden={shapesActive || !startShapes}
+        onStart={() => startShapes?.()}
+      />
       <div className="h-[85%] w-full flex flex-col justify-center sm:mt-0 -mt-8 sm:px-28">
         <p
           className="font-bold sm:px-0 px-4 sm:-mt-24 -mt-60 lg:text-8xl sm:text-7xl text-4xl leading-snug"

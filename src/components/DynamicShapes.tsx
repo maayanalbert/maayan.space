@@ -25,7 +25,6 @@ interface DynamicShape {
   ang: number
   lineSW: number
   duration: number
-  isInitialShape: boolean
   init: () => void
   show: () => void
   move: () => void
@@ -34,19 +33,16 @@ interface DynamicShape {
 
 type P5Instance = import("p5").default
 
-type InitialShapeConfig = {
+type SpawnOrigin = {
   x?: number
   y?: number
-  size?: number
-  color?: string
-  shapeType?: number
 }
 
 interface DynamicShapesOptions {
   width?: number
   height?: number
-  initialShape?: InitialShapeConfig
   autoStart?: boolean
+  spawnOrigin?: SpawnOrigin
 }
 
 interface DynamicShapesCanvasProps extends DynamicShapesOptions {
@@ -68,51 +64,28 @@ const easeInOutExpo = (x: number): number => {
   return (2 - Math.pow(2, -20 * x + 10)) / 2
 }
 
-const createPointerIconDrawer = (
-  p5: P5Instance,
-  centerX: number,
-  centerY: number,
-  size: number,
-  color: string
-) => {
-  const pointerPath =
-    typeof Path2D !== "undefined"
-      ? new Path2D(
-          "M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"
-        )
-      : null
-
-  if (!pointerPath || !size) return
-  const ctx = p5.drawingContext as CanvasRenderingContext2D
-  const scale = size / 24
-  ctx.save()
-  // Scale around the center, then shift the viewBox to center the path
-  ctx.translate(centerX, centerY)
-  ctx.scale(scale, scale)
-  ctx.translate(-12, -12)
-  ctx.fillStyle = color
-  ctx.fill(pointerPath)
-  ctx.restore()
-}
-
 function createSketch(
   options: DynamicShapesOptions = {},
   callbacks?: { onStart?: () => void; onReset?: () => void }
 ) {
   return function sketch(p5: P5Instance) {
     const objs: DynamicShape[] = []
-    const { width, height, initialShape, autoStart = true } = options
-    let hasStarted = autoStart
-    let isHoveringInitialShape = false
-    let initialShapeScale = 1.0
-    const hoverScaleTarget = 1.25
+    const { width, height, autoStart = true, spawnOrigin } = options
+    let hasStarted = false
     let isResetting = false
 
-    // Spawn center is the initial shape position
-    let spawnCenterX = 0
-    let spawnCenterY = 0
+    // Spawn center defaults to top-right of the canvas
+    const fallbackWidth =
+      typeof window !== "undefined" ? width ?? window.innerWidth : width ?? 1000
+    let spawnCenterX = spawnOrigin?.x ?? (fallbackWidth ?? 1000) - 24
+    let spawnCenterY = spawnOrigin?.y ?? 24
     let animationStartTime = 0
     const growthDuration = 5000 // milliseconds (5 seconds)
+
+    const updateSpawnCenter = () => {
+      spawnCenterX = spawnOrigin?.x ?? p5.width - 24
+      spawnCenterY = spawnOrigin?.y ?? 24
+    }
 
     const getSpawnRadius = () => {
       if (!window.innerWidth) return 0
@@ -132,32 +105,23 @@ function createSketch(
       const progress = Math.min(elapsed / growthDuration, 1)
       // Spawn more shapes as the area grows
       // Start at 1-5 shapes, grow to 5-40 shapes per spawn
-      const minShapes = p5.lerp(2, 10, progress)
+      const minShapes = p5.lerp(1, 5, progress)
       const maxShapes = p5.lerp(50, 60, progress)
       return { minShapes, maxShapes }
     }
 
     const triggerStart = () => {
-      if (hasStarted) return
+      if (hasStarted || isResetting) return
       hasStarted = true
       animationStartTime = Date.now()
-
-      // Make initial shape shrink
-      const initialObj = getInitialShape()
-      if (initialObj) {
-        initialObj.isInitialShape = false
-        initialObj.actionPoints = 0 // Trigger shrink animation
-        initialObj.elapsedT = 1
-        initialObj.fromSize = initialObj.size
-        initialObj.toSize = 0
-        initialObj.duration = 20 // Fast shrink
-        initialObj.lineSW = 0
-      }
-
-      // Reset hover state and cursor
-      isHoveringInitialShape = false
-      initialShapeScale = 1.0
       document.body.style.cursor = "default"
+
+      // Seed shapes immediately on start
+      const { minShapes, maxShapes } = getSpawnRate()
+      const initialCount = Math.max(10, Math.round((minShapes + maxShapes) / 2))
+      for (let i = 0; i < initialCount; i++) {
+        objs.push(new DynamicShapeClass())
+      }
 
       // Change text in DOM
       const textElement = document.querySelector(
@@ -177,10 +141,8 @@ function createSketch(
       if (isResetting) return
       isResetting = true
 
-      // Force all shapes to shrink down (including initial shape)
+      // Force all shapes to shrink down
       for (const obj of objs) {
-        // Remove initial shape flag so it can shrink
-        obj.isInitialShape = false
         obj.actionPoints = 0 // Set to 0 so they shrink (not -1 which makes them die immediately)
         obj.elapsedT = 1 // Start at 1 so animation runs immediately
         obj.fromSize = obj.size
@@ -196,13 +158,11 @@ function createSketch(
     const completeReset = () => {
       hasStarted = false
       animationStartTime = 0
-      // Clear all objects except keep the initial shape config
-      const initialConfig = initialShape
       objs.length = 0
-      objs.push(new DynamicShapeClass(initialConfig))
       isResetting = false
       // Reset cursor
       document.body.style.cursor = "default"
+      p5.noLoop()
 
       // Reset text in DOM
       const textElement = document.querySelector(
@@ -214,19 +174,6 @@ function createSketch(
 
       // Notify parent component
       callbacks?.onReset?.()
-      // Keep loop running so initial shape can grow in
-      // The draw loop will stop it once the grow-in is complete
-    }
-
-    const getInitialShape = () => objs[0]
-
-    const isPointInsideInitialShape = (mx: number, my: number) => {
-      const obj = getInitialShape()
-      if (!obj) return false
-      const effectiveSize = obj.size || obj.sizeMax || obj.toSize || 0
-      if (!effectiveSize) return false
-      const radius = effectiveSize * 0.5
-      return p5.dist(mx, my, obj.x, obj.y) <= radius
     }
 
     const isPointInsideShape = (mx: number, my: number, obj: DynamicShape) => {
@@ -262,42 +209,24 @@ function createSketch(
       ang: number
       lineSW: number
       duration: number
-      isInitialShape: boolean
 
-      constructor(config?: InitialShapeConfig) {
-        // If config provided, use it (for initial shape)
-        // Otherwise spawn near the spawn center with some variance
-        this.isInitialShape = !!config
-
-        if (config) {
-          this.x = config.x ?? 0
-          this.y = config.y ?? 0
-          // Update spawn center when initial shape is created
-          spawnCenterX = this.x
-          spawnCenterY = this.y
-        } else {
-          // Spawn within a radius around the spawn center (spilling effect)
-          const spawnRadius = getSpawnRadius()
-          const angle = p5.random(Math.PI * 2)
-          const distance = p5.random(0, spawnRadius)
-          this.x = spawnCenterX + Math.cos(angle) * distance
-          this.y = spawnCenterY + Math.sin(angle) * distance
-        }
+      constructor() {
+        // Spawn within a radius around the spawn center (spilling effect)
+        const spawnRadius = getSpawnRadius()
+        const angle = p5.random(Math.PI * 2)
+        const distance = p5.random(0, spawnRadius)
+        this.x = spawnCenterX + Math.cos(angle) * distance
+        this.y = spawnCenterY + Math.sin(angle) * distance
 
         this.reductionRatio = 1
-        this.shapeType =
-          typeof config?.shapeType === "number"
-            ? config.shapeType
-            : config
-            ? 0
-            : p5.int(p5.random(4))
+        this.shapeType = p5.int(p5.random(4))
         this.animationType = 0
         this.maxActionPoints = p5.int(p5.random(2, 5))
         this.actionPoints = this.maxActionPoints
         this.elapsedT = 0
         // Always start at size 0
         this.size = 0
-        this.sizeMax = config?.size ?? p5.random(10, 20)
+        this.sizeMax = p5.random(10, 20)
         this.fromSize = 0
         this.toSize = this.sizeMax
         this.fromX = 0
@@ -305,12 +234,11 @@ function createSketch(
         this.toX = 0
         this.toY = 0
         this.isDead = false
-        this.clr = config?.color ?? p5.random(SHAPE_COLORS)
+        this.clr = p5.random(SHAPE_COLORS)
         this.changeShape = true
         this.ang = p5.int(p5.random(2)) * Math.PI * 0.25
         this.lineSW = 0
-        // Use shorter duration for initial shape grow-in
-        this.duration = config ? 30 : 0
+        this.duration = 0
         this.init()
       }
 
@@ -358,13 +286,6 @@ function createSketch(
           p5.line(0, -this.size * 0.45, 0, this.size * 0.45)
           p5.line(-this.size * 0.45, 0, this.size * 0.45, 0)
         }
-        // Overlay a filled cursor icon on the initial shape for affordance
-        if (this.isInitialShape) {
-          const iconSize = Math.min(this.size, this.sizeMax) * 0.6
-          if (iconSize > 2) {
-            createPointerIconDrawer(p5, 0, 0, iconSize, "#ffd3dc")
-          }
-        }
         p5.pop()
         p5.strokeWeight(this.lineSW)
         p5.stroke(this.clr)
@@ -372,20 +293,6 @@ function createSketch(
       }
 
       move(): void {
-        // Initial shape lifecycle: grow in once, then stay stationary
-        if (this.isInitialShape && !isResetting && !hasStarted) {
-          if (this.elapsedT < this.duration) {
-            // Still growing in
-            const n = easeInOutExpo(p5.norm(this.elapsedT, 0, this.duration))
-            this.size = p5.lerp(0, this.sizeMax, n)
-            this.elapsedT++
-          } else {
-            // Done growing, stay at full size
-            this.size = this.sizeMax
-          }
-          return
-        }
-
         // Spawned shapes lifecycle or animations: animate normally
         const n = easeInOutExpo(p5.norm(this.elapsedT, 0, this.duration))
         if (0 < this.elapsedT && this.elapsedT < this.duration) {
@@ -445,57 +352,23 @@ function createSketch(
       p5.clear()
       p5.rectMode(p5.CENTER)
       p5.textAlign(p5.CENTER, p5.CENTER)
-      objs.push(new DynamicShapeClass(initialShape))
-      // Start loop to allow initial shape to grow in
-      // The draw loop will stop it once the grow-in is complete
+      updateSpawnCenter()
+      if (autoStart) {
+        triggerStart()
+      } else {
+        p5.noLoop()
+      }
     }
 
     p5.windowResized = () => {
       const canvasWidth = width ?? (window.innerWidth * 2) / 3
       const canvasHeight = height ?? (window.innerHeight * 2) / 3
       p5.resizeCanvas(canvasWidth, canvasHeight)
-
-      // Update initial shape position if it exists
-      const initialObj = getInitialShape()
-      if (initialObj && initialShape) {
-        // Recalculate position based on new canvas size
-        const newX = initialShape.x ?? p5.width - 20
-        const newY = initialShape.y ?? 20
-
-        // Update the initial shape's position
-        initialObj.x = newX
-        initialObj.y = newY
-        initialObj.fromX = newX
-        initialObj.toX = newX
-        initialObj.fromY = newY
-        initialObj.toY = newY
-
-        // Update spawn center to match new position
-        spawnCenterX = newX
-        spawnCenterY = newY
-      }
+      updateSpawnCenter()
 
       // Redraw to reflect changes
       if (!hasStarted) {
         p5.redraw()
-      }
-    }
-
-    p5.mouseMoved = () => {
-      if (!hasStarted && !isResetting) {
-        // Update hover state for the stationary initial shape
-        const wasHovering = isHoveringInitialShape
-        isHoveringInitialShape = isPointInsideInitialShape(p5.mouseX, p5.mouseY)
-
-        // Update cursor via document.body
-        document.body.style.cursor = isHoveringInitialShape
-          ? "pointer"
-          : "default"
-
-        // Start drawing to animate scale transition
-        if (wasHovering !== isHoveringInitialShape) {
-          p5.loop()
-        }
       }
     }
 
@@ -504,10 +377,7 @@ function createSketch(
       if (isResetting) return
 
       if (!hasStarted) {
-        // Start animation if clicking the initial shape
-        if (isPointInsideInitialShape(p5.mouseX, p5.mouseY)) {
-          triggerStart()
-        }
+        triggerStart()
       } else {
         // Reset animation if clicking any filled shape
         for (let i = objs.length - 1; i >= 0; i--) {
@@ -522,54 +392,16 @@ function createSketch(
     p5.draw = () => {
       p5.clear()
 
-      // Check if initial shape is still growing in
-      const initialObj = getInitialShape()
-      const isGrowingIn =
-        initialObj &&
-        initialObj.elapsedT <= initialObj.duration &&
-        initialObj.isInitialShape
-
-      // Animate scale for initial shape (only after it's fully grown in)
-      if (!hasStarted && !isResetting) {
-        const targetScale =
-          !isGrowingIn && isHoveringInitialShape ? hoverScaleTarget : 1.0
-        initialShapeScale = p5.lerp(initialShapeScale, targetScale, 0.15)
-
-        // Stop looping once animation is complete AND initial shape has finished growing
-        if (!isGrowingIn && Math.abs(initialShapeScale - targetScale) < 0.001) {
-          initialShapeScale = targetScale
-          p5.noLoop()
-        }
-      } else {
-        isHoveringInitialShape = false
-        initialShapeScale = 1.0
-      }
-
       for (const clr of LAYER_ORDER) {
         for (let i = 0; i < objs.length; i++) {
           const obj = objs[i]
           if (obj.clr === clr) {
-            // Apply scale effect for initial shape (only when not resetting and fully grown)
-            if (
-              !hasStarted &&
-              !isResetting &&
-              obj.isInitialShape &&
-              !isGrowingIn
-            ) {
-              p5.push()
-              p5.translate(obj.x, obj.y)
-              p5.scale(initialShapeScale)
-              p5.translate(-obj.x, -obj.y)
-              obj.show()
-              p5.pop()
-            } else {
-              obj.show()
-            }
+            obj.show()
           }
         }
       }
 
-      // Always move shapes (for initial shape grow-in, main animation, and reset)
+      // Always move shapes (for main animation and reset)
       for (const obj of objs) {
         obj.move()
       }
@@ -611,6 +443,12 @@ function createSketch(
 
         // Update cursor via document.body
         document.body.style.cursor = isOverShape ? "pointer" : "default"
+      } else if (!hasStarted && !isResetting) {
+        document.body.style.cursor = "default"
+        // Stop looping when idle with no shapes
+        if (objs.length === 0) {
+          p5.noLoop()
+        }
       }
     }
   }
@@ -619,7 +457,7 @@ function createSketch(
 export default function DynamicShapesCanvas({
   width,
   height,
-  initialShape,
+  spawnOrigin,
   autoStart = true,
   className,
   onReady,
@@ -633,26 +471,23 @@ export default function DynamicShapesCanvas({
   onStartRef.current = onStart
   const onResetRef = useRef(onReset)
   onResetRef.current = onReset
-  const resolvedInitialShape = useMemo<InitialShapeConfig>(() => {
+  const resolvedSpawnOrigin = useMemo<SpawnOrigin>(() => {
     const fallbackWidth =
       typeof window !== "undefined" ? width ?? window.innerWidth : width ?? 1000
     return {
       x: (fallbackWidth ?? 1000) - 24,
       y: 24,
-      size: 28,
-      color: "rgb(255,70,100)",
-      shapeType: 2,
-      ...(initialShape ?? {}),
+      ...(spawnOrigin ?? {}),
     }
-  }, [initialShape, width])
+  }, [spawnOrigin, width])
   const sketchOptions = useMemo<DynamicShapesOptions>(
     () => ({
       width,
       height,
-      initialShape: resolvedInitialShape,
       autoStart,
+      spawnOrigin: resolvedSpawnOrigin,
     }),
-    [width, height, resolvedInitialShape, autoStart]
+    [width, height, resolvedSpawnOrigin, autoStart]
   )
 
   useEffect(() => {
