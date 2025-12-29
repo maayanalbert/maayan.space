@@ -68,6 +68,33 @@ const easeInOutExpo = (x: number): number => {
   return (2 - Math.pow(2, -20 * x + 10)) / 2
 }
 
+const createPointerIconDrawer = (
+  p5: P5Instance,
+  centerX: number,
+  centerY: number,
+  size: number,
+  color: string
+) => {
+  const pointerPath =
+    typeof Path2D !== "undefined"
+      ? new Path2D(
+          "M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"
+        )
+      : null
+
+  if (!pointerPath || !size) return
+  const ctx = p5.drawingContext as CanvasRenderingContext2D
+  const scale = size / 24
+  ctx.save()
+  // Scale around the center, then shift the viewBox to center the path
+  ctx.translate(centerX, centerY)
+  ctx.scale(scale, scale)
+  ctx.translate(-12, -12)
+  ctx.fillStyle = color
+  ctx.fill(pointerPath)
+  ctx.restore()
+}
+
 function createSketch(
   options: DynamicShapesOptions = {},
   callbacks?: { onStart?: () => void; onReset?: () => void }
@@ -105,8 +132,8 @@ function createSketch(
       const progress = Math.min(elapsed / growthDuration, 1)
       // Spawn more shapes as the area grows
       // Start at 1-5 shapes, grow to 5-40 shapes per spawn
-      const minShapes = p5.lerp(1, 5, progress)
-      const maxShapes = p5.lerp(20, 60, progress)
+      const minShapes = p5.lerp(2, 10, progress)
+      const maxShapes = p5.lerp(50, 60, progress)
       return { minShapes, maxShapes }
     }
 
@@ -331,6 +358,13 @@ function createSketch(
           p5.line(0, -this.size * 0.45, 0, this.size * 0.45)
           p5.line(-this.size * 0.45, 0, this.size * 0.45, 0)
         }
+        // Overlay a filled cursor icon on the initial shape for affordance
+        if (this.isInitialShape) {
+          const iconSize = Math.min(this.size, this.sizeMax) * 0.6
+          if (iconSize > 2) {
+            createPointerIconDrawer(p5, 0, 0, iconSize, "#ffd3dc")
+          }
+        }
         p5.pop()
         p5.strokeWeight(this.lineSW)
         p5.stroke(this.clr)
@@ -544,7 +578,7 @@ function createSketch(
       if (
         hasStarted &&
         !isResetting &&
-        p5.frameCount % p5.int(p5.random([15, 30])) == 0
+        p5.frameCount % p5.int(p5.random([25, 50])) == 0
       ) {
         const { minShapes, maxShapes } = getSpawnRate()
         const addNum = p5.int(p5.random(minShapes, maxShapes))
@@ -599,19 +633,26 @@ export default function DynamicShapesCanvas({
   onStartRef.current = onStart
   const onResetRef = useRef(onReset)
   onResetRef.current = onReset
-  const initialShapeKey = initialShape ? JSON.stringify(initialShape) : "none"
-  const normalizedInitialShape = useMemo<InitialShapeConfig | undefined>(
-    () => (initialShape ? { ...initialShape } : undefined),
-    [initialShapeKey]
-  )
+  const resolvedInitialShape = useMemo<InitialShapeConfig>(() => {
+    const fallbackWidth =
+      typeof window !== "undefined" ? width ?? window.innerWidth : width ?? 1000
+    return {
+      x: (fallbackWidth ?? 1000) - 24,
+      y: 24,
+      size: 28,
+      color: "rgb(255,70,100)",
+      shapeType: 2,
+      ...(initialShape ?? {}),
+    }
+  }, [initialShape, width])
   const sketchOptions = useMemo<DynamicShapesOptions>(
     () => ({
       width,
       height,
-      initialShape: normalizedInitialShape,
+      initialShape: resolvedInitialShape,
       autoStart,
     }),
-    [width, height, normalizedInitialShape, autoStart]
+    [width, height, resolvedInitialShape, autoStart]
   )
 
   useEffect(() => {

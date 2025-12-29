@@ -4,7 +4,7 @@ import ContactInfo from "@/components/ContactInfo"
 import { PhilosophyInfo } from "@/components/PhilosophyInfo"
 import NavButtons from "@/components/NavButtons"
 import DynamicShapesCanvas from "@/components/DynamicShapes"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { DefaultInfo } from "@/components/DefaultInfo"
 
 /**
@@ -34,17 +34,6 @@ export default function Home() {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  const initialCornerShape = useMemo(
-    () => ({
-      x: windowSize.width - 10,
-      y: 10,
-      size: 32,
-      color: "rgb(255,70,100)",
-      shapeType: 0,
-    }),
-    [windowSize.width]
-  )
-
   return (
     <>
       <div
@@ -54,7 +43,6 @@ export default function Home() {
         <DynamicShapesCanvas
           width={windowSize.width}
           height={windowSize.height}
-          initialShape={initialCornerShape}
           autoStart={false}
           className="pointer-events-none w-full h-full"
         />
