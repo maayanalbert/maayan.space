@@ -1,5 +1,6 @@
 "use client"
 
+import { Gamepad2 } from "lucide-react"
 interface InitialShapeTriggerProps {
   onStart?: () => void
   hidden?: boolean
@@ -10,9 +11,9 @@ export function InitialShapeTrigger({
   hidden = false,
 }: InitialShapeTriggerProps) {
   const baseStyles =
-    "fixed top-6 right-6 w-10 h-10 rounded-sm flex items-center justify-center bg-[rgb(255,70,100)]"
+    "fixed top-3 right-3 w-8 h-8 rounded-sm flex items-center justify-center bg-[rgb(255,70,100)]"
   const interactionStyles =
-    "transition-transform duration-200 ease-out pointer-events-auto active:scale-105 will-change-transform will-change-opacity"
+    "transition-transform group duration-200 ease-in-out pointer-events-auto will-change-transform will-change-opacity"
   const visibilityStyles = hidden
     ? "pointer-events-none scale-0"
     : "scale-100 hover:scale-110"
@@ -24,16 +25,13 @@ export function InitialShapeTrigger({
       onClick={() => onStart?.()}
       type="button"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="#ffd3dc"
-        aria-hidden="true"
-      >
-        <path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" />
-      </svg>
+      <Gamepad2
+        className="group-hover:opacity-100 opacity-0 transition-opacity duration-200 delay-0 ease-in-out"
+        fill="transparent"
+        color="#ffd3dc"
+        height={20}
+        width={20}
+      />
     </button>
   )
 }

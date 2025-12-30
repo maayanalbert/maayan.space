@@ -41,7 +41,6 @@ type SpawnOrigin = {
 interface DynamicShapesOptions {
   width?: number
   height?: number
-  autoStart?: boolean
   spawnOrigin?: SpawnOrigin
 }
 
@@ -52,8 +51,8 @@ interface DynamicShapesCanvasProps extends DynamicShapesOptions {
   onReset?: () => void
 }
 
-const SHAPE_COLORS = ["rgb(0,151,254)", "#EBC737", "rgb(255,70,100)"]
-const LAYER_ORDER = ["#EBC737", "rgb(0,151,254)", "rgb(255,70,100)"]
+export const SHAPE_COLORS = ["rgb(0,151,254)", "#EBC737", "rgb(255,70,100)"]
+export const LAYER_ORDER = ["#EBC737", "rgb(0,151,254)", "rgb(255,70,100)"]
 
 const easeInOutExpo = (x: number): number => {
   if (x === 0) return 0
@@ -70,7 +69,7 @@ function createSketch(
 ) {
   return function sketch(p5: P5Instance) {
     const objs: DynamicShape[] = []
-    const { width, height, autoStart = true, spawnOrigin } = options
+    const { width, height, spawnOrigin } = options
     let hasStarted = false
     let isResetting = false
 
@@ -123,14 +122,6 @@ function createSketch(
         objs.push(new DynamicShapeClass())
       }
 
-      // Change text in DOM
-      const textElement = document.querySelector(
-        'p[style*="Helvetica Neue"]'
-      ) as HTMLElement
-      if (textElement) {
-        textElement.textContent = "Catch a shape!"
-      }
-
       // Notify parent component
       callbacks?.onStart?.()
 
@@ -163,14 +154,6 @@ function createSketch(
       // Reset cursor
       document.body.style.cursor = "default"
       p5.noLoop()
-
-      // Reset text in DOM
-      const textElement = document.querySelector(
-        'p[style*="Helvetica Neue"]'
-      ) as HTMLElement
-      if (textElement) {
-        textElement.textContent = "Hi, I'm Maayan"
-      }
 
       // Notify parent component
       callbacks?.onReset?.()
@@ -353,11 +336,7 @@ function createSketch(
       p5.rectMode(p5.CENTER)
       p5.textAlign(p5.CENTER, p5.CENTER)
       updateSpawnCenter()
-      if (autoStart) {
-        triggerStart()
-      } else {
-        p5.noLoop()
-      }
+      p5.noLoop()
     }
 
     p5.windowResized = () => {
@@ -376,9 +355,7 @@ function createSketch(
       // Don't allow interaction while resetting
       if (isResetting) return
 
-      if (!hasStarted) {
-        triggerStart()
-      } else {
+      if (hasStarted) {
         // Reset animation if clicking any filled shape
         for (let i = objs.length - 1; i >= 0; i--) {
           if (isPointInsideShape(p5.mouseX, p5.mouseY, objs[i])) {
@@ -458,7 +435,6 @@ export default function DynamicShapesCanvas({
   width,
   height,
   spawnOrigin,
-  autoStart = true,
   className,
   onReady,
   onStart,
@@ -484,10 +460,9 @@ export default function DynamicShapesCanvas({
     () => ({
       width,
       height,
-      autoStart,
       spawnOrigin: resolvedSpawnOrigin,
     }),
-    [width, height, resolvedSpawnOrigin, autoStart]
+    [width, height, resolvedSpawnOrigin]
   )
 
   useEffect(() => {

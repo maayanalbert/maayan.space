@@ -27,3 +27,42 @@ div#__next {
 div {
   -webkit-tap-highlight-color: transparent;
 }
+
+.headline-transition {
+  display: inline-grid;
+  position: relative;
+  align-items: start;
+}
+
+.headline-pane {
+  grid-area: 1 / 1;
+  transition: opacity 260ms cubic-bezier(.215, .61, .355, 1),
+    transform 260ms cubic-bezier(.215, .61, .355, 1);
+  will-change: transform, opacity;
+}
+
+.headline-pane.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 200ms;
+}
+
+.headline-pane.is-hidden {
+  opacity: 0;
+  transition-delay: 0ms;
+}
+
+.headline-pane.from-bottom.is-hidden {
+  transform: translateY(14px);
+}
+
+.headline-pane.from-top.is-hidden {
+  transform: translateY(-14px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headline-pane {
+    transition: opacity 150ms ease;
+    transform: none !important;
+  }
+}

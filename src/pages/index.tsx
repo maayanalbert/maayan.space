@@ -7,6 +7,7 @@ import DynamicShapesCanvas from "@/components/DynamicShapes"
 import { InitialShapeTrigger } from "@/components/InitialShapeTrigger"
 import { useEffect, useState } from "react"
 import { DefaultInfo } from "@/components/DefaultInfo"
+import { ShapeCombinations } from "@/components/ShapeCombinations"
 
 /**
  * A wrapper for the main page
@@ -45,7 +46,6 @@ export default function Home() {
         <DynamicShapesCanvas
           width={windowSize.width}
           height={windowSize.height}
-          autoStart={false}
           onStart={() => setShapesActive(true)}
           onReset={() => setShapesActive(false)}
           onReady={({ start }) => setStartShapes(() => start)}
@@ -61,7 +61,22 @@ export default function Home() {
           className="font-bold sm:px-0 px-4 sm:-mt-24 -mt-60 lg:text-8xl sm:text-7xl text-4xl leading-snug"
           style={{ fontFamily: "Helvetica Neue" }}
         >
-          Hi, I'm Maayan
+          <span className="headline-transition" aria-live="polite">
+            <span
+              className={`headline-pane from-bottom ${
+                shapesActive ? "is-visible" : "is-hidden"
+              }`}
+            >
+              Catch a shape!
+            </span>
+            <span
+              className={`headline-pane from-top ${
+                shapesActive ? "is-hidden" : "is-visible"
+              }`}
+            >
+              Hi, I'm Maayan
+            </span>
+          </span>
         </p>
         <div className="relative w-full md:ml-[5px]  ml-[4px] flex sm:justify-start justify-center">
           <div className="absolute text-gray-900 w-full sm:text-[20px] text-[16px] sm:px-0 px-4 sm:pt-9 pt-4 leading-[1.4] sm:max-w-[900px]">
@@ -78,6 +93,7 @@ export default function Home() {
         </div>
       </div>
       <NavButtons />
+      <ShapeCombinations />
     </>
   )
 }
