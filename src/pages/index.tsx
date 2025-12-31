@@ -5,9 +5,20 @@ import { PhilosophyInfo } from "@/components/PhilosophyInfo"
 import NavButtons from "@/components/NavButtons"
 import DynamicShapesCanvas from "@/components/DynamicShapes"
 import { InitialShapeTrigger } from "@/components/InitialShapeTrigger"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { DefaultInfo } from "@/components/DefaultInfo"
 import { ShapeCombinations } from "@/components/ShapeCombinations"
+
+const POSITIVE_HEADLINES = [
+  "Killed it 😎",
+  "Maayan's impressed 👀",
+  "Great job bestie 🫶",
+  "👏👏👏",
+  "Slay! 💅",
+]
+
+const pickPositiveHeadline = () =>
+  POSITIVE_HEADLINES[Math.floor(Math.random() * POSITIVE_HEADLINES.length)]
 
 /**
  * A wrapper for the main page
@@ -19,6 +30,14 @@ export default function Home() {
 
   const { curPage, shapesActive, setShapesActive } = usePageContext()
   const [startShapes, setStartShapes] = useState<(() => void) | null>(null)
+  const [headlinePhase, setHeadlinePhase] = useState<
+    "intro" | "catch" | "positive"
+  >(shapesActive ? "catch" : "intro")
+  const [positiveHeadline, setPositiveHeadline] = useState<string>(
+    POSITIVE_HEADLINES[0]
+  )
+  const prevShapesActiveRef = useRef(shapesActive)
+  const positiveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== "undefined" ? window.innerWidth : 1000,
@@ -36,6 +55,35 @@ export default function Home() {
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
   }, [])
+
+  useEffect(() => {
+    const prevShapesActive = prevShapesActiveRef.current
+    if (positiveTimeoutRef.current) {
+      clearTimeout(positiveTimeoutRef.current)
+      positiveTimeoutRef.current = null
+    }
+
+    if (shapesActive) {
+      setHeadlinePhase("catch")
+    } else if (prevShapesActive) {
+      setPositiveHeadline(pickPositiveHeadline())
+      setHeadlinePhase("positive")
+      positiveTimeoutRef.current = setTimeout(() => {
+        setHeadlinePhase("intro")
+        positiveTimeoutRef.current = null
+      }, 1600)
+    } else {
+      setHeadlinePhase("intro")
+    }
+
+    prevShapesActiveRef.current = shapesActive
+
+    return () => {
+      if (positiveTimeoutRef.current) {
+        clearTimeout(positiveTimeoutRef.current)
+      }
+    }
+  }, [shapesActive])
 
   return (
     <>
@@ -70,8 +118,15 @@ export default function Home() {
               Catch a shape!
             </span>
             <span
+              className={`headline-pane from-bottom ${
+                headlinePhase === "positive" ? "is-visible" : "is-hidden"
+              }`}
+            >
+              {positiveHeadline}
+            </span>
+            <span
               className={`headline-pane from-top ${
-                shapesActive ? "is-hidden" : "is-visible"
+                headlinePhase === "intro" ? "is-visible" : "is-hidden"
               }`}
             >
               Hi, I'm Maayan

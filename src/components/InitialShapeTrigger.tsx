@@ -11,12 +11,12 @@ export function InitialShapeTrigger({
   hidden = false,
 }: InitialShapeTriggerProps) {
   const baseStyles =
-    "fixed top-3 right-3 w-8 h-8 rounded-sm flex items-center justify-center bg-[rgb(255,70,100)]"
+    "fixed top-3 right-3 w-8 h-8 flex items-center justify-center bg-[rgb(255,70,100)]"
   const interactionStyles =
     "transition-transform group duration-200 ease-in-out pointer-events-auto will-change-transform will-change-opacity"
   const visibilityStyles = hidden
     ? "pointer-events-none scale-0"
-    : "scale-100 hover:scale-110"
+    : "scale-100 hover:scale-125"
 
   return (
     <button

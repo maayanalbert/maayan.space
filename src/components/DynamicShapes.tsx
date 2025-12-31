@@ -109,8 +109,9 @@ function createSketch(
       const progress = Math.min(elapsed / growthDuration, 1)
       // Spawn more shapes as the area grows
       // Start at 1-5 shapes, grow to 5-40 shapes per spawn
-      const minShapes = p5.lerp(1, 5, progress)
-      const maxShapes = p5.lerp(50, 60, progress)
+      // number of shapes to spawn
+      const minShapes = p5.lerp(15, 40, progress)
+      const maxShapes = p5.lerp(25, 50, progress)
       return { minShapes, maxShapes }
     }
 
