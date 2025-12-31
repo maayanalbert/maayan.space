@@ -25,6 +25,9 @@ interface DynamicShape {
   ang: number
   lineSW: number
   duration: number
+  isHovered: boolean
+  hoverProgress: number
+  hitPadding: number
   init: () => void
   show: () => void
   move: () => void
@@ -53,6 +56,8 @@ interface DynamicShapesCanvasProps extends DynamicShapesOptions {
 
 export const SHAPE_COLORS = ["rgb(0,151,254)", "#EBC737", "rgb(255,70,100)"]
 export const LAYER_ORDER = ["#EBC737", "rgb(0,151,254)", "rgb(255,70,100)"]
+
+const HIT_BOX_PADDING = 10
 
 const easeInOutExpo = (x: number): number => {
   if (x === 0) return 0
@@ -159,10 +164,18 @@ function createSketch(
       callbacks?.onReset?.()
     }
 
-    const isPointInsideShape = (mx: number, my: number, obj: DynamicShape) => {
+    const isPointInsideShape = (
+      mx: number,
+      my: number,
+      obj: DynamicShape,
+      includePadding = false
+    ) => {
       const effectiveSize = obj.size || obj.sizeMax || obj.toSize || 0
       if (!effectiveSize) return false
-      const radius = effectiveSize * 0.5
+      const padding = includePadding
+        ? Math.max(HIT_BOX_PADDING, obj.hitPadding, effectiveSize * 0.15)
+        : 0
+      const radius = effectiveSize * 0.5 + padding
       return p5.dist(mx, my, obj.x, obj.y) <= radius
     }
 
@@ -192,6 +205,9 @@ function createSketch(
       ang: number
       lineSW: number
       duration: number
+      isHovered: boolean
+      hoverProgress: number
+      hitPadding: number
 
       constructor() {
         // Spawn within a radius around the spawn center (spilling effect)
@@ -222,6 +238,13 @@ function createSketch(
         this.ang = p5.int(p5.random(2)) * Math.PI * 0.25
         this.lineSW = 0
         this.duration = 0
+        this.isHovered = false
+        this.hoverProgress = 0
+        this.hitPadding = Math.max(
+          HIT_BOX_PADDING,
+          // Keep the hit area slightly larger than the base shape
+          this.sizeMax * 0.25
+        )
         this.init()
       }
 
@@ -243,31 +266,47 @@ function createSketch(
         this.toY = this.fromY + Math.sin(angleFromCenter) * moveDistance
 
         this.animationType = p5.int(p5.random(3))
-        this.duration = p5.random(25, 50)
+        // speed
+        this.duration = p5.random(25, 55)
       }
 
       show(): void {
+        const interactivePadding = Math.max(
+          this.hitPadding,
+          this.sizeMax * 0.25
+        )
+        // Smoothly expand toward the interactive area when hovered
+        this.hoverProgress = p5.lerp(
+          this.hoverProgress,
+          this.isHovered ? 1 : 0,
+          0.18
+        )
+        const renderSize = p5.lerp(
+          this.size,
+          this.size + interactivePadding * 2,
+          this.hoverProgress
+        )
         p5.push()
         p5.translate(this.x, this.y)
         p5.fill(this.clr)
         p5.stroke(this.clr)
-        p5.strokeWeight(this.size * 0.05)
+        p5.strokeWeight(renderSize * 0.05)
 
         if (this.shapeType == 0) {
           p5.noStroke()
-          p5.circle(0, 0, this.size)
+          p5.circle(0, 0, renderSize)
         } else if (this.shapeType == 1) {
           p5.noFill()
-          p5.circle(0, 0, this.size)
+          p5.circle(0, 0, renderSize)
         } else if (this.shapeType == 2) {
           p5.noStroke()
-          p5.rect(0, 0, this.size, this.size)
+          p5.rect(0, 0, renderSize, renderSize)
         } else if (this.shapeType == 3) {
           p5.noFill()
-          p5.rect(0, 0, this.size * 0.9, this.size * 0.9)
+          p5.rect(0, 0, renderSize * 0.9, renderSize * 0.9)
         } else if (this.shapeType == 4) {
-          p5.line(0, -this.size * 0.45, 0, this.size * 0.45)
-          p5.line(-this.size * 0.45, 0, this.size * 0.45, 0)
+          p5.line(0, -renderSize * 0.45, 0, renderSize * 0.45)
+          p5.line(-renderSize * 0.45, 0, renderSize * 0.45, 0)
         }
         p5.pop()
         p5.strokeWeight(this.lineSW)
@@ -358,7 +397,7 @@ function createSketch(
       if (hasStarted) {
         // Reset animation if clicking any filled shape
         for (let i = objs.length - 1; i >= 0; i--) {
-          if (isPointInsideShape(p5.mouseX, p5.mouseY, objs[i])) {
+          if (isPointInsideShape(p5.mouseX, p5.mouseY, objs[i], true)) {
             resetAnimation()
             break
           }
@@ -368,6 +407,20 @@ function createSketch(
 
     p5.draw = () => {
       p5.clear()
+
+      // Determine hover state using the larger interactive hit area
+      let hoveredShape: DynamicShape | null = null
+      if (hasStarted && !isResetting) {
+        for (let i = objs.length - 1; i >= 0; i--) {
+          if (isPointInsideShape(p5.mouseX, p5.mouseY, objs[i], true)) {
+            hoveredShape = objs[i]
+            break
+          }
+        }
+      }
+      for (const obj of objs) {
+        obj.isHovered = obj === hoveredShape
+      }
 
       for (const clr of LAYER_ORDER) {
         for (let i = 0; i < objs.length; i++) {
@@ -410,14 +463,7 @@ function createSketch(
 
       // Update cursor for moving shapes (when animation started and not resetting)
       if (hasStarted && !isResetting) {
-        let isOverShape = false
-        for (let i = objs.length - 1; i >= 0; i--) {
-          if (isPointInsideShape(p5.mouseX, p5.mouseY, objs[i])) {
-            isOverShape = true
-            break
-          }
-        }
-
+        const isOverShape = Boolean(hoveredShape)
         // Update cursor via document.body
         document.body.style.cursor = isOverShape ? "pointer" : "default"
       } else if (!hasStarted && !isResetting) {

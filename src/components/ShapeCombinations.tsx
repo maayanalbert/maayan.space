@@ -7,62 +7,30 @@ type ShapeRenderer = (color: string) => JSX.Element
 const SHAPE_VARIANTS: { key: string; render: ShapeRenderer }[] = [
   {
     key: "filled-circle",
-    render: (color) => <circle cx="12" cy="12" r="8" fill={color} />,
-  },
-  {
-    key: "outline-circle",
     render: (color) => (
       <circle
         cx="12"
         cy="12"
-        r="8"
-        fill="none"
+        r="10"
+        color={color}
         stroke={color}
-        strokeWidth="2"
+        strokeWidth="1"
+        fill="transparent"
       />
     ),
   },
   {
     key: "filled-square",
-    render: (color) => <rect x="6" y="6" width="12" height="12" fill={color} />,
-  },
-  {
-    key: "outline-square",
     render: (color) => (
       <rect
-        x="6"
-        y="6"
-        width="12"
-        height="12"
-        fill="none"
+        x="3"
+        y="3"
+        width="18"
+        height="18"
         stroke={color}
         strokeWidth="1"
+        fill="transparent"
       />
-    ),
-  },
-  {
-    key: "cross",
-    render: (color) => (
-      <>
-        <line
-          x1="12"
-          y1="6"
-          x2="12"
-          y2="18"
-          stroke={color}
-          strokeWidth="1"
-          strokeLinecap="round"
-        />
-        <line
-          x1="6"
-          y1="12"
-          x2="18"
-          y2="12"
-          stroke={color}
-          strokeWidth="1"
-          strokeLinecap="round"
-        />
-      </>
     ),
   },
 ]
@@ -76,7 +44,7 @@ export function ShapeCombinations() {
   )
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-1 pointer-events-none">
+    <div className="fixed bottom-0 right-3 z-50 flex flex-row items-end gap-1 pointer-events-none">
       {combinations.map(({ key, render }) => (
         <div
           key={key}
