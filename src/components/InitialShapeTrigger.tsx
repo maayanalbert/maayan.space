@@ -1,6 +1,7 @@
 "use client"
 
 import { Gamepad2 } from "lucide-react"
+
 interface InitialShapeTriggerProps {
   onStart?: () => void
   hidden?: boolean
@@ -28,7 +29,7 @@ export function InitialShapeTrigger({
       <Gamepad2
         className="group-hover:opacity-100 opacity-0 transition-opacity duration-200 delay-0 ease-in-out"
         fill="transparent"
-        color="#ffd3dc"
+        color="white"
         height={20}
         width={20}
       />

@@ -1,11 +1,4 @@
-import {
-  ReactNode,
-  RefObject,
-  createContext,
-  useContext,
-  useRef,
-  useState,
-} from "react"
+import { ReactNode, createContext, useContext, useState } from "react"
 import { Page } from "./pageHelpers"
 
 export const Pages = ["ABOUT", "CONTACT", "GEOGRAPHY"]
@@ -17,18 +10,12 @@ interface PageContextType {
   setShapesActive: (active: boolean) => void
 }
 
-/**
- * Create the context
- */
 const PageContext = createContext<PageContextType | undefined>(undefined)
 
 interface Props {
   children: ReactNode
 }
 
-/**
- * Create the provider that everything that uses the context should be wrapped in
- */
 export const PageContextProvider = ({ children }: Props): JSX.Element => {
   const [curPage, setCurPage] = useState<Page>()
   const [shapesActive, setShapesActive] = useState(false)
@@ -47,9 +34,6 @@ export const PageContextProvider = ({ children }: Props): JSX.Element => {
   )
 }
 
-/**
- * Use the context
- */
 export function usePageContext(): PageContextType {
   const context = useContext(PageContext)
   if (!context) {

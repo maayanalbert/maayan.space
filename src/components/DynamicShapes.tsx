@@ -52,6 +52,7 @@ interface DynamicShapesCanvasProps extends DynamicShapesOptions {
   onReady?: (controls: { start: () => void }) => void
   onStart?: () => void
   onReset?: () => void
+  onCatch?: (shape: { shapeType: number; clr: string }) => void
 }
 
 export const SHAPE_COLORS = ["rgb(0,151,254)", "#EBC737", "rgb(255,70,100)"]
@@ -70,13 +71,18 @@ const easeInOutExpo = (x: number): number => {
 
 function createSketch(
   options: DynamicShapesOptions = {},
-  callbacks?: { onStart?: () => void; onReset?: () => void }
+  callbacks?: {
+    onStart?: () => void
+    onReset?: () => void
+    onCatch?: (shape: { shapeType: number; clr: string }) => void
+  }
 ) {
   return function sketch(p5: P5Instance) {
     const objs: DynamicShape[] = []
     const { width, height, spawnOrigin } = options
     let hasStarted = false
     let isResetting = false
+    let pendingStart = false
 
     // Spawn center defaults to top-right of the canvas
     const fallbackWidth =
@@ -117,6 +123,16 @@ function createSketch(
 
     const triggerStart = () => {
       if (hasStarted || isResetting) return
+
+      // In instance-mode p5, `setup()` (and thus createCanvas) may not have run yet
+      // when a consumer calls `startAnimation()` immediately after construction.
+      // Accessing `p5.width` before the renderer exists can throw.
+      const renderer = (p5 as unknown as { _renderer?: unknown })._renderer
+      if (!renderer) {
+        pendingStart = true
+        return
+      }
+
       hasStarted = true
       animationStartTime = Date.now()
       document.body.style.cursor = "default"
@@ -377,6 +393,12 @@ function createSketch(
       p5.textAlign(p5.CENTER, p5.CENTER)
       updateSpawnCenter()
       p5.noLoop()
+
+      // If a start was requested before the renderer existed, start now.
+      if (pendingStart) {
+        pendingStart = false
+        triggerStart()
+      }
     }
 
     p5.windowResized = () => {
@@ -399,6 +421,10 @@ function createSketch(
         // Reset animation if clicking any filled shape
         for (let i = objs.length - 1; i >= 0; i--) {
           if (isPointInsideShape(p5.mouseX, p5.mouseY, objs[i], true)) {
+            callbacks?.onCatch?.({
+              shapeType: objs[i].shapeType,
+              clr: objs[i].clr,
+            })
             resetAnimation()
             break
           }
@@ -486,6 +512,7 @@ export default function DynamicShapesCanvas({
   onReady,
   onStart,
   onReset,
+  onCatch,
 }: DynamicShapesCanvasProps = {}) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const onReadyRef = useRef(onReady)
@@ -494,6 +521,8 @@ export default function DynamicShapesCanvas({
   onStartRef.current = onStart
   const onResetRef = useRef(onReset)
   onResetRef.current = onReset
+  const onCatchRef = useRef(onCatch)
+  onCatchRef.current = onCatch
   const resolvedSpawnOrigin = useMemo<SpawnOrigin>(() => {
     const fallbackWidth =
       typeof window !== "undefined" ? width ?? window.innerWidth : width ?? 1000
@@ -523,6 +552,7 @@ export default function DynamicShapesCanvas({
       const callbacks = {
         onStart: onStartRef.current,
         onReset: onResetRef.current,
+        onCatch: onCatchRef.current,
       }
       instance = new P5(
         createSketch(sketchOptions, callbacks),
