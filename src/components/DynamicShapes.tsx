@@ -52,7 +52,13 @@ interface DynamicShapesCanvasProps extends DynamicShapesOptions {
   onReady?: (controls: { start: () => void }) => void
   onStart?: () => void
   onReset?: () => void
-  onCatch?: (shape: { shapeType: number; clr: string }) => void
+  onCatch?: (shape: {
+    x: number
+    y: number
+    size: number
+    shapeType: number
+    clr: string
+  }) => void
 }
 
 export const SHAPE_COLORS = ["rgb(0,151,254)", "#EBC737", "rgb(255,70,100)"]
@@ -74,7 +80,13 @@ function createSketch(
   callbacks?: {
     onStart?: () => void
     onReset?: () => void
-    onCatch?: (shape: { shapeType: number; clr: string }) => void
+    onCatch?: (shape: {
+      x: number
+      y: number
+      size: number
+      shapeType: number
+      clr: string
+    }) => void
   }
 ) {
   return function sketch(p5: P5Instance) {
@@ -418,10 +430,15 @@ function createSketch(
       if (isResetting) return
 
       if (hasStarted) {
-        // Reset animation if clicking any filled shape
+        // Reset animation if clicking any shape
         for (let i = objs.length - 1; i >= 0; i--) {
           if (isPointInsideShape(p5.mouseX, p5.mouseY, objs[i], true)) {
+            const effectiveSize =
+              objs[i].size || objs[i].sizeMax || objs[i].toSize || 0
             callbacks?.onCatch?.({
+              x: objs[i].x,
+              y: objs[i].y,
+              size: effectiveSize,
               shapeType: objs[i].shapeType,
               clr: objs[i].clr,
             })

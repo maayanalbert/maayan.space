@@ -1,6 +1,7 @@
 "use client"
 
-import { Gamepad2 } from "lucide-react"
+import { FolderLock } from "lucide-react"
+import * as Tooltip from "@radix-ui/react-tooltip"
 
 interface InitialShapeTriggerProps {
   onStart?: () => void
@@ -12,27 +13,42 @@ export function InitialShapeTrigger({
   hidden = false,
 }: InitialShapeTriggerProps) {
   const baseStyles =
-    "fixed top-3 right-3 w-8 h-8 flex items-center justify-center bg-[rgb(255,70,100)]"
+    "fixed top-24 right-60 flex items-center justify-center p-1"
   const interactionStyles =
-    "transition-transform group duration-200 ease-in-out pointer-events-auto will-change-transform will-change-opacity"
+    "transition-all group duration-200 ease-in-out pointer-events-auto will-change-transform will-change-opacity"
   const visibilityStyles = hidden
     ? "pointer-events-none scale-0"
-    : "scale-100 hover:scale-125"
+    : "scale-100 hover:scale-125 opacity-40 hover:opacity-100"
 
   return (
-    <button
-      aria-label="Start shapes"
-      className={`${baseStyles} ${interactionStyles} ${visibilityStyles}`}
-      onClick={() => onStart?.()}
-      type="button"
-    >
-      <Gamepad2
-        className="group-hover:opacity-100 opacity-0 transition-opacity duration-200 delay-0 ease-in-out"
-        fill="transparent"
-        color="white"
-        height={20}
-        width={20}
-      />
-    </button>
+    <Tooltip.Provider delayDuration={0}>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <button
+            id="initial-shape-trigger"
+            aria-label="Secrets manager"
+            className={`${baseStyles}`}
+            onClick={() => onStart?.()}
+            type="button"
+          >
+            <div
+              className={`${interactionStyles} ${visibilityStyles} text-2xl`}
+            >
+              🤫
+            </div>
+          </button>
+        </Tooltip.Trigger>
+        <Tooltip.Portal>
+          <Tooltip.Content
+            side="top"
+            sideOffset={10}
+            className="z-[100] rounded-md bg-black/5 px-2 py-1 text-xs text-black shadow-md"
+          >
+            Secrets manager
+            <Tooltip.Arrow className="fill-black/5" />
+          </Tooltip.Content>
+        </Tooltip.Portal>
+      </Tooltip.Root>
+    </Tooltip.Provider>
   )
 }
