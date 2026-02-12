@@ -9,8 +9,12 @@ import { useEffect, useRef, useState } from "react"
 import { DefaultInfo } from "@/components/DefaultInfo"
 import {
   type CaughtShape,
-  CaughtShapeOverlay,
+  type CollectedShape,
+  CollectedShapesShelf,
 } from "@/components/CaughtShapeOverlay"
+import { SHAPE_COLORS, type ShapeCombo } from "@/components/DynamicShapes"
+import { getSecretForShape } from "@/components/ShapeModal"
+import { Agentation } from "agentation"
 
 const POSITIVE_HEADLINES = [
   "Killed it 😎",
@@ -54,7 +58,35 @@ export default function Home() {
   )
   const prevShapesActiveRef = useRef(shapesActive)
   const positiveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [caughtShape, setCaughtShape] = useState<CaughtShape | null>(null)
+  const [collectedShapes, setCollectedShapes] = useState<CollectedShape[]>([])
+  const [lastCaughtShape, setLastCaughtShape] = useState<CaughtShape | null>(
+    null
+  )
+  const nextShapeId = useRef(0)
+
+  // Debug mode: populate all shape combos at once via ?debug query param
+  const hasCheckedDebug = useRef(false)
+  useEffect(() => {
+    if (hasCheckedDebug.current) return
+    hasCheckedDebug.current = true
+    const params = new URLSearchParams(window.location.search)
+    if (params.has("debug")) {
+      const all: CollectedShape[] = []
+      let id = 0
+      for (let st = 0; st < 4; st++) {
+        for (const clr of SHAPE_COLORS) {
+          all.push({ x: 0, y: 0, size: 0, shapeType: st, clr, id: id++ })
+        }
+      }
+      // Shuffle for variety
+      for (let i = all.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[all[i], all[j]] = [all[j], all[i]]
+      }
+      setCollectedShapes(all)
+      nextShapeId.current = all.length
+    }
+  }, [])
 
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== "undefined" ? window.innerWidth : 1000,
@@ -84,8 +116,8 @@ export default function Home() {
       if (!el) return
       const rect = el.getBoundingClientRect()
       setSpawnOrigin({
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
+        x: window.innerWidth - 112,
+        y: 72,
       })
     }
     const scheduleMeasure = () => {
@@ -133,10 +165,30 @@ export default function Home() {
     }
   }, [shapesActive])
 
+  // Derive excluded combos from already-collected shapes
+  const excludedCombos: ShapeCombo[] = collectedShapes.map((s) => ({
+    shapeType: s.shapeType,
+    clr: s.clr,
+  }))
+
+  const handleCatch = (shape: CaughtShape) => {
+    // Only collect if this combo isn't already collected
+    const alreadyCollected = collectedShapes.some(
+      (s) => s.shapeType === shape.shapeType && s.clr === shape.clr
+    )
+    if (!alreadyCollected) {
+      const id = nextShapeId.current++
+      setCollectedShapes((prev) => [...prev, { ...shape, id }])
+    }
+    setLastCaughtShape(shape)
+    setSecretCatchPhase("form")
+  }
+
   const isBlackMode = hasPressedTrigger || shapesActive
 
   return (
     <>
+      <Agentation />
       {isBlackMode ? (
         <div className="fixed inset-0 z-0 bg-black pointer-events-none" />
       ) : null}
@@ -150,17 +202,14 @@ export default function Home() {
           spawnOrigin={spawnOrigin}
           onStart={() => setShapesActive(true)}
           onReset={() => setShapesActive(false)}
-          onCatch={(shape) => {
-            setSecretCatchPhase("form")
-            setSecretFormError(null)
-            setCaughtShape(shape)
-          }}
+          onCatch={handleCatch}
           onReady={({ start }) => setStartShapes(() => start)}
+          excludedCombos={excludedCombos}
           className="pointer-events-none w-full h-full"
         />
-        <CaughtShapeOverlay shape={caughtShape} />
       </div>
       <InitialShapeTrigger
+        isBlackMode={isBlackMode}
         hidden={shapesActive || !startShapes}
         onStart={() => {
           setHasPressedTrigger(true)
@@ -215,169 +264,19 @@ export default function Home() {
           <NavButtons />
         </>
       )}
+      <CollectedShapesShelf shapes={collectedShapes} />
       {isBlackMode ? (
         <div
           className={`fixed inset-x-0 bottom-0 z-50 pb-14 sm:pb-[72px] ${
             secretCatchPhase === "prompt" ? "pointer-events-none" : ""
           }`}
         >
-          {secretCatchPhase === "prompt" ? (
-            <p
-              className="px-4 sm:px-0 sm:ml-28 font-bold lg:text-8xl sm:text-7xl text-4xl leading-snug text-white/90"
-              style={{ fontFamily: "Helvetica Neue" }}
-            >
-              Catch a secret!
-            </p>
-          ) : (
-            <div className="pointer-events-auto px-4 sm:px-0 sm:ml-28">
-              <div className="w-full max-w-[620px] text-[15px] font-normal text-white/80">
-                {secretCatchPhase === "submitted" ? (
-                  <div className="space-y-2">
-                    <p className="text-white/80">You’re in.</p>
-                    <p className="text-white/80">
-                      Thanks{" "}
-                      <span className="text-white/80">
-                        {secretFormValues.fullName.trim() || "there"}
-                      </span>
-                      . Maayan will reveal one of her secrets.
-                    </p>
-                    <div className="pt-2">
-                      <button
-                        type="button"
-                        className="text-white/80 underline underline-offset-4 decoration-white/30 transition-opacity duration-200 ease hover:opacity-80"
-                        onClick={() => {
-                          setSecretCatchPhase("prompt")
-                          setSecretFormError(null)
-                          setSecretFormValues({
-                            fullName: "",
-                            theirSecret: "",
-                          })
-                          setCaughtShape(null)
-                          startShapes?.()
-                        }}
-                      >
-                        Catch another secret
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <form
-                    className="space-y-3"
-                    onSubmit={async (e) => {
-                      e.preventDefault()
-                      if (isSubmittingSecret) return
-                      const fullName = secretFormValues.fullName.trim()
-                      const theirSecret = secretFormValues.theirSecret.trim()
-                      if (!fullName) {
-                        setSecretFormError("Please enter your full name.")
-                        return
-                      }
-                      if (!theirSecret) {
-                        setSecretFormError(
-                          "Please share a secret about yourself."
-                        )
-                        return
-                      }
-
-                      setIsSubmittingSecret(true)
-                      setSecretFormError(null)
-                      try {
-                        const res = await fetch("/api/secret", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({
-                            fullName,
-                            theirSecret,
-                          }),
-                        })
-
-                        const json = (await res.json().catch(() => null)) as
-                          | { ok: true }
-                          | { ok: false; error: string }
-                          | null
-
-                        if (!res.ok || !json?.ok) {
-                          throw new Error(
-                            (json && "error" in json && json.error) ||
-                              "Could not submit your secret."
-                          )
-                        }
-
-                        setSecretCatchPhase("submitted")
-                      } catch (err) {
-                        setSecretFormError(
-                          err instanceof Error
-                            ? err.message
-                            : "Could not submit your secret."
-                        )
-                      } finally {
-                        setIsSubmittingSecret(false)
-                      }
-                    }}
-                  >
-                    <div className="space-y-3 pb-2">
-                      <p className="text-white/80 text-2xl font-bold">
-                        Aha! I do have some sense of self preservation. To get
-                        the secret, give me one of yours.
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      <label className="block">
-                        <span className="text-white/80">Name:</span>{" "}
-                        <input
-                          value={secretFormValues.fullName}
-                          onChange={(e) =>
-                            setSecretFormValues((prev) => ({
-                              ...prev,
-                              fullName: e.target.value,
-                            }))
-                          }
-                          className="inline-block min-w-[220px] bg-transparent border-b border-white/25 px-1 py-1 text-white/80 outline-none transition-colors duration-200 ease focus:border-white/50"
-                          autoComplete="name"
-                        />
-                      </label>
-
-                      <label className="block">
-                        <span className="text-white/80">
-                          Your secret: (it better be good)
-                        </span>
-                        <textarea
-                          value={secretFormValues.theirSecret}
-                          onChange={(e) =>
-                            setSecretFormValues((prev) => ({
-                              ...prev,
-                              theirSecret: e.target.value,
-                            }))
-                          }
-                          className="mt-2 block w-full min-h-[120px] resize-none bg-transparent border border-white/25 px-1 py-1 text-white/80 outline-none transition-colors duration-200 ease focus:border-white/50"
-                        />
-                      </label>
-                    </div>
-
-                    {secretFormError ? (
-                      <p className="text-[rgb(255,70,100)]">
-                        {secretFormError}
-                      </p>
-                    ) : null}
-
-                    <div className="pt-1 w-full flex justify-start">
-                      <button
-                        type="submit"
-                        aria-label="Submit"
-                        disabled={isSubmittingSecret}
-                        className={`text-white/80 transition-opacity duration-200 ease hover:opacity-80 underline underline-offset-4 decoration-white/30 ${
-                          isSubmittingSecret ? "opacity-60" : ""
-                        }`}
-                      >
-                        {isSubmittingSecret ? "Sharing…" : "Share my secret →"}
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </div>
-            </div>
-          )}
+          <p
+            className="px-4 sm:px-0 sm:ml-28 font-bold lg:text-8xl sm:text-7xl text-4xl leading-snug text-white/90"
+            style={{ fontFamily: "Helvetica Neue" }}
+          >
+            Catch a secret!
+          </p>
         </div>
       ) : null}
     </>

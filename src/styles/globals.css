@@ -66,3 +66,126 @@ div {
     transform: none !important;
   }
 }
+
+/* Shelf shape entrance animation */
+.shelf-shape-card {
+  animation: shelf-shape-enter 200ms cubic-bezier(.215, .61, .355, 1) backwards;
+  transition: transform 200ms ease;
+}
+
+@keyframes shelf-shape-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-30px) scale(0);
+  }
+}
+
+.shelf-shape-label {
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shelf-shape-card:hover {
+    transform: translateX(30px);
+  }
+  .shelf-shape-card:hover .shelf-shape-label {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shelf-shape-card {
+    animation: none;
+    transition: none;
+    transform: none !important;
+  }
+  .shelf-shape-label {
+    transition: none;
+  }
+}
+
+/* Shape modal overlay */
+.shape-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0);
+  animation: shape-overlay-in 250ms cubic-bezier(.215, .61, .355, 1) forwards;
+  cursor: pointer;
+}
+
+.shape-modal-overlay.is-closing {
+  animation: shape-overlay-out 150ms cubic-bezier(.55, .085, .68, .53) forwards;
+}
+
+.shape-modal-shape {
+  animation: shape-scale-in 250ms cubic-bezier(.215, .61, .355, 1) both;
+  will-change: transform, opacity;
+}
+
+.shape-modal-shape.is-closing {
+  animation: shape-scale-out 150ms cubic-bezier(.55, .085, .68, .53) forwards;
+}
+
+.shape-modal-shape.is-spinning {
+  animation: shape-spin 800ms cubic-bezier(.645, .045, .355, 1) forwards;
+  will-change: transform;
+}
+
+@keyframes shape-overlay-in {
+  from { background-color: rgba(0, 0, 0, 0); }
+  to { background-color: rgba(0, 0, 0, 0.7); }
+}
+
+@keyframes shape-overlay-out {
+  from { background-color: rgba(0, 0, 0, 0.7); }
+  to { background-color: rgba(0, 0, 0, 0); }
+}
+
+@keyframes shape-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shape-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(720deg);
+  }
+}
+
+@keyframes shape-scale-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shape-modal-overlay,
+  .shape-modal-overlay.is-closing {
+    animation: none;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  .shape-modal-shape,
+  .shape-modal-shape.is-closing,
+  .shape-modal-shape.is-spinning {
+    animation: none;
+  }
+}

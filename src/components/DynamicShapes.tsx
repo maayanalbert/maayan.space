@@ -59,7 +59,10 @@ interface DynamicShapesCanvasProps extends DynamicShapesOptions {
     shapeType: number
     clr: string
   }) => void
+  excludedCombos?: ShapeCombo[]
 }
+
+export type ShapeCombo = { shapeType: number; clr: string }
 
 export const SHAPE_COLORS = ["rgb(0,151,254)", "#EBC737", "rgb(255,70,100)"]
 export const LAYER_ORDER = ["#EBC737", "rgb(0,151,254)", "rgb(255,70,100)"]
@@ -87,7 +90,8 @@ function createSketch(
       shapeType: number
       clr: string
     }) => void
-  }
+  },
+  excludedCombosRef?: { current: ShapeCombo[] }
 ) {
   return function sketch(p5: P5Instance) {
     const objs: DynamicShape[] = []
@@ -208,6 +212,29 @@ function createSketch(
       return p5.dist(mx, my, obj.x, obj.y) <= radius
     }
 
+    /** Pick a random (shapeType, clr) combo that isn't excluded. */
+    const pickCombo = (): { shapeType: number; clr: string } => {
+      const excluded = excludedCombosRef?.current ?? []
+      // Build list of all valid combos (4 shapeTypes × 3 colors = 12 total)
+      const allCombos: { shapeType: number; clr: string }[] = []
+      for (let st = 0; st < 4; st++) {
+        for (const clr of SHAPE_COLORS) {
+          const isExcluded = excluded.some(
+            (e) => e.shapeType === st && e.clr === clr
+          )
+          if (!isExcluded) allCombos.push({ shapeType: st, clr })
+        }
+      }
+      if (allCombos.length === 0) {
+        // All combos caught – fall back to fully random
+        return {
+          shapeType: p5.int(p5.random(4)),
+          clr: p5.random(SHAPE_COLORS),
+        }
+      }
+      return allCombos[p5.int(p5.random(allCombos.length))]
+    }
+
     ;(p5 as P5Instance & { startAnimation?: () => void }).startAnimation =
       triggerStart
 
@@ -246,8 +273,9 @@ function createSketch(
         this.x = spawnCenterX + Math.cos(angle) * distance
         this.y = spawnCenterY + Math.sin(angle) * distance
 
+        const combo = pickCombo()
         this.reductionRatio = 1
-        this.shapeType = p5.int(p5.random(4))
+        this.shapeType = combo.shapeType
         this.animationType = 0
         this.maxActionPoints = p5.int(p5.random(2, 5))
         this.actionPoints = this.maxActionPoints
@@ -262,7 +290,7 @@ function createSketch(
         this.toX = 0
         this.toY = 0
         this.isDead = false
-        this.clr = p5.random(SHAPE_COLORS)
+        this.clr = combo.clr
         this.changeShape = true
         this.ang = p5.int(p5.random(2)) * Math.PI * 0.25
         this.lineSW = 0
@@ -530,6 +558,7 @@ export default function DynamicShapesCanvas({
   onStart,
   onReset,
   onCatch,
+  excludedCombos,
 }: DynamicShapesCanvasProps = {}) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const onReadyRef = useRef(onReady)
@@ -540,6 +569,8 @@ export default function DynamicShapesCanvas({
   onResetRef.current = onReset
   const onCatchRef = useRef(onCatch)
   onCatchRef.current = onCatch
+  const excludedCombosRef = useRef<ShapeCombo[]>(excludedCombos ?? [])
+  excludedCombosRef.current = excludedCombos ?? []
   const resolvedSpawnOrigin = useMemo<SpawnOrigin>(() => {
     const fallbackWidth =
       typeof window !== "undefined" ? width ?? window.innerWidth : width ?? 1000
@@ -572,7 +603,7 @@ export default function DynamicShapesCanvas({
         onCatch: onCatchRef.current,
       }
       instance = new P5(
-        createSketch(sketchOptions, callbacks),
+        createSketch(sketchOptions, callbacks, excludedCombosRef),
         containerRef.current
       )
       if (onReadyRef.current) {
