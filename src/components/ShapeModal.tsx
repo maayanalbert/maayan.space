@@ -33,24 +33,24 @@ const SHAPE_SECRETS: Record<string, ShapeSecret> = {
   // Filled circle
   "0-rgb(0,151,254)": {
     title: "Glass houses",
-    body: "Maayan takes great pride being a nice person (she thinks she's a little bit better than everyone else because of it). But the ages of 2-4, Maayan was a terrible bully, who teased one boy in particular for having a hard name to pronounce (Maayan has a hard name to pronounce). The boy is now good friends with her brother and seems to have no recollection of this.",
+    body: "Maayan takes great pride being a nice person (she thinks she's a little bit better than everyone else because of it). But the ages of 2-4, Maayan was a terrible bully, who teased one boy in particular for having a hard name to pronounce (Maayan has a hard name to pronounce). The boy is now good friends with her brother and seems to have no recollection of this. Maayan would like to keep it that way.",
   },
   "0-#EBC737": {
-    title: "Still in the closet",
-    body: "In college Maayan thought she was straight and had what she didn't realize was a debilitating crush on her head TA. She spoke about the woman to her boyfriend so often that it became an inside joke that she was obsessed with her. Maayan spent 3/4s of college trying to come up with an excuse to talk to her, and graduated never managing to do so.",
+    title: "🥺👉👈",
+    body: "The single most uncomfortable thing you can make Maayan do is flirt with another woman.",
   },
   "0-rgb(255,70,100)": {
-    title: "Gold digger",
+    title: "Gold digger", // good
     body: "Maayan doesn't have an affinity for fancy things, but secretly loves being taken out to nice dinners. She considers herself a strong independent woman who isn't phased by wealth, but, regardless of the nature of the relationship, will do almost anything for you if you take her snowboarding (please take her snowboarding).",
   },
   // Outlined circle
   "1-rgb(0,151,254)": {
     title: "Grandma's girl",
-    body: "Maayan thinks she looks really cool skateboarding but that wearing a helmet cancels out the coolness. She wears a helmet anyways because her grandma told her to.",
+    body: "Maayan thinks she looks really cool skateboarding, but that wearing a helmet cancels out the coolness. She wears a helmet anyways because her grandma told her to.",
   },
   "1-#EBC737": {
-    title: "Tech bro",
-    body: "Maayan will roll her eyes at almost every common tech motivational phrase on Twitter, but in her heart of hearts all she wants is to be the kind of successful founder that these guys are talking about.",
+    title: "Smooth moves",
+    body: "Maayan has some really cool dance moves that she practices alone in her room. But if you ask her to do any one of them in public, she'll probably find a convenient reason to disappear.",
   },
   "1-rgb(255,70,100)": {
     title: "Itai",
@@ -58,16 +58,16 @@ const SHAPE_SECRETS: Record<string, ShapeSecret> = {
   },
   // Filled square
   "2-rgb(0,151,254)": {
-    title: "Smooth moves",
-    body: "Maayan has some really cool dance moves that she practices alone in her room. But if you ask her to do any one of them in public, she'll probably find a convenient reason to disappear.",
+    title: "Tech bro", // good
+    body: "Maayan will roll her eyes at almost every common tech motivational phrase on Twitter, but in her heart of hearts all she wants is to be the kind of successful founder that these guys are talking about.",
   },
   "2-#EBC737": {
     title: "Debí tirar más fotos",
     body: "Maayan says she wants to learn Spanish to understand the new Rosalía album, but really it's so she can sing along to Bad Bunny without sounding like an idiot (this will happen regardless).",
   },
   "2-rgb(255,70,100)": {
-    title: "🥺👉👈",
-    body: "The single most uncomfortable thing you can make Maayan do is flirt with another woman.",
+    title: "Still in the closet", // good
+    body: "In college Maayan thought she was straight and had what she didn't realize was a debilitating crush on her head TA. She spoke about the woman to her boyfriend so often that it became an inside joke that she was obsessed with her. Maayan spent 3/4s of college trying to come up with an excuse to talk to her, and graduated never managing to do so.",
   },
   // Outlined square
   "3-rgb(0,151,254)": {
@@ -76,7 +76,7 @@ const SHAPE_SECRETS: Record<string, ShapeSecret> = {
   },
   "3-#EBC737": {
     title: "Oversharing",
-    body: "Do you know when a thought occurs to you doing a conversation that you want to share but know you probably shouldn’t? Maayan is very bad at the probably shouldn’t part. As a result, if you ask her anything, she’ll answer a bit too truthfully. Unless you ask her about her dating life, in which she’ll suddenly become very interested in whatever seltzers are at the function.",
+    body: "Do you know when a thought occurs to you doing a conversation that you want to share but know you probably shouldn’t? Maayan is very bad at the probably shouldn’t part. As a result, if you ask her anything, she’ll answer a bit too truthfully. Please don't ask her what she really thinks about a mutual friend, because she'll feel badly about what she told you after.",
   },
   "3-rgb(255,70,100)": {
     title: "Societal values",
@@ -262,7 +262,7 @@ export function ShapeModal({ shape, onClose }: ShapeModalProps) {
                   <p className="text-xl font-bold leading-tight">
                     A Secret for a Secret
                   </p>
-                  <p className="text-lg text-white leading-snug">
+                  <p className="text-lg text-white">
                     Maayan would like one of your secrets in exchange for hers.
                   </p>
                 </div>
