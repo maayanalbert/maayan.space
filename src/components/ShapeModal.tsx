@@ -45,7 +45,7 @@ const SHAPE_SECRETS: Record<string, ShapeSecret> = {
   },
   // Outlined circle
   "1-rgb(0,151,254)": {
-    title: "Brown noser",
+    title: "Grandma's girl",
     body: "Maayan thinks she looks really cool skateboarding but that wearing a helmet cancels out the coolness. She wears a helmet anyways because her grandma told her to.",
   },
   "1-#EBC737": {
@@ -72,7 +72,7 @@ const SHAPE_SECRETS: Record<string, ShapeSecret> = {
   // Outlined square
   "3-rgb(0,151,254)": {
     title: "The Mom",
-    body: "If you know Maayan, she has probably talked about you to her mom at some point. This is a good thing in most cases.",
+    body: "If you know Maayan, she has probably talked about you to her mom at some point. This is a good thing, in most cases.",
   },
   "3-#EBC737": {
     title: "Oversharing",
