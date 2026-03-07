@@ -18,7 +18,7 @@ export default function TextLink({ text, href, page, newTab = true }: Props) {
         style={{ color: getPageColor(page, true) }}
       >
         {text}
-      </a>{" "}
+      </a>
     </>
   )
 }

@@ -13,13 +13,14 @@ export function DefaultInfo() {
         text="the Macintosh"
         href="https://folklore.org/0-index.html"
         page="DEFAULT"
-      />
+      />{" "}
       and classic hits like the
       <TextLink
-        text="paperclip and zipper."
+        text="paperclip and zipper"
         href="https://www.penguinrandomhouse.com/books/130244/the-evolution-of-useful-things-by-henry-petroski/"
         page="DEFAULT"
       />
+      .
     </p>
   )
 }
