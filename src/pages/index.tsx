@@ -3,23 +3,38 @@ import { AboutInfo } from "@/components/AboutInfo"
 import ContactInfo from "@/components/ContactInfo"
 import { PhilosophyInfo } from "@/components/PhilosophyInfo"
 import NavButtons from "@/components/NavButtons"
-import { ReactNode, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { DefaultInfo } from "@/components/DefaultInfo"
 import { MoabFloatingButton, MoabProvider } from "@/MoabProvider"
+import DynamicShapesCanvas from "@/components/DynamicShapes"
 
-/**
- * A wrapper for the main page
- */
 export default function Home() {
   useEffect(() => {
     document.title = "Maayan"
   }, [])
 
   const { curPage } = usePageContext()
+  const [introDone, setIntroDone] = useState(false)
+
+  const handleReady = useCallback((controls: { start: () => void }) => {
+    controls.start()
+  }, [])
+
+  const handleDone = useCallback(() => {
+    setIntroDone(true)
+  }, [])
 
   return (
     <>
       <MoabProvider>
+        {!introDone && (
+          <div className="fixed inset-0 pointer-events-none z-50">
+            <DynamicShapesCanvas
+              onReady={handleReady}
+              onDone={handleDone}
+            />
+          </div>
+        )}
         <div className="h-[85%] w-full flex flex-col justify-center sm:mt-0 -mt-8 sm:px-28">
           <p
             className="font-bold sm:px-0 px-4 sm:-mt-24 -mt-60 lg:text-8xl sm:text-7xl text-4xl leading-snug"
