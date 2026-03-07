@@ -29,10 +29,7 @@ export default function Home() {
       <MoabProvider>
         {!introDone && (
           <div className="fixed inset-0 pointer-events-none z-50">
-            <DynamicShapesCanvas
-              onReady={handleReady}
-              onDone={handleDone}
-            />
+            <DynamicShapesCanvas onReady={handleReady} onDone={handleDone} />
           </div>
         )}
         <div className="h-[85%] w-full flex flex-col justify-center sm:mt-0 -mt-8 sm:px-28">
