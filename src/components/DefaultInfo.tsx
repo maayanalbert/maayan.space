@@ -6,7 +6,7 @@ import TextLink from "./TextLink"
 
 export function DefaultInfo() {
   return (
-    <p className="sm:text-[26px]">
+    <p className="sm:text-[26px] text-xl">
       I build simple, useful, and slightly magical tools for humans.
       Inspirations include
       <TextLink
