@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Helvetica", sans-serif;
+  --lh: 1.4;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body * {
+  line-height: var(--lh) !important;
 }
 
 .font-display {
