@@ -244,7 +244,7 @@ export default function App({ Component, pageProps }: AppProps) {
         {/* @ts-ignore */}
         <Component {...pageProps} />
       </PageContextProvider>
-      <TogglesPanel />
+      {process.env.NODE_ENV === "development" && <TogglesPanel />}
     </TogglesProvider>
   )
 }
