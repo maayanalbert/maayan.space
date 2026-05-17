@@ -28,10 +28,11 @@ import {
 import { jsx } from "react/jsx-runtime";
 var STYLE_ID = "scaffold-tweaks-styles";
 var INJECTED_CSS = `
-.st-toggle:hover { background: #404040 !important; }
-.st-seg-btn:hover { color: #404040 !important; }
-.st-select:focus { outline: none; box-shadow: 0 0 0 2px #e5e5e5; }
-.st-toggle, .st-seg-btn { transition: background 120ms ease, color 120ms ease; }
+.st-toggle:hover { background: #252525 !important; }
+.st-seg-btn:hover { color: rgba(255, 255, 255, 0.7) !important; }
+.st-select:focus { outline: none; }
+.st-toggle { transition: background 180ms ease, color 180ms ease; }
+.st-seg-btn { transition: background 120ms ease, color 120ms ease; }
 .st-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 9999px; outline: none; cursor: pointer; background: linear-gradient(to right, #c8c8c8 var(--st-pct, 50%), #e8e8e8 var(--st-pct, 50%)); }
 .st-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 0; height: 0; }
 .st-slider::-moz-range-thumb { width: 0; height: 0; border: none; }
@@ -96,107 +97,70 @@ import React2, {
   useEffect as useEffect2,
   useRef
 } from "react";
-import { jsx as jsx2, jsxs } from "react/jsx-runtime";
+import { Fragment, jsx as jsx2, jsxs } from "react/jsx-runtime";
 function DialsIcon() {
   return /* @__PURE__ */ jsxs(
     "svg",
     {
+      xmlns: "http://www.w3.org/2000/svg",
       width: "16",
       height: "16",
-      viewBox: "0 0 16 16",
+      viewBox: "0 0 24 24",
       fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
       "aria-hidden": "true",
       children: [
-        /* @__PURE__ */ jsx2(
-          "line",
-          {
-            x1: "1",
-            y1: "4",
-            x2: "15",
-            y2: "4",
-            stroke: "currentColor",
-            strokeWidth: "1.5",
-            strokeLinecap: "round"
-          }
-        ),
-        /* @__PURE__ */ jsx2(
-          "circle",
-          {
-            cx: "5",
-            cy: "4",
-            r: "2",
-            fill: "white",
-            stroke: "currentColor",
-            strokeWidth: "1.5"
-          }
-        ),
-        /* @__PURE__ */ jsx2(
-          "line",
-          {
-            x1: "1",
-            y1: "8",
-            x2: "15",
-            y2: "8",
-            stroke: "currentColor",
-            strokeWidth: "1.5",
-            strokeLinecap: "round"
-          }
-        ),
-        /* @__PURE__ */ jsx2(
-          "circle",
-          {
-            cx: "11",
-            cy: "8",
-            r: "2",
-            fill: "white",
-            stroke: "currentColor",
-            strokeWidth: "1.5"
-          }
-        ),
-        /* @__PURE__ */ jsx2(
-          "line",
-          {
-            x1: "1",
-            y1: "12",
-            x2: "15",
-            y2: "12",
-            stroke: "currentColor",
-            strokeWidth: "1.5",
-            strokeLinecap: "round"
-          }
-        ),
-        /* @__PURE__ */ jsx2(
-          "circle",
-          {
-            cx: "7",
-            cy: "12",
-            r: "2",
-            fill: "white",
-            stroke: "currentColor",
-            strokeWidth: "1.5"
-          }
-        )
+        /* @__PURE__ */ jsx2("path", { d: "M10 5H3" }),
+        /* @__PURE__ */ jsx2("path", { d: "M12 19H3" }),
+        /* @__PURE__ */ jsx2("path", { d: "M14 3v4" }),
+        /* @__PURE__ */ jsx2("path", { d: "M16 17v4" }),
+        /* @__PURE__ */ jsx2("path", { d: "M21 12h-9" }),
+        /* @__PURE__ */ jsx2("path", { d: "M21 19h-5" }),
+        /* @__PURE__ */ jsx2("path", { d: "M21 5h-7" }),
+        /* @__PURE__ */ jsx2("path", { d: "M8 10v4" }),
+        /* @__PURE__ */ jsx2("path", { d: "M8 12H3" })
       ]
     }
   );
 }
-var panelShell = {
-  position: "fixed",
-  bottom: 24,
-  right: 24,
-  zIndex: 50,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-end",
-  gap: 12
-};
+var MARGIN = 24;
+var BTN_SIZE = 42;
+var PANEL_GAP = 12;
+function cornerBtnPos(c) {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  return {
+    x: c.endsWith("right") ? w - MARGIN - BTN_SIZE : MARGIN,
+    y: c.startsWith("top") ? MARGIN : h - MARGIN - BTN_SIZE
+  };
+}
+function nearestCorner(mx, my) {
+  const left = mx < window.innerWidth / 2;
+  const top = my < window.innerHeight / 2;
+  return `${top ? "top" : "bottom"}-${left ? "left" : "right"}`;
+}
+function panelFixedStyle(c) {
+  const offset = MARGIN + BTN_SIZE + PANEL_GAP;
+  switch (c) {
+    case "bottom-right":
+      return { position: "fixed", bottom: offset, right: MARGIN, zIndex: 50 };
+    case "bottom-left":
+      return { position: "fixed", bottom: offset, left: MARGIN, zIndex: 50 };
+    case "top-right":
+      return { position: "fixed", top: offset, right: MARGIN, zIndex: 50 };
+    case "top-left":
+      return { position: "fixed", top: offset, left: MARGIN, zIndex: 50 };
+  }
+}
 var panelCard = {
   width: 288,
-  background: "white",
+  background: "#1c1c1c",
   borderRadius: 16,
-  boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.05)",
-  border: "1px solid #f5f5f5",
+  boxShadow: "0 4px 12px -2px rgb(0 0 0 / 0.3), 0 0 0 0.5px rgb(255 255 255 / 0.08)",
+  border: "1px solid rgb(255 255 255 / 0.08)",
   overflow: "hidden"
 };
 var panelBody = {
@@ -208,12 +172,12 @@ var panelBody = {
   overflowY: "auto"
 };
 var toggleBtn = {
-  width: 36,
-  height: 36,
-  background: "#171717",
+  width: 42,
+  height: 42,
+  background: "#1c1c1c",
   color: "white",
   borderRadius: 9999,
-  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.2)",
+  boxShadow: "0 2px 8px -1px rgb(0 0 0 / 0.4), 0 0 0 0.5px rgb(255 255 255 / 0.08)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -224,25 +188,105 @@ var toggleBtn = {
 };
 function TweaksPanelShell({ children }) {
   const [open, setOpen] = React2.useState(false);
-  const ref = useRef(null);
+  const [corner, setCorner] = React2.useState("bottom-right");
+  const [btnPos, setBtnPos] = React2.useState(
+    null
+  );
+  const [animating, setAnimating] = React2.useState(false);
+  const [dragging, setDragging] = React2.useState(false);
+  const panelRef = useRef(null);
+  const btnRef = useRef(null);
+  const dragRef = useRef(null);
+  const snapTimer = useRef(null);
+  useEffect2(() => {
+    var _a;
+    const saved = (_a = localStorage.getItem("tweaks-corner")) != null ? _a : "bottom-right";
+    setCorner(saved);
+    setBtnPos(cornerBtnPos(saved));
+  }, []);
+  useEffect2(() => {
+    function onResize() {
+      setBtnPos(cornerBtnPos(corner));
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [corner]);
   useEffect2(() => {
     if (!open) return;
-    function handleClick(e) {
-      if (ref.current && !ref.current.contains(e.target)) {
+    function onOutside(e) {
+      const t = e.target;
+      if (panelRef.current && !panelRef.current.contains(t) && btnRef.current && !btnRef.current.contains(t))
+        setOpen(false);
+    }
+    document.addEventListener("mousedown", onOutside);
+    return () => document.removeEventListener("mousedown", onOutside);
+  }, [open]);
+  function snapToCorner(c) {
+    setCorner(c);
+    setAnimating(true);
+    setBtnPos(cornerBtnPos(c));
+    localStorage.setItem("tweaks-corner", c);
+    if (snapTimer.current) clearTimeout(snapTimer.current);
+    snapTimer.current = setTimeout(() => setAnimating(false), 300);
+  }
+  function handleButtonMouseDown(e) {
+    if (!btnPos) return;
+    e.preventDefault();
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startBtnX: btnPos.x,
+      startBtnY: btnPos.y,
+      moved: false
+    };
+    function onMove(me) {
+      if (!dragRef.current) return;
+      const dx = me.clientX - dragRef.current.startX;
+      const dy = me.clientY - dragRef.current.startY;
+      if (!dragRef.current.moved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+        dragRef.current.moved = true;
+        setDragging(true);
         setOpen(false);
       }
+      if (dragRef.current.moved) {
+        setBtnPos({
+          x: dragRef.current.startBtnX + dx,
+          y: dragRef.current.startBtnY + dy
+        });
+      }
     }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [open]);
-  return /* @__PURE__ */ jsxs("div", { ref, style: panelShell, children: [
-    open && /* @__PURE__ */ jsx2("div", { style: panelCard, children: /* @__PURE__ */ jsx2("div", { style: panelBody, children }) }),
+    function onUp(me) {
+      var _a;
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      if (!((_a = dragRef.current) == null ? void 0 : _a.moved)) {
+        setOpen((o) => !o);
+      } else {
+        snapToCorner(nearestCorner(me.clientX, me.clientY));
+      }
+      setDragging(false);
+      dragRef.current = null;
+    }
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }
+  if (!btnPos) return null;
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    open && /* @__PURE__ */ jsx2("div", { ref: panelRef, style: panelFixedStyle(corner), children: /* @__PURE__ */ jsx2("div", { style: panelCard, children: /* @__PURE__ */ jsx2("div", { style: panelBody, children }) }) }),
     /* @__PURE__ */ jsx2(
       "button",
       {
+        ref: btnRef,
         className: "st-toggle",
-        onClick: () => setOpen((o) => !o),
-        style: toggleBtn,
+        onMouseDown: handleButtonMouseDown,
+        style: __spreadProps(__spreadValues({}, toggleBtn), {
+          position: "fixed",
+          left: btnPos.x,
+          top: btnPos.y,
+          cursor: dragging ? "grabbing" : "grab",
+          transition: animating ? "left 300ms cubic-bezier(0.25, 0, 0, 1), top 300ms cubic-bezier(0.25, 0, 0, 1)" : "none",
+          zIndex: 51
+        }),
         "aria-label": "Toggle design panel",
         children: /* @__PURE__ */ jsx2(DialsIcon, {})
       }
@@ -260,7 +304,7 @@ function Section({
         style: {
           fontSize: 10,
           fontWeight: 600,
-          color: "#a3a3a3",
+          color: "rgb(255 255 255 / 0.35)",
           textTransform: "uppercase",
           letterSpacing: "0.1em",
           margin: 0
@@ -277,14 +321,25 @@ function Field({
   children
 }) {
   return /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 8 }, children: [
-    /* @__PURE__ */ jsx2("p", { style: { fontSize: 14, fontWeight: 500, color: "#404040", margin: 0 }, children: label }),
+    /* @__PURE__ */ jsx2(
+      "p",
+      {
+        style: {
+          fontSize: 14,
+          fontWeight: 500,
+          color: "rgb(255 255 255 / 0.88)",
+          margin: 0
+        },
+        children: label
+      }
+    ),
     children,
     /* @__PURE__ */ jsx2(
       "p",
       {
         style: {
           fontSize: 12,
-          color: "#a3a3a3",
+          color: "rgb(255 255 255 / 0.4)",
           lineHeight: 1.625,
           margin: 0
         },
@@ -299,53 +354,67 @@ function SegmentedControl({
   onChange
 }) {
   const selectedIndex = options.findIndex((o) => o.value === value);
-  const pct = selectedIndex === -1 ? 0 : selectedIndex / options.length * 100;
+  const btnRefs = useRef([]);
+  const containerRef = useRef(null);
+  const [pillGeom, setPillGeom] = React2.useState(null);
+  useEffect2(() => {
+    const btn = btnRefs.current[selectedIndex];
+    const container = containerRef.current;
+    if (!btn || !container) return;
+    const bRect = btn.getBoundingClientRect();
+    const cRect = container.getBoundingClientRect();
+    setPillGeom({ left: bRect.left - cRect.left, width: bRect.width });
+  }, [selectedIndex, options]);
   return /* @__PURE__ */ jsxs(
     "div",
     {
+      ref: containerRef,
       style: {
         position: "relative",
         display: "flex",
         padding: 4,
-        background: "#f5f5f5",
+        background: "rgb(255 255 255 / 0.08)",
         borderRadius: 8
       },
       children: [
-        selectedIndex !== -1 && /* @__PURE__ */ jsx2(
+        pillGeom && selectedIndex !== -1 && /* @__PURE__ */ jsx2(
           "div",
           {
             style: {
               position: "absolute",
               top: 4,
               bottom: 4,
-              left: `calc(${pct}% + 4px)`,
-              width: `calc(${100 / options.length}% - 8px)`,
-              background: "white",
+              left: pillGeom.left,
+              width: pillGeom.width,
+              background: "rgb(255 255 255 / 0.14)",
               borderRadius: 6,
-              boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.08)",
-              transition: "left 160ms cubic-bezier(0.4, 0, 0.2, 1)",
+              boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.4)",
+              transition: "left 160ms cubic-bezier(0.4, 0, 0.2, 1), width 160ms cubic-bezier(0.4, 0, 0.2, 1)",
               pointerEvents: "none"
             }
           }
         ),
-        options.map((opt) => /* @__PURE__ */ jsx2(
+        options.map((opt, i) => /* @__PURE__ */ jsx2(
           "button",
           {
+            ref: (el) => {
+              btnRefs.current[i] = el;
+            },
             className: "st-seg-btn",
             onClick: () => onChange(opt.value),
             style: {
-              flex: 1,
               fontSize: 12,
-              padding: "6px 0",
+              padding: "6px 10px",
               borderRadius: 6,
               fontWeight: 500,
               border: "none",
               cursor: "pointer",
               background: "transparent",
-              color: value === opt.value ? "#171717" : "#737373",
+              color: value === opt.value ? "rgb(255 255 255 / 0.9)" : "rgb(255 255 255 / 0.4)",
               position: "relative",
               zIndex: 1,
-              transition: "color 160ms ease"
+              transition: "color 160ms ease",
+              whiteSpace: "nowrap"
             },
             children: opt.label
           },
@@ -370,7 +439,7 @@ function ChevronDown() {
         "path",
         {
           d: "M2 4.5L6 8L10 4.5",
-          stroke: "#a3a3a3",
+          stroke: "rgb(255 255 255 / 0.4)",
           strokeWidth: "1.5",
           strokeLinecap: "round",
           strokeLinejoin: "round"
@@ -394,14 +463,16 @@ function SelectControl({
         style: {
           width: "100%",
           fontSize: 13,
-          border: "1px solid #e5e5e5",
+          border: "1px solid rgb(255 255 255 / 0.1)",
           borderRadius: 8,
           padding: "8px 32px 8px 12px",
-          background: "white",
-          color: "#171717",
+          background: "rgb(255 255 255 / 0.08)",
+          color: "rgb(255 255 255 / 0.88)",
           appearance: "none",
           boxSizing: "border-box",
-          cursor: "pointer"
+          cursor: "pointer",
+          colorScheme: "dark",
+          outline: "none"
         },
         children: options.map((opt) => /* @__PURE__ */ jsx2("option", { value: opt.value, children: opt.label }, opt.value))
       }
@@ -431,47 +502,132 @@ function SliderControl({
   onChange,
   formatValue
 }) {
+  const [isDragging, setIsDragging] = React2.useState(false);
+  const [isHovered, setIsHovered] = React2.useState(false);
+  const trackRef = useRef(null);
+  const dragStartRef = useRef(null);
   const pct = (value - min) / (max - min) * 100;
   const display = formatValue ? formatValue(value) : String(value);
-  return /* @__PURE__ */ jsxs("div", { style: { position: "relative", borderRadius: 8, overflow: "hidden", height: 34, cursor: "pointer" }, children: [
-    /* @__PURE__ */ jsx2("div", { style: { position: "absolute", inset: 0, background: "#e9e9eb" } }),
-    /* @__PURE__ */ jsx2("div", { style: { position: "absolute", top: 0, left: 0, bottom: 0, width: `${pct}%`, background: "#d1d1d6" } }),
-    /* @__PURE__ */ jsxs("div", { style: {
-      position: "absolute",
-      inset: 0,
-      display: "flex",
-      alignItems: "center",
-      padding: "0 12px",
-      pointerEvents: "none"
-    }, children: [
-      /* @__PURE__ */ jsx2("span", { style: { flex: 1 } }),
-      /* @__PURE__ */ jsx2("span", { style: { fontSize: 13, color: "#3c3c43" }, children: display })
-    ] }),
-    /* @__PURE__ */ jsx2(
-      "input",
-      {
-        type: "range",
-        min,
-        max,
-        step,
-        value,
-        onChange: (e) => onChange(Number(e.target.value)),
-        style: {
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          appearance: "none",
-          WebkitAppearance: "none",
-          background: "transparent",
-          cursor: "pointer",
-          margin: 0,
-          padding: 0,
-          opacity: 0
+  const KNOB_W = 2;
+  const KNOB_PAD = 8;
+  const OUTER_R = 10;
+  const INNER_PAD = 4;
+  const INNER_R = OUTER_R - INNER_PAD + 1;
+  const active = isDragging || isHovered;
+  const knobInset = active ? 6 : KNOB_PAD;
+  const knobW = KNOB_W;
+  const knobLeft = `clamp(4px, calc(${pct}% - ${knobW + KNOB_PAD}px), calc(100% - 4px - ${knobW}px))`;
+  function handlePointerDown(e) {
+    const track = trackRef.current;
+    if (!track) return;
+    const rect = track.getBoundingClientRect();
+    const rawLeft = pct / 100 * rect.width - (knobW + KNOB_PAD);
+    const clampedLeft = Math.min(Math.max(rawLeft, 4), rect.width - 4 - knobW);
+    const knobX = rect.left + clampedLeft;
+    const HIT = 10;
+    if (e.clientX < knobX - HIT || e.clientX > knobX + knobW + HIT) return;
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragStartRef.current = { x: e.clientX, value };
+    setIsDragging(true);
+  }
+  function handlePointerMove(e) {
+    const track = trackRef.current;
+    if (!dragStartRef.current || !track) return;
+    const rect = track.getBoundingClientRect();
+    const dx = e.clientX - dragStartRef.current.x;
+    const raw = dragStartRef.current.value + dx / rect.width * (max - min);
+    const stepped = Math.round(raw / step) * step;
+    const decimals = step.toString().includes(".") ? step.toString().split(".")[1].length : 0;
+    const clean = parseFloat(stepped.toFixed(decimals));
+    onChange(Math.min(max, Math.max(min, clean)));
+  }
+  function handlePointerUp(e) {
+    if (!dragStartRef.current) return;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    setIsDragging(false);
+    dragStartRef.current = null;
+  }
+  return /* @__PURE__ */ jsx2(
+    "div",
+    {
+      ref: trackRef,
+      onPointerDown: handlePointerDown,
+      onPointerMove: handlePointerMove,
+      onPointerUp: handlePointerUp,
+      onMouseEnter: () => setIsHovered(true),
+      onMouseLeave: () => setIsHovered(false),
+      style: {
+        position: "relative",
+        borderRadius: OUTER_R,
+        height: 36,
+        cursor: isDragging ? "grabbing" : "grab",
+        background: "rgb(255 255 255 / 0.08)",
+        padding: INNER_PAD,
+        boxSizing: "border-box",
+        userSelect: "none"
+      },
+      children: /* @__PURE__ */ jsxs(
+        "div",
+        {
+          style: {
+            position: "relative",
+            height: "100%",
+            borderRadius: INNER_R,
+            overflow: "hidden"
+          },
+          children: [
+            /* @__PURE__ */ jsx2(
+              "div",
+              {
+                style: {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  width: `${pct}%`,
+                  background: "rgb(255 255 255 / 0.13)",
+                  borderRadius: `${INNER_R}px`
+                }
+              }
+            ),
+            /* @__PURE__ */ jsx2(
+              "div",
+              {
+                style: {
+                  position: "absolute",
+                  top: knobInset,
+                  bottom: knobInset,
+                  left: knobLeft,
+                  width: knobW,
+                  background: active ? "rgb(255 255 255 / 0.7)" : "rgb(255 255 255 / 0.55)",
+                  borderRadius: 2,
+                  transition: "top 120ms ease, bottom 120ms ease, width 120ms ease, background 120ms ease"
+                }
+              }
+            ),
+            /* @__PURE__ */ jsxs(
+              "div",
+              {
+                style: {
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0 10px",
+                  pointerEvents: "none"
+                },
+                children: [
+                  /* @__PURE__ */ jsx2("span", { style: { flex: 1 } }),
+                  /* @__PURE__ */ jsx2("span", { style: { fontSize: 13, color: "rgb(255 255 255 / 0.65)" }, children: display })
+                ]
+              }
+            )
+          ]
         }
-      }
-    )
-  ] });
+      )
+    }
+  );
 }
 
 // src/TweaksPanel.tsx

@@ -47,7 +47,7 @@ declare function TweaksPanel(): JSX.Element;
 
 declare function TweaksPanelShell({ children }: {
     children: ReactNode;
-}): JSX.Element;
+}): JSX.Element | null;
 declare function Section({ label, children, }: {
     label: string;
     children: ReactNode;
