@@ -228,16 +228,20 @@ export function TweaksPanelShell({ children }: { children: ReactNode }) {
         style={{
           ...panelFixedStyle(corner),
           opacity: open ? 1 : 0,
-          transform: open ? "scale(1) translateY(0)" : `scale(0.98) ${panelTranslate}`,
+          transform: open
+            ? "scale(1) translateY(0)"
+            : `scale(0.98) ${panelTranslate}`,
           transformOrigin: panelTransformOrigin,
           pointerEvents: open ? "auto" : "none",
           transition: open
             ? "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)"
-            : "opacity 200ms ease, transform 200ms cubic-bezier(0.25, 0, 0, 1)",
+            : "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)",
         }}
       >
         <div style={panelCard}>
-          <div className="st-panel-body" style={panelBody}>{children}</div>
+          <div className="st-panel-body" style={panelBody}>
+            {children}
+          </div>
         </div>
       </div>
       <button

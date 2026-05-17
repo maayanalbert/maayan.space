@@ -322,7 +322,7 @@ function TweaksPanelShell({ children }) {
           transform: open ? "scale(1) translateY(0)" : `scale(0.98) ${panelTranslate}`,
           transformOrigin: panelTransformOrigin,
           pointerEvents: open ? "auto" : "none",
-          transition: open ? "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)" : "opacity 200ms ease, transform 200ms cubic-bezier(0.25, 0, 0, 1)"
+          transition: open ? "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)" : "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)"
         }),
         children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: panelCard, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "st-panel-body", style: panelBody, children }) })
       }
