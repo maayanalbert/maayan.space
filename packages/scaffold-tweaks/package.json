@@ -12,7 +12,7 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": ["dist", "SKILL.md"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
