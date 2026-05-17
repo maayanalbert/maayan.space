@@ -203,7 +203,8 @@ var panelBody = {
   flexDirection: "column",
   gap: 20,
   maxHeight: 448,
-  overflowY: "auto"
+  overflowY: "auto",
+  scrollbarWidth: "none"
 };
 var toggleBtn = {
   width: 42,
@@ -306,7 +307,8 @@ function TweaksPanelShell({ children }) {
   }
   if (!btnPos) return null;
   return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-    open && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { ref: panelRef, style: panelFixedStyle(corner), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: panelCard, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: panelBody, children }) }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("style", { children: `.st-panel-body::-webkit-scrollbar{width:0;height:0;background:transparent}` }),
+    open && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { ref: panelRef, style: panelFixedStyle(corner), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: panelCard, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "st-panel-body", style: panelBody, children }) }) }),
     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
       "button",
       {

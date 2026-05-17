@@ -85,6 +85,7 @@ const panelBody: CSSProperties = {
   gap: 20,
   maxHeight: 448,
   overflowY: "auto",
+  scrollbarWidth: "none",
 }
 
 const toggleBtn: CSSProperties = {
@@ -216,10 +217,11 @@ export function TweaksPanelShell({ children }: { children: ReactNode }) {
 
   return (
     <>
+      <style>{`.st-panel-body::-webkit-scrollbar{width:0;height:0;background:transparent}`}</style>
       {open && (
         <div ref={panelRef} style={panelFixedStyle(corner)}>
           <div style={panelCard}>
-            <div style={panelBody}>{children}</div>
+            <div className="st-panel-body" style={panelBody}>{children}</div>
           </div>
         </div>
       )}
