@@ -215,18 +215,31 @@ export function TweaksPanelShell({ children }: { children: ReactNode }) {
 
   if (!btnPos) return null
 
+  const isBottom = corner.startsWith("bottom")
+  const isRight = corner.endsWith("right")
+  const panelTransformOrigin = `${isBottom ? "bottom" : "top"} ${isRight ? "right" : "left"}`
+  const panelTranslate = isBottom ? "translateY(4px)" : "translateY(-4px)"
+
   return (
     <>
       <style>{`.st-panel-body::-webkit-scrollbar{width:0;height:0;background:transparent}`}</style>
-      {open && (
-        <div ref={panelRef} style={panelFixedStyle(corner)}>
-          <div style={panelCard}>
-            <div className="st-panel-body" style={panelBody}>
-              {children}
-            </div>
-          </div>
+      <div
+        ref={panelRef}
+        style={{
+          ...panelFixedStyle(corner),
+          opacity: open ? 1 : 0,
+          transform: open ? "scale(1) translateY(0)" : `scale(0.98) ${panelTranslate}`,
+          transformOrigin: panelTransformOrigin,
+          pointerEvents: open ? "auto" : "none",
+          transition: open
+            ? "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)"
+            : "opacity 200ms ease, transform 200ms cubic-bezier(0.25, 0, 0, 1)",
+        }}
+      >
+        <div style={panelCard}>
+          <div className="st-panel-body" style={panelBody}>{children}</div>
         </div>
-      )}
+      </div>
       <button
         ref={btnRef}
         className="st-toggle"
