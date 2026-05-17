@@ -1,5 +1,5 @@
 export { TweaksProvider, useTweaks } from './TweaksContext'
-export { TweaksPanel } from './TweaksPanel'
+export { TweaksPanel, TweaksPanelBody } from './TweaksPanel'
 export {
   TweaksPanelShell,
   Section,

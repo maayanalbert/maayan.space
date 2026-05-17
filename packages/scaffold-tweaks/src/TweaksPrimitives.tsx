@@ -221,7 +221,9 @@ export function TweaksPanelShell({ children }: { children: ReactNode }) {
       {open && (
         <div ref={panelRef} style={panelFixedStyle(corner)}>
           <div style={panelCard}>
-            <div className="st-panel-body" style={panelBody}>{children}</div>
+            <div className="st-panel-body" style={panelBody}>
+              {children}
+            </div>
           </div>
         </div>
       )}
@@ -285,29 +287,92 @@ export function Field({
   blurb: string
   children: ReactNode
 }) {
+  const [expanded, setExpanded] = React.useState(false)
+
+  const blurbParagraphs = blurb.split("\n\n")
+  const blurbText = (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      {blurbParagraphs.map((para, i) => (
+        <p
+          key={i}
+          style={{
+            fontSize: 12,
+            color: "rgb(255 255 255 / 0.4)",
+            lineHeight: 1.625,
+            margin: 0,
+          }}
+        >
+          {para}
+        </p>
+      ))}
+    </div>
+  )
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <p
+      <div
         style={{
-          fontSize: 14,
-          fontWeight: 500,
-          color: "rgb(255 255 255 / 0.88)",
-          margin: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        {label}
-      </p>
+        <p
+          style={{
+            fontSize: 14,
+            fontWeight: 500,
+            color: "rgb(255 255 255 / 0.88)",
+            margin: 0,
+          }}
+        >
+          {label}
+        </p>
+        <button
+          onClick={() => setExpanded((e) => !e)}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "rgb(255 255 255 / 0.35)",
+            padding: "2px 0",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            aria-hidden="true"
+            style={{
+              transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform 150ms ease",
+            }}
+          >
+            <path
+              d="M2 4.5L6 8L10 4.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+
       {children}
-      <p
+
+      <div
         style={{
-          fontSize: 12,
-          color: "rgb(255 255 255 / 0.4)",
-          lineHeight: 1.625,
-          margin: 0,
+          overflow: "hidden",
+          maxHeight: expanded ? "120px" : "0px",
+          opacity: expanded ? 1 : 0,
+          transition: "max-height 200ms ease, opacity 200ms ease",
         }}
       >
-        {blurb}
-      </p>
+        {blurbText}
+      </div>
     </div>
   )
 }

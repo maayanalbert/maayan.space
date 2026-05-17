@@ -53,6 +53,7 @@ __export(index_exports, {
   SelectControl: () => SelectControl,
   SliderControl: () => SliderControl,
   TweaksPanel: () => TweaksPanel,
+  TweaksPanelBody: () => TweaksPanelBody,
   TweaksPanelShell: () => TweaksPanelShell,
   TweaksProvider: () => TweaksProvider,
   useTweaks: () => useTweaks,
@@ -356,30 +357,96 @@ function Field({
   blurb,
   children
 }) {
+  const [expanded, setExpanded] = import_react2.default.useState(false);
+  const blurbParagraphs = blurb.split("\n\n");
+  const blurbText = /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", flexDirection: "column", gap: 6 }, children: blurbParagraphs.map((para, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    "p",
+    {
+      style: {
+        fontSize: 12,
+        color: "rgb(255 255 255 / 0.4)",
+        lineHeight: 1.625,
+        margin: 0
+      },
+      children: para
+    },
+    i
+  )) });
   return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", flexDirection: "column", gap: 8 }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-      "p",
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+      "div",
       {
         style: {
-          fontSize: 14,
-          fontWeight: 500,
-          color: "rgb(255 255 255 / 0.88)",
-          margin: 0
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between"
         },
-        children: label
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "p",
+            {
+              style: {
+                fontSize: 14,
+                fontWeight: 500,
+                color: "rgb(255 255 255 / 0.88)",
+                margin: 0
+              },
+              children: label
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "button",
+            {
+              onClick: () => setExpanded((e) => !e),
+              style: {
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "rgb(255 255 255 / 0.35)",
+                padding: "2px 0",
+                display: "flex",
+                alignItems: "center"
+              },
+              children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                "svg",
+                {
+                  width: "12",
+                  height: "12",
+                  viewBox: "0 0 12 12",
+                  fill: "none",
+                  "aria-hidden": "true",
+                  style: {
+                    transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 150ms ease"
+                  },
+                  children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                    "path",
+                    {
+                      d: "M2 4.5L6 8L10 4.5",
+                      stroke: "currentColor",
+                      strokeWidth: "1.5",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round"
+                    }
+                  )
+                }
+              )
+            }
+          )
+        ]
       }
     ),
     children,
     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-      "p",
+      "div",
       {
         style: {
-          fontSize: 12,
-          color: "rgb(255 255 255 / 0.4)",
-          lineHeight: 1.625,
-          margin: 0
+          overflow: "hidden",
+          maxHeight: expanded ? "120px" : "0px",
+          opacity: expanded ? 1 : 0,
+          transition: "max-height 200ms ease, opacity 200ms ease"
         },
-        children: blurb
+        children: blurbText
       }
     )
   ] });
@@ -683,8 +750,13 @@ function FieldControl({ field }) {
   var _a;
   const { getValue, setTweak } = useTweaks();
   const value = getValue(field.fieldId);
-  const selectedOption = (_a = field.options.find((o) => String(o.value) === value)) != null ? _a : field.options[0];
+  const selectedOption = field.type === "slider" ? field.options.reduce(
+    (best, opt) => Math.abs(Number(opt.value) - Number(value)) < Math.abs(Number(best.value) - Number(value)) ? opt : best
+  ) : (_a = field.options.find((o) => String(o.value) === value)) != null ? _a : field.options[0];
   const blurb = selectedOption.explanation;
+  function handleChange(v) {
+    setTweak(field.fieldId, v);
+  }
   const stringOptions = field.options.map((o) => {
     var _a2;
     return {
@@ -699,7 +771,7 @@ function FieldControl({ field }) {
       {
         options: stringOptions,
         value,
-        onChange: (v) => setTweak(field.fieldId, v)
+        onChange: handleChange
       }
     );
   } else if (field.type === "select") {
@@ -708,7 +780,7 @@ function FieldControl({ field }) {
       {
         options: stringOptions,
         value,
-        onChange: (v) => setTweak(field.fieldId, v)
+        onChange: handleChange
       }
     );
   } else {
@@ -719,16 +791,19 @@ function FieldControl({ field }) {
         max: field.max,
         step: field.step,
         value: Number(value),
-        onChange: (v) => setTweak(field.fieldId, String(v))
+        onChange: (v) => handleChange(String(v))
       }
     );
   }
   return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Field, { label: field.name, blurb, children: control });
 }
-function TweaksPanel() {
+function TweaksPanelBody() {
   const { fields } = useTweaks();
   const grouped = groupByCategory(fields);
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TweaksPanelShell, { children: Array.from(grouped.entries()).map(([category, categoryFields]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Section, { label: category, children: categoryFields.map((field) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FieldControl, { field }, field.fieldId)) }, category)) });
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: Array.from(grouped.entries()).map(([category, categoryFields]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Section, { label: category, children: categoryFields.map((field) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FieldControl, { field }, field.fieldId)) }, category)) });
+}
+function TweaksPanel() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TweaksPanelShell, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TweaksPanelBody, {}) });
 }
 
 // src/hooks.ts
@@ -747,6 +822,7 @@ function useVariant(fieldId, variantMap) {
   SelectControl,
   SliderControl,
   TweaksPanel,
+  TweaksPanelBody,
   TweaksPanelShell,
   TweaksProvider,
   useTweaks,

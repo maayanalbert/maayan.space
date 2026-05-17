@@ -25,8 +25,19 @@ function FieldControl({ field }: { field: FieldDef }) {
   const value = getValue(field.fieldId)
 
   const selectedOption =
-    field.options.find((o) => String(o.value) === value) ?? field.options[0]
+    field.type === 'slider'
+      ? field.options.reduce((best, opt) =>
+          Math.abs(Number(opt.value) - Number(value)) <
+          Math.abs(Number(best.value) - Number(value))
+            ? opt
+            : best
+        )
+      : field.options.find((o) => String(o.value) === value) ?? field.options[0]
   const blurb = selectedOption.explanation
+
+  function handleChange(v: string) {
+    setTweak(field.fieldId, v)
+  }
 
   const stringOptions = field.options.map((o) => ({
     label: o.label ?? String(o.value),
@@ -40,7 +51,7 @@ function FieldControl({ field }: { field: FieldDef }) {
       <SegmentedControl
         options={stringOptions}
         value={value}
-        onChange={(v) => setTweak(field.fieldId, v)}
+        onChange={handleChange}
       />
     )
   } else if (field.type === 'select') {
@@ -48,7 +59,7 @@ function FieldControl({ field }: { field: FieldDef }) {
       <SelectControl
         options={stringOptions}
         value={value}
-        onChange={(v) => setTweak(field.fieldId, v)}
+        onChange={handleChange}
       />
     )
   } else {
@@ -58,7 +69,7 @@ function FieldControl({ field }: { field: FieldDef }) {
         max={field.max}
         step={field.step}
         value={Number(value)}
-        onChange={(v) => setTweak(field.fieldId, String(v))}
+        onChange={(v) => handleChange(String(v))}
       />
     )
   }
@@ -70,12 +81,12 @@ function FieldControl({ field }: { field: FieldDef }) {
   )
 }
 
-export function TweaksPanel() {
+export function TweaksPanelBody() {
   const { fields } = useTweaks()
   const grouped = groupByCategory(fields)
 
   return (
-    <TweaksPanelShell>
+    <>
       {Array.from(grouped.entries()).map(([category, categoryFields]) => (
         <Section key={category} label={category}>
           {categoryFields.map((field) => (
@@ -83,6 +94,14 @@ export function TweaksPanel() {
           ))}
         </Section>
       ))}
+    </>
+  )
+}
+
+export function TweaksPanel() {
+  return (
+    <TweaksPanelShell>
+      <TweaksPanelBody />
     </TweaksPanelShell>
   )
 }

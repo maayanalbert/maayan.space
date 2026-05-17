@@ -62,28 +62,28 @@ const fields: FieldDef[] = [
         value: "prose",
         label: "Prose",
         explanation:
-          "Flowing list — each item reads like a sentence in a paragraph. Feels conversational and unpretentious, but items compete for visual weight when there are four.",
+          "Flowing list — each item reads like a sentence in a paragraph. Feels conversational and unpretentious.\n\nItems compete for visual weight when there are four.",
         current: true,
       },
       {
         value: "cards",
         label: "Cards",
         explanation:
-          "Each item gets its own contained box. Creates clear separation and equal visual weight per item. Can feel heavier and more corporate than the content warrants.",
+          "Each item gets its own contained box. Creates clear separation and equal visual weight per item.\n\nCan feel heavier and more corporate than the content warrants.",
         current: false,
       },
       {
         value: "timeline",
         label: "Timeline",
         explanation:
-          "Left spine with dot markers — implies a narrative arc and chronological reading. Adds structure and momentum. Works best when the items actually follow a sequence.",
+          "Left spine with dot markers — implies a narrative arc and chronological reading. Adds structure and momentum.\n\nWorks best when the items actually follow a sequence.",
         current: false,
       },
       {
         value: "compact",
         label: "Compact",
         explanation:
-          "Tight divider-separated rows — maximum density with minimum decoration. Lets the text do all the work. Feels focused and editorial; the links carry the accent colour load.",
+          "Tight divider-separated rows — maximum density with minimum decoration. Lets the text do all the work.\n\nFeels focused and editorial; the links carry the accent colour load.",
         current: false,
       },
     ],
@@ -98,7 +98,7 @@ const fields: FieldDef[] = [
         value: "current",
         label: "Current — Helvetica Neue / Helvetica Neue",
         explanation:
-          "Neutral and consistent — the same voice everywhere. Dependable, but doesn't use type to create hierarchy or personality. Good baseline to compare against.",
+          "Neutral and consistent — the same voice everywhere. Dependable.\n\nDoesn't use type to create hierarchy or personality. Good baseline to compare against.",
         current: true,
       },
       {
@@ -112,7 +112,7 @@ const fields: FieldDef[] = [
         value: "futura",
         label: "Futura / Futura",
         explanation:
-          "Geometric and forward-looking — the circular forms give it a timeless optimism that's hard to fake. Can read as cold at body sizes; works best when the content has confidence to match.",
+          "Geometric and forward-looking — the circular forms give it a timeless optimism that's hard to fake.\n\nCan read as cold at body sizes; works best when the content has confidence to match.",
         current: false,
       },
       {
@@ -126,7 +126,7 @@ const fields: FieldDef[] = [
         value: "editorial",
         label: "Editorial — Playfair / Inter",
         explanation:
-          "High-contrast serif heading paired with a crisp UI sans for body. The contrast signals a literary, considered sensibility. Can tip into over-designed if the content doesn't match the register.",
+          "High-contrast serif heading paired with a crisp UI sans for body. The contrast signals a literary, considered sensibility.\n\nCan tip into over-designed if the content doesn't match the register.",
         current: false,
       },
       {
@@ -154,7 +154,7 @@ const fields: FieldDef[] = [
         value: "minimal",
         label: "Minimal — Inter / Inter",
         explanation:
-          "Pure utility — Inter everywhere. Extremely legible and familiar, lets the content and layout do all the work. Falls flat without strong sizing contrast between heading and body.",
+          "Pure utility — Inter everywhere. Extremely legible and familiar, lets the content and layout do all the work.\n\nFalls flat without strong sizing contrast between heading and body.",
         current: false,
       },
       {
@@ -183,10 +183,34 @@ const fields: FieldDef[] = [
     step: 0.05,
     options: [
       {
+        value: 1.1,
+        explanation:
+          "Lines sit right on top of each other. Only works for large display headings you want to feel like a single unit.\n\nUnreadable at body sizes.",
+        current: false,
+      },
+      {
+        value: 1.25,
+        explanation:
+          "Compact — works for UI labels and short captions where vertical space matters.\n\nParagraphs blur together; readers have to work harder to track across lines.",
+        current: false,
+      },
+      {
         value: 1.4,
         explanation:
-          "Comfortable reading rhythm — gives each line room to breathe without feeling sparse. Good default for most body copy.",
+          "Comfortable reading rhythm — gives each line room to breathe without feeling sparse.\n\nGood default for most body copy.",
         current: true,
+      },
+      {
+        value: 1.65,
+        explanation:
+          "Relaxed and spacious — reads well for longer prose and gives the page an airy quality.\n\nCan feel loose for short paragraphs; the page may look underfull.",
+        current: false,
+      },
+      {
+        value: 1.9,
+        explanation:
+          "Very open — approaching double-spaced. Creates a deliberate, literary quality.\n\nParagraphs lose their sense of cohesion; works better for pull quotes than flowing body text.",
+        current: false,
       },
     ],
   },
