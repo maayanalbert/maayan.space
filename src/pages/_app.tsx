@@ -223,10 +223,7 @@ function TweaksCSSSync() {
 
   useEffect(() => {
     const fonts = FONT_FAMILIES[fontCombo] ?? FONT_FAMILIES.current
-    document.documentElement.style.setProperty(
-      "--font-heading",
-      fonts.heading
-    )
+    document.documentElement.style.setProperty("--font-heading", fonts.heading)
     document.documentElement.style.setProperty("--font-body", fonts.body)
   }, [fontCombo])
 
@@ -238,7 +235,6 @@ function TweaksCSSSync() {
 
   return null
 }
-
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <TogglesProvider fields={fields}>
