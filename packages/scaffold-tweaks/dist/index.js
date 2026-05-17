@@ -52,11 +52,11 @@ __export(index_exports, {
   SegmentedControl: () => SegmentedControl,
   SelectControl: () => SelectControl,
   SliderControl: () => SliderControl,
-  TweaksPanel: () => TweaksPanel,
-  TweaksPanelBody: () => TweaksPanelBody,
-  TweaksPanelShell: () => TweaksPanelShell,
-  TweaksProvider: () => TweaksProvider,
-  useTweaks: () => useTweaks,
+  TogglesPanel: () => TogglesPanel,
+  TogglesPanelBody: () => TogglesPanelBody,
+  TogglesPanelShell: () => TogglesPanelShell,
+  TogglesProvider: () => TogglesProvider,
+  useToggles: () => useToggles,
   useVariant: () => useVariant
 });
 module.exports = __toCommonJS(index_exports);
@@ -64,7 +64,7 @@ module.exports = __toCommonJS(index_exports);
 // src/TweaksContext.tsx
 var import_react = require("react");
 var import_jsx_runtime = require("react/jsx-runtime");
-var STYLE_ID = "scaffold-tweaks-styles";
+var STYLE_ID = "toggletation-styles";
 var INJECTED_CSS = `
 .st-toggle:hover { background: #252525 !important; }
 .st-seg-btn:hover { color: rgba(255, 255, 255, 0.7) !important; }
@@ -82,7 +82,7 @@ var TweaksContext = (0, import_react.createContext)({
   },
   getValue: () => ""
 });
-function TweaksProvider({
+function TogglesProvider({
   fields,
   children
 }) {
@@ -126,7 +126,7 @@ function TweaksProvider({
   }
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TweaksContext.Provider, { value: { tweaks, fields, setTweak, getValue }, children });
 }
-function useTweaks() {
+function useToggles() {
   return (0, import_react.useContext)(TweaksContext);
 }
 
@@ -222,7 +222,7 @@ var toggleBtn = {
   border: "none",
   flexShrink: 0
 };
-function TweaksPanelShell({ children }) {
+function TogglesPanelShell({ children }) {
   const [open, setOpen] = import_react2.default.useState(false);
   const [corner, setCorner] = import_react2.default.useState("bottom-right");
   const [btnPos, setBtnPos] = import_react2.default.useState(
@@ -765,7 +765,7 @@ function groupByCategory(fields) {
 }
 function FieldControl({ field }) {
   var _a;
-  const { getValue, setTweak } = useTweaks();
+  const { getValue, setTweak } = useToggles();
   const value = getValue(field.fieldId);
   const selectedOption = field.type === "slider" ? field.options.reduce(
     (best, opt) => Math.abs(Number(opt.value) - Number(value)) < Math.abs(Number(best.value) - Number(value)) ? opt : best
@@ -814,19 +814,19 @@ function FieldControl({ field }) {
   }
   return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Field, { label: field.name, blurb, children: control });
 }
-function TweaksPanelBody() {
-  const { fields } = useTweaks();
+function TogglesPanelBody() {
+  const { fields } = useToggles();
   const grouped = groupByCategory(fields);
   return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: Array.from(grouped.entries()).map(([category, categoryFields]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Section, { label: category, children: categoryFields.map((field) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FieldControl, { field }, field.fieldId)) }, category)) });
 }
-function TweaksPanel() {
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TweaksPanelShell, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TweaksPanelBody, {}) });
+function TogglesPanel() {
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TogglesPanelShell, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TogglesPanelBody, {}) });
 }
 
 // src/hooks.ts
 function useVariant(fieldId, variantMap) {
   var _a;
-  const { getValue } = useTweaks();
+  const { getValue } = useToggles();
   const value = getValue(fieldId);
   const keys = Object.keys(variantMap);
   return (_a = variantMap[value]) != null ? _a : variantMap[keys[0]];
@@ -838,11 +838,11 @@ function useVariant(fieldId, variantMap) {
   SegmentedControl,
   SelectControl,
   SliderControl,
-  TweaksPanel,
-  TweaksPanelBody,
-  TweaksPanelShell,
-  TweaksProvider,
-  useTweaks,
+  TogglesPanel,
+  TogglesPanelBody,
+  TogglesPanelShell,
+  TogglesProvider,
+  useToggles,
   useVariant
 });
 //# sourceMappingURL=index.js.map

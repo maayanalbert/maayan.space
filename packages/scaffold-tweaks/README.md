@@ -1,4 +1,4 @@
-# scaffold-tweaks
+# Toggletation
 
 Live design-variant panels for React apps. Define fields, get a floating panel for free — no UI to write.
 
@@ -7,17 +7,17 @@ A draggable button sits in the corner of your app. Click it to open a panel with
 ## Install
 
 ```bash
-npm install scaffold-tweaks
+npm install toggletation
 ```
 
 Peer deps: React ≥ 18.
 
 ## Setup
 
-Wrap your app in `TweaksProvider` and drop in `TweaksPanel`:
+Wrap your app in `TogglesProvider` and drop in `TogglesPanel`:
 
 ```tsx
-import { TweaksProvider, TweaksPanel, type FieldDef } from 'scaffold-tweaks'
+import { TogglesProvider, TogglesPanel, type FieldDef } from 'toggletation'
 
 const fields: FieldDef[] = [
   {
@@ -34,10 +34,10 @@ const fields: FieldDef[] = [
 
 export default function App({ children }) {
   return (
-    <TweaksProvider fields={fields}>
+    <TogglesProvider fields={fields}>
       {children}
-      <TweaksPanel />
-    </TweaksProvider>
+      {process.env.NODE_ENV === "development" && <TogglesPanel />}
+    </TogglesProvider>
   )
 }
 ```
@@ -84,9 +84,9 @@ For sliders, add options at representative points across the range. The panel pi
 ### Conditional logic
 
 ```tsx
-import { useTweaks } from 'scaffold-tweaks'
+import { useToggles } from 'toggletation'
 
-const { getValue } = useTweaks()
+const { getValue } = useToggles()
 const view = getValue('view')
 return view === 'grid' ? <Grid items={items} /> : <List items={items} />
 ```
@@ -94,7 +94,7 @@ return view === 'grid' ? <Grid items={items} /> : <List items={items} />
 ### Whole component swap
 
 ```tsx
-import { useVariant } from 'scaffold-tweaks'
+import { useVariant } from 'toggletation'
 
 const Card = useVariant('cardStyle', {
   default: DefaultCard,
@@ -109,7 +109,7 @@ Falls back to the first map entry if the current value isn't found.
 ### CSS custom property
 
 ```tsx
-const { getValue } = useTweaks()
+const { getValue } = useToggles()
 useEffect(() => {
   document.documentElement.style.setProperty('--line-height', getValue('lineHeight'))
 }, [getValue('lineHeight')])
@@ -117,21 +117,21 @@ useEffect(() => {
 
 ## Agent setup
 
-The package ships with a `SKILL.md` — a plain-markdown file that tells AI coding assistants how to use scaffold-tweaks correctly. Copy it to the right place for your tool:
+The package ships with a `SKILL.md` — a plain-markdown file that tells AI coding assistants how to use Toggletation correctly. Copy it to the right place for your tool:
 
 ```bash
 # Cursor
-mkdir -p .cursor/skills/scaffold-tweaks
-cp node_modules/scaffold-tweaks/SKILL.md .cursor/skills/scaffold-tweaks/SKILL.md
+mkdir -p .cursor/skills/toggletation
+cp node_modules/toggletation/SKILL.md .cursor/skills/toggletation/SKILL.md
 
 # Claude
-cat node_modules/scaffold-tweaks/SKILL.md >> CLAUDE.md
+cat node_modules/toggletation/SKILL.md >> CLAUDE.md
 
 # GitHub Copilot
-cat node_modules/scaffold-tweaks/SKILL.md >> .github/copilot-instructions.md
+cat node_modules/toggletation/SKILL.md >> .github/copilot-instructions.md
 
 # Windsurf
-cat node_modules/scaffold-tweaks/SKILL.md >> .windsurfrules
+cat node_modules/toggletation/SKILL.md >> .windsurfrules
 ```
 
 Once wired up, your agent will proactively suggest tweaks panels whenever you ask for design variants, layout options, or style alternatives.

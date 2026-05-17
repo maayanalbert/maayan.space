@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import type { FieldDef, TweakState, TweaksContextValue } from './types'
 
-const STYLE_ID = 'scaffold-tweaks-styles'
+const STYLE_ID = 'toggletation-styles'
 
 const INJECTED_CSS = `
 .st-toggle:hover { background: #252525 !important; }
@@ -27,7 +27,7 @@ const TweaksContext = createContext<TweaksContextValue>({
   getValue: () => '',
 })
 
-export function TweaksProvider({
+export function TogglesProvider({
   fields,
   children,
 }: {
@@ -83,6 +83,6 @@ export function TweaksProvider({
   )
 }
 
-export function useTweaks(): TweaksContextValue {
+export function useToggles(): TweaksContextValue {
   return useContext(TweaksContext)
 }

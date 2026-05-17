@@ -37,16 +37,16 @@ type TweaksContextValue = {
     getValue: (fieldId: string) => string;
 };
 
-declare function TweaksProvider({ fields, children, }: {
+declare function TogglesProvider({ fields, children, }: {
     fields: FieldDef[];
     children: ReactNode;
 }): JSX.Element;
-declare function useTweaks(): TweaksContextValue;
+declare function useToggles(): TweaksContextValue;
 
-declare function TweaksPanelBody(): JSX.Element;
-declare function TweaksPanel(): JSX.Element;
+declare function TogglesPanelBody(): JSX.Element;
+declare function TogglesPanel(): JSX.Element;
 
-declare function TweaksPanelShell({ children }: {
+declare function TogglesPanelShell({ children }: {
     children: ReactNode;
 }): JSX.Element | null;
 declare function Section({ label, children, }: {
@@ -85,4 +85,4 @@ declare function SliderControl({ value, min, max, step, onChange, formatValue, }
 
 declare function useVariant<T extends ComponentType<any>>(fieldId: string, variantMap: Record<string, T>): T;
 
-export { Field, type FieldDef, type FieldType, type Option, Section, SegmentedControl, type SegmentedField, SelectControl, type SelectField, SliderControl, type SliderField, type TweakState, type TweaksContextValue, TweaksPanel, TweaksPanelBody, TweaksPanelShell, TweaksProvider, useTweaks, useVariant };
+export { Field, type FieldDef, type FieldType, type Option, Section, SegmentedControl, type SegmentedField, SelectControl, type SelectField, SliderControl, type SliderField, TogglesPanel, TogglesPanelBody, TogglesPanelShell, TogglesProvider, type TweakState, type TweaksContextValue, useToggles, useVariant };

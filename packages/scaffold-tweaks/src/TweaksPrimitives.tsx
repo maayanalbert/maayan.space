@@ -105,7 +105,7 @@ const toggleBtn: CSSProperties = {
   flexShrink: 0,
 }
 
-export function TweaksPanelShell({ children }: { children: ReactNode }) {
+export function TogglesPanelShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = React.useState(false)
   const [corner, setCorner] = React.useState<Corner>("bottom-right")
   // null until mounted so we don't render at (0,0) during SSR

@@ -4,11 +4,11 @@ import type { AppProps } from "next/app"
 import "@/styles/moab-styles.css"
 import { useEffect } from "react"
 import {
-  TweaksProvider,
-  TweaksPanel,
-  useTweaks,
+  TogglesProvider,
+  TogglesPanel,
+  useToggles,
   type FieldDef,
-} from "scaffold-tweaks"
+} from "toggletation"
 
 const FONT_FAMILIES: Record<string, { heading: string; body: string }> = {
   current: {
@@ -217,7 +217,7 @@ const fields: FieldDef[] = [
 ]
 
 function TweaksCSSSync() {
-  const { getValue } = useTweaks()
+  const { getValue } = useToggles()
   const fontCombo = getValue("fontCombo")
   const lineHeight = getValue("lineHeight")
 
@@ -241,14 +241,14 @@ function TweaksCSSSync() {
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <TweaksProvider fields={fields}>
+    <TogglesProvider fields={fields}>
       <TweaksCSSSync />
       {/* @ts-ignore */}
       <PageContextProvider>
         {/* @ts-ignore */}
         <Component {...pageProps} />
       </PageContextProvider>
-      <TweaksPanel />
-    </TweaksProvider>
+      <TogglesPanel />
+    </TogglesProvider>
   )
 }

@@ -1,5 +1,5 @@
 {
-  "name": "scaffold-tweaks",
+  "name": "toggletation",
   "version": "0.1.0",
   "description": "Live design-variant panels for React apps. Define fields, get a panel for free.",
   "main": "dist/index.js",

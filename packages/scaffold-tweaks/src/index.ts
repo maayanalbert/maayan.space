@@ -1,7 +1,7 @@
-export { TweaksProvider, useTweaks } from './TweaksContext'
-export { TweaksPanel, TweaksPanelBody } from './TweaksPanel'
+export { TogglesProvider, useToggles } from './TweaksContext'
+export { TogglesPanel, TogglesPanelBody } from './TweaksPanel'
 export {
-  TweaksPanelShell,
+  TogglesPanelShell,
   Section,
   Field,
   SegmentedControl,

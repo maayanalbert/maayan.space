@@ -1,4 +1,4 @@
-import { useTweaks } from "scaffold-tweaks"
+import { useToggles } from "toggletation"
 import TextLink from "./TextLink"
 
 const items = [
@@ -106,7 +106,7 @@ function CompactLayout() {
 }
 
 export function AboutInfo() {
-  const { getValue } = useTweaks()
+  const { getValue } = useToggles()
   const layout = getValue("aboutLayout") as string
 
   if (layout === "cards") return <CardsLayout />

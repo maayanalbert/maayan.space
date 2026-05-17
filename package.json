@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "scaffold-tweaks": "workspace:*",
+    "toggletation": "workspace:*",
     "@heroicons/react": "^2.0.17",
     "@p5-wrapper/next": "2.0.0",
     "@p5-wrapper/react": "5.0.0-rc.5",

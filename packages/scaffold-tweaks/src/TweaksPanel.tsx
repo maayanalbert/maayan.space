@@ -1,7 +1,7 @@
 import React from 'react'
-import { useTweaks } from './TweaksContext'
+import { useToggles } from './TweaksContext'
 import {
-  TweaksPanelShell,
+  TogglesPanelShell,
   Section,
   Field,
   SegmentedControl,
@@ -21,7 +21,7 @@ function groupByCategory(fields: FieldDef[]): Map<string, FieldDef[]> {
 }
 
 function FieldControl({ field }: { field: FieldDef }) {
-  const { getValue, setTweak } = useTweaks()
+  const { getValue, setTweak } = useToggles()
   const value = getValue(field.fieldId)
 
   const selectedOption =
@@ -81,8 +81,8 @@ function FieldControl({ field }: { field: FieldDef }) {
   )
 }
 
-export function TweaksPanelBody() {
-  const { fields } = useTweaks()
+export function TogglesPanelBody() {
+  const { fields } = useToggles()
   const grouped = groupByCategory(fields)
 
   return (
@@ -98,10 +98,10 @@ export function TweaksPanelBody() {
   )
 }
 
-export function TweaksPanel() {
+export function TogglesPanel() {
   return (
-    <TweaksPanelShell>
-      <TweaksPanelBody />
-    </TweaksPanelShell>
+    <TogglesPanelShell>
+      <TogglesPanelBody />
+    </TogglesPanelShell>
   )
 }

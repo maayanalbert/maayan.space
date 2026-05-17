@@ -1,30 +1,30 @@
 ---
-name: scaffold-tweaks
+name: toggletation
 description: >-
-  Build live design-variant panels using the scaffold-tweaks package.
+  Build live design-variant panels using the toggletation package.
   Use proactively whenever the user asks for variants, alternatives, or options
   of any kind — layout, colour, typography, density, style — even if they don't
   mention a tweaks panel explicitly.
 ---
 
-# scaffold-tweaks
+# toggletation
 
-Import from `'scaffold-tweaks'`.
+Import from `'toggletation'`.
 
 ## Setup
 
-`TweaksProvider` wraps the app and receives a `fields: FieldDef[]` array.
-`TweaksPanel` renders automatically — no panel content to write.
+`TogglesProvider` wraps the app and receives a `fields: FieldDef[]` array.
+`TogglesPanel` renders automatically — no panel content to write.
 
 ```tsx
-import { TweaksProvider, TweaksPanel, type FieldDef } from 'scaffold-tweaks'
+import { TogglesProvider, TogglesPanel, type FieldDef } from 'toggletation'
 
 const fields: FieldDef[] = [ /* ... */ ]
 
-<TweaksProvider fields={fields}>
+<TogglesProvider fields={fields}>
   {children}
-  <TweaksPanel />
-</TweaksProvider>
+  {process.env.NODE_ENV === "development" && <TogglesPanel />}
+</TogglesProvider>
 ```
 
 ## Defining fields
@@ -81,9 +81,9 @@ Pick the right tier for what the tweak affects:
 ### Tier 1 — Conditional rendering / logic
 
 ```tsx
-import { useTweaks } from "scaffold-tweaks"
+import { useToggles } from "toggletation"
 
-const { getValue } = useTweaks()
+const { getValue } = useToggles()
 const view = getValue("view")
 return view === "grid" ? <Grid items={items} /> : <List items={items} />
 ```
@@ -91,7 +91,7 @@ return view === "grid" ? <Grid items={items} /> : <List items={items} />
 ### Tier 2 — Whole component swap
 
 ```tsx
-import { useVariant } from "scaffold-tweaks"
+import { useVariant } from "toggletation"
 
 const Card = useVariant("cardStyle", {
   default: DefaultCard,
@@ -106,7 +106,7 @@ Returns the component constructor for the current field value. Falls back to the
 ### Tier 3 — CSS custom property
 
 ```tsx
-const { getValue } = useTweaks()
+const { getValue } = useToggles()
 useEffect(() => {
   document.documentElement.style.setProperty(
     "--line-height",
