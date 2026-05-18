@@ -174,6 +174,85 @@ const fields: FieldDef[] = [
     ],
   },
   {
+    fieldId: "linkStyle",
+    type: "segmented",
+    name: "Link style",
+    category: "Typography",
+    options: [
+      {
+        value: "color",
+        label: "Color",
+        explanation:
+          "The link announces itself by hue alone — no decoration interrupts the reading line. Very clean.\n\nEntirely dependent on colour perception; invisible to users with colour blindness or in bright ambient light.",
+        current: true,
+      },
+      {
+        value: "underline",
+        label: "Underline",
+        explanation:
+          "A persistent underline makes links universally scannable without relying on colour. Offset keeps it clear of descenders.\n\nAdds visual noise in dense prose — every link competes for attention equally.",
+        current: false,
+      },
+      {
+        value: "highlight",
+        label: "Highlight",
+        explanation:
+          "A faint background wash behind the link text — more marker than underline. Warm and editorial; works well at low link density.\n\nCan read as busy when links cluster close together.",
+        current: false,
+      },
+      {
+        value: "dotted",
+        label: "Dotted",
+        explanation:
+          "A dotted underline signals interactive without the weight of a solid line — gentler and more conversational.\n\nDots can be hard to see at small sizes or on low-contrast displays.",
+        current: false,
+      },
+    ],
+  },
+  {
+    fieldId: "linkHoverStyle",
+    type: "select",
+    name: "Highlight hover",
+    category: "Typography",
+    options: [
+      {
+        value: "fade",
+        label: "Fade",
+        explanation:
+          "The highlight dims on hover — quiet and unobtrusive. The link acknowledges interaction without drama.\n\nCan feel too subtle; easy to miss that you're hovering.",
+        current: true,
+      },
+      {
+        value: "deepen",
+        label: "Deepen",
+        explanation:
+          "The colour saturates and darkens on hover — the highlight intensifies in place. Feels grounded and confident.\n\nRequires enough contrast in the base highlight to read as a clear state change.",
+        current: false,
+      },
+      {
+        value: "fill",
+        label: "Fill",
+        explanation:
+          "The background floods to full accent colour and the text flips white — a decisive, high-contrast reveal.\n\nThe strongest signal of the four; can feel heavy if links are frequent.",
+        current: false,
+      },
+      {
+        value: "pop",
+        label: "Pop",
+        explanation:
+          "The chip lifts slightly with a soft shadow — a physical, almost tactile response.\n\nAdds motion to a static page; works best when links are spaced apart rather than inline in dense prose.",
+        current: false,
+      },
+      {
+        value: "fillpop",
+        label: "Fill + Pop",
+        explanation:
+          "Fill and lift at once — the background floods to full accent, text flips white, and the chip rises with a shadow. The most emphatic of the five.\n\nCan feel like a lot in dense prose; strongest when links are few and intentional.",
+        current: false,
+      },
+    ],
+  },
+  {
     fieldId: "lineHeight",
     type: "slider",
     name: "Line height",
@@ -216,7 +295,7 @@ const fields: FieldDef[] = [
   },
 ]
 
-function TweaksCSSSync() {
+function TogglesCSSSync() {
   const { getValue } = useToggles()
   const fontCombo = getValue("fontCombo")
   const lineHeight = getValue("lineHeight")
@@ -237,8 +316,8 @@ function TweaksCSSSync() {
 }
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <TogglesProvider fields={fields}>
-      <TweaksCSSSync />
+    <TogglesProvider fields={fields} defaults={{ fontCombo: "friendly", linkStyle: "highlight", lineHeight: 1.6, linkHoverStyle: "fill" }}>
+      <TogglesCSSSync />
       {/* @ts-ignore */}
       <PageContextProvider>
         {/* @ts-ignore */}

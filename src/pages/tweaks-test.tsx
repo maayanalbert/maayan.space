@@ -307,7 +307,7 @@ function SpringDemo() {
 
 // ─── page ──────────────────────────────────────────────────────────────────
 
-export default function TweaksTestPage() {
+export default function TogglesTestPage() {
   return (
     <div
       style={{

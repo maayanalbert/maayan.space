@@ -9,7 +9,7 @@ description: >-
 
 # toggletation
 
-npm package at `packages/scaffold-tweaks`. Import from `'toggletation'`.
+npm package at `packages/toggletation`. Import from `'toggletation'`.
 
 ## Setup (already wired in `_app.tsx`)
 
@@ -26,6 +26,39 @@ const fields: FieldDef[] = [ /* ... */ ]
   {process.env.NODE_ENV === "development" && <TogglesPanel />}
 </TogglesProvider>
 ```
+
+### `defaults` prop — promoting panel selections to code
+
+`TogglesProvider` accepts an optional `defaults` prop that overrides `current: true` at init without touching the `fields` array:
+
+```tsx
+<TogglesProvider fields={fields} defaults={{ linkStyle: "highlight", lineHeight: 1.6 }}>
+```
+
+Only supply the fields you want to change — omitted fields fall back to `current: true`.
+
+## Saving selections
+
+### localStorage persistence
+
+All selections are automatically persisted to `localStorage` (`toggletation-state`) and restored on reload. New fields start at their `current: true` value regardless.
+
+### Modified indicators
+
+Any field whose live value differs from its `current: true` baseline turns **blue** — the selected segment label, select text, or slider value label.
+
+### Save button
+
+When any field is modified, a save button (bookmark icon) appears to the inward side of the dials toggle. Clicking it copies a ready-to-paste snippet:
+
+```
+defaults={{
+  linkStyle: "highlight",
+  lineHeight: 1.6
+}}
+```
+
+Paste it into `TogglesProvider` as `defaults`. The `fields` array never needs to change.
 
 ## Defining fields
 
@@ -73,6 +106,12 @@ explanation: "What this option does well — its character and strengths.\n\nWhe
 ## Explanation style
 
 Field explanations use a collapsible chevron toggle. Each field is collapsed by default; clicking the chevron expands the explanation beneath the control. No other style should be used.
+
+## Panel isolation
+
+The panel hard-resets `fontFamily` and `lineHeight` on its root container so it is immune to any CSS custom properties you apply to `html` or `body`. This means you can safely set `--font-body`, `--font-heading`, `--line-height`, etc. on the document without worrying about the panel picking them up.
+
+If you add new CSS variables that affect inherited properties (e.g. `--letter-spacing`, `--font-size`), reset them in `panelCard` inside `packages/toggletation/src/TogglesPrimitives.tsx`, then run `pnpm build` in that package. Never rely on CSS cascade to style panel internals — every property must be explicit on the element.
 
 ## Consuming state — three tiers
 

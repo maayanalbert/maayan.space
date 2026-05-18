@@ -25,14 +25,15 @@ export type SliderField = BaseField & {
 
 export type FieldDef = SegmentedField | SelectField | SliderField
 
-export type TweakState = {
+export type ToggleState = {
   fieldId: string
   value: string
 }
 
-export type TweaksContextValue = {
-  tweaks: TweakState[]
+export type TogglesContextValue = {
+  toggles: ToggleState[]
   fields: FieldDef[]
-  setTweak: (fieldId: string, value: string) => void
+  setToggle: (fieldId: string, value: string) => void
   getValue: (fieldId: string) => string
+  getDefaultValue: (fieldId: string) => string
 }

@@ -18,7 +18,7 @@ var __spreadValues = (a, b) => {
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 
-// src/TweaksContext.tsx
+// src/TogglesContext.tsx
 import {
   createContext,
   useContext,
@@ -27,6 +27,7 @@ import {
 } from "react";
 import { jsx } from "react/jsx-runtime";
 var STYLE_ID = "toggletation-styles";
+var LS_KEY = "toggletation-state";
 var INJECTED_CSS = `
 .st-toggle:hover { background: #252525 !important; }
 .st-seg-btn:hover { color: rgba(255, 255, 255, 0.7) !important; }
@@ -37,31 +38,64 @@ var INJECTED_CSS = `
 .st-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 0; height: 0; }
 .st-slider::-moz-range-thumb { width: 0; height: 0; border: none; }
 `;
-var TweaksContext = createContext({
-  tweaks: [],
+var TogglesContext = createContext({
+  toggles: [],
   fields: [],
-  setTweak: () => {
+  setToggle: () => {
   },
-  getValue: () => ""
+  getValue: () => "",
+  getDefaultValue: () => ""
 });
+function getDefaultForField(field, defaults) {
+  var _a;
+  if (defaults && defaults[field.fieldId] !== void 0) {
+    return String(defaults[field.fieldId]);
+  }
+  const current = (_a = field.options.find((o) => o.current)) != null ? _a : field.options[0];
+  return String(current.value);
+}
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch (e) {
+    return {};
+  }
+}
+function saveToStorage(toggles) {
+  try {
+    const map = {};
+    for (const t of toggles) map[t.fieldId] = t.value;
+    localStorage.setItem(LS_KEY, JSON.stringify(map));
+  } catch (e) {
+  }
+}
 function TogglesProvider({
   fields,
+  defaults,
   children
 }) {
-  const [tweaks, setTweaks] = useState(
-    () => fields.map((f) => {
+  const [toggles, setToggles] = useState(() => {
+    const stored = loadFromStorage();
+    return fields.map((f) => {
       var _a;
-      const current = (_a = f.options.find((o) => o.current)) != null ? _a : f.options[0];
-      return { fieldId: f.fieldId, value: String(current.value) };
-    })
-  );
+      return {
+        fieldId: f.fieldId,
+        value: (_a = stored[f.fieldId]) != null ? _a : getDefaultForField(f, defaults)
+      };
+    });
+  });
   useEffect(() => {
-    setTweaks((prev) => {
+    setToggles((prev) => {
+      const stored = loadFromStorage();
       const existing = new Set(prev.map((t) => t.fieldId));
       const newEntries = fields.filter((f) => !existing.has(f.fieldId)).map((f) => {
         var _a;
-        const current = (_a = f.options.find((o) => o.current)) != null ? _a : f.options[0];
-        return { fieldId: f.fieldId, value: String(current.value) };
+        return {
+          fieldId: f.fieldId,
+          value: (_a = stored[f.fieldId]) != null ? _a : getDefaultForField(f, defaults)
+        };
       });
       return newEntries.length === 0 ? prev : [...prev, ...newEntries];
     });
@@ -77,27 +111,43 @@ function TogglesProvider({
       (_a = document.getElementById(STYLE_ID)) == null ? void 0 : _a.remove();
     };
   }, []);
-  function setTweak(fieldId, value) {
-    setTweaks(
-      (prev) => prev.map((t) => t.fieldId === fieldId ? __spreadProps(__spreadValues({}, t), { value }) : t)
-    );
+  function setToggle(fieldId, value) {
+    setToggles((prev) => {
+      const next = prev.map(
+        (t) => t.fieldId === fieldId ? __spreadProps(__spreadValues({}, t), { value }) : t
+      );
+      saveToStorage(next);
+      return next;
+    });
   }
   function getValue(fieldId) {
     var _a, _b;
-    return (_b = (_a = tweaks.find((t) => t.fieldId === fieldId)) == null ? void 0 : _a.value) != null ? _b : "";
+    return (_b = (_a = toggles.find((t) => t.fieldId === fieldId)) == null ? void 0 : _a.value) != null ? _b : "";
   }
-  return /* @__PURE__ */ jsx(TweaksContext.Provider, { value: { tweaks, fields, setTweak, getValue }, children });
+  function getDefaultValue(fieldId) {
+    const field = fields.find((f) => f.fieldId === fieldId);
+    if (!field) return "";
+    return getDefaultForField(field, defaults);
+  }
+  return /* @__PURE__ */ jsx(
+    TogglesContext.Provider,
+    {
+      value: { toggles, fields, setToggle, getValue, getDefaultValue },
+      children
+    }
+  );
 }
 function useToggles() {
-  return useContext(TweaksContext);
+  return useContext(TogglesContext);
 }
 
-// src/TweaksPrimitives.tsx
+// src/TogglesPrimitives.tsx
 import React2, {
   useEffect as useEffect2,
   useRef
 } from "react";
 import { Fragment, jsx as jsx2, jsxs } from "react/jsx-runtime";
+var MODIFIED_BLUE = "#60a5fa";
 function DialsIcon() {
   return /* @__PURE__ */ jsxs(
     "svg",
@@ -122,6 +172,66 @@ function DialsIcon() {
         /* @__PURE__ */ jsx2("path", { d: "M21 5h-7" }),
         /* @__PURE__ */ jsx2("path", { d: "M8 10v4" }),
         /* @__PURE__ */ jsx2("path", { d: "M8 12H3" })
+      ]
+    }
+  );
+}
+function CopyIcon() {
+  return /* @__PURE__ */ jsxs(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "15",
+      height: "15",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      children: [
+        /* @__PURE__ */ jsx2("rect", { x: "9", y: "9", width: "13", height: "13", rx: "2", ry: "2" }),
+        /* @__PURE__ */ jsx2("path", { d: "M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" })
+      ]
+    }
+  );
+}
+function CheckIcon() {
+  return /* @__PURE__ */ jsx2(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "15",
+      height: "15",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      children: /* @__PURE__ */ jsx2("polyline", { points: "20 6 9 17 4 12" })
+    }
+  );
+}
+function XIcon() {
+  return /* @__PURE__ */ jsxs(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      children: [
+        /* @__PURE__ */ jsx2("line", { x1: "18", y1: "6", x2: "6", y2: "18" }),
+        /* @__PURE__ */ jsx2("line", { x1: "6", y1: "6", x2: "18", y2: "18" })
       ]
     }
   );
@@ -159,12 +269,13 @@ var panelCard = {
   width: 288,
   background: "#1c1c1c",
   borderRadius: 16,
-  boxShadow: "0 4px 12px -2px rgb(0 0 0 / 0.3), 0 0 0 0.5px rgb(255 255 255 / 0.08)",
-  border: "1px solid rgb(255 255 255 / 0.08)",
-  overflow: "hidden"
+  border: "1px solid rgb(255 255 255 / 0.12)",
+  overflow: "hidden",
+  fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  lineHeight: "normal"
 };
 var panelBody = {
-  padding: 16,
+  padding: "18px 16px 16px 16px",
   display: "flex",
   flexDirection: "column",
   gap: 20,
@@ -178,16 +289,19 @@ var toggleBtn = {
   background: "#1c1c1c",
   color: "white",
   borderRadius: 9999,
-  boxShadow: "0 2px 8px -1px rgb(0 0 0 / 0.4), 0 0 0 0.5px rgb(255 255 255 / 0.08)",
+  border: "1px solid rgb(255 255 255 / 0.12)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   cursor: "pointer",
   userSelect: "none",
-  border: "none",
   flexShrink: 0
 };
-function TogglesPanelShell({ children }) {
+function TogglesPanelShell({
+  children,
+  hasChanges,
+  onSave
+}) {
   const [open, setOpen] = React2.useState(false);
   const [corner, setCorner] = React2.useState("bottom-right");
   const [btnPos, setBtnPos] = React2.useState(
@@ -195,13 +309,15 @@ function TogglesPanelShell({ children }) {
   );
   const [animating, setAnimating] = React2.useState(false);
   const [dragging, setDragging] = React2.useState(false);
+  const [copied, setCopied] = React2.useState(false);
   const panelRef = useRef(null);
   const btnRef = useRef(null);
   const dragRef = useRef(null);
   const snapTimer = useRef(null);
+  const copiedTimer = useRef(null);
   useEffect2(() => {
     var _a;
-    const saved = (_a = localStorage.getItem("tweaks-corner")) != null ? _a : "bottom-right";
+    const saved = (_a = localStorage.getItem("toggles-corner")) != null ? _a : "bottom-right";
     setCorner(saved);
     setBtnPos(cornerBtnPos(saved));
   }, []);
@@ -214,19 +330,17 @@ function TogglesPanelShell({ children }) {
   }, [corner]);
   useEffect2(() => {
     if (!open) return;
-    function onOutside(e) {
-      const t = e.target;
-      if (panelRef.current && !panelRef.current.contains(t) && btnRef.current && !btnRef.current.contains(t))
-        setOpen(false);
+    function onKey(e) {
+      if (e.key === "Escape") setOpen(false);
     }
-    document.addEventListener("mousedown", onOutside);
-    return () => document.removeEventListener("mousedown", onOutside);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [open]);
   function snapToCorner(c) {
     setCorner(c);
     setAnimating(true);
     setBtnPos(cornerBtnPos(c));
-    localStorage.setItem("tweaks-corner", c);
+    localStorage.setItem("toggles-corner", c);
     if (snapTimer.current) clearTimeout(snapTimer.current);
     snapTimer.current = setTimeout(() => setAnimating(false), 300);
   }
@@ -271,6 +385,12 @@ function TogglesPanelShell({ children }) {
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseup", onUp);
   }
+  function handleSaveClick() {
+    onSave == null ? void 0 : onSave();
+    setCopied(true);
+    if (copiedTimer.current) clearTimeout(copiedTimer.current);
+    copiedTimer.current = setTimeout(() => setCopied(false), 1800);
+  }
   if (!btnPos) return null;
   const isBottom = corner.startsWith("bottom");
   const isRight = corner.endsWith("right");
@@ -287,9 +407,89 @@ function TogglesPanelShell({ children }) {
           transform: open ? "scale(1) translateY(0)" : `scale(0.98) ${panelTranslate}`,
           transformOrigin: panelTransformOrigin,
           pointerEvents: open ? "auto" : "none",
-          transition: open ? "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)" : "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)"
+          transition: "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)"
         }),
-        children: /* @__PURE__ */ jsx2("div", { style: panelCard, children: /* @__PURE__ */ jsx2("div", { className: "st-panel-body", style: panelBody, children }) })
+        children: /* @__PURE__ */ jsxs("div", { style: { position: "relative" }, children: [
+          /* @__PURE__ */ jsx2("div", { style: panelCard, children: /* @__PURE__ */ jsx2("div", { className: "st-panel-body", style: panelBody, children }) }),
+          /* @__PURE__ */ jsxs(
+            "div",
+            {
+              style: {
+                position: "absolute",
+                top: 0,
+                right: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                background: "#252525",
+                border: "1px solid rgb(255 255 255 / 0.14)",
+                borderRadius: "0 16px 0 10px",
+                padding: "4px 6px 4px 8px",
+                zIndex: 1,
+                boxShadow: "0 2px 6px rgb(0 0 0 / 0.35)"
+              },
+              children: [
+                /* @__PURE__ */ jsx2(
+                  "button",
+                  {
+                    onClick: handleSaveClick,
+                    onMouseEnter: (e) => {
+                      if (hasChanges) e.currentTarget.style.background = "rgb(96 165 250 / 0.12)";
+                    },
+                    onMouseLeave: (e) => {
+                      e.currentTarget.style.background = "none";
+                    },
+                    style: {
+                      background: "none",
+                      border: "none",
+                      cursor: hasChanges ? "pointer" : "default",
+                      color: hasChanges ? MODIFIED_BLUE : "rgb(255 255 255 / 0.25)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 20,
+                      height: 20,
+                      borderRadius: 999,
+                      padding: 0,
+                      pointerEvents: hasChanges ? "auto" : "none",
+                      transition: "color 180ms ease, background 120ms ease"
+                    },
+                    "aria-label": "Copy defaults snippet",
+                    children: copied ? /* @__PURE__ */ jsx2(CheckIcon, {}) : /* @__PURE__ */ jsx2(CopyIcon, {})
+                  }
+                ),
+                /* @__PURE__ */ jsx2(
+                  "button",
+                  {
+                    onClick: () => setOpen(false),
+                    onMouseEnter: (e) => {
+                      e.currentTarget.style.background = "rgb(255 255 255 / 0.1)";
+                    },
+                    onMouseLeave: (e) => {
+                      e.currentTarget.style.background = "none";
+                    },
+                    style: {
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "rgb(255 255 255 / 0.4)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 20,
+                      height: 20,
+                      borderRadius: 999,
+                      padding: 0,
+                      transition: "color 120ms ease, background 120ms ease"
+                    },
+                    "aria-label": "Close panel",
+                    children: /* @__PURE__ */ jsx2(XIcon, {})
+                  }
+                )
+              ]
+            }
+          )
+        ] })
       }
     ),
     /* @__PURE__ */ jsx2(
@@ -302,7 +502,7 @@ function TogglesPanelShell({ children }) {
           position: "fixed",
           left: btnPos.x,
           top: btnPos.y,
-          cursor: dragging ? "grabbing" : "grab",
+          cursor: dragging ? "grabbing" : "pointer",
           transition: animating ? "left 300ms cubic-bezier(0.25, 0, 0, 1), top 300ms cubic-bezier(0.25, 0, 0, 1)" : "none",
           zIndex: 51
         }),
@@ -346,7 +546,7 @@ function Field({
     {
       style: {
         fontSize: 12,
-        color: "rgb(255 255 255 / 0.4)",
+        color: "rgb(255 255 255 / 0.6)",
         lineHeight: 1.625,
         margin: 0
       },
@@ -436,7 +636,8 @@ function Field({
 function SegmentedControl({
   options,
   value,
-  onChange
+  onChange,
+  isModified
 }) {
   const selectedIndex = options.findIndex((o) => o.value === value);
   const btnRefs = useRef([]);
@@ -471,10 +672,10 @@ function SegmentedControl({
               bottom: 4,
               left: pillGeom.left,
               width: pillGeom.width,
-              background: "rgb(255 255 255 / 0.14)",
+              background: isModified ? "rgb(96 165 250 / 0.15)" : "rgb(255 255 255 / 0.14)",
               borderRadius: 6,
               boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.4)",
-              transition: "left 160ms cubic-bezier(0.4, 0, 0.2, 1), width 160ms cubic-bezier(0.4, 0, 0.2, 1)",
+              transition: "left 160ms cubic-bezier(0.4, 0, 0.2, 1), width 160ms cubic-bezier(0.4, 0, 0.2, 1), background 200ms ease",
               pointerEvents: "none"
             }
           }
@@ -495,7 +696,7 @@ function SegmentedControl({
               border: "none",
               cursor: "pointer",
               background: "transparent",
-              color: value === opt.value ? "rgb(255 255 255 / 0.9)" : "rgb(255 255 255 / 0.4)",
+              color: value === opt.value ? isModified ? MODIFIED_BLUE : "rgb(255 255 255 / 0.9)" : "rgb(255 255 255 / 0.4)",
               position: "relative",
               zIndex: 1,
               transition: "color 160ms ease",
@@ -536,7 +737,8 @@ function ChevronDown() {
 function SelectControl({
   options,
   value,
-  onChange
+  onChange,
+  isModified
 }) {
   return /* @__PURE__ */ jsxs("div", { style: { position: "relative", width: "100%" }, children: [
     /* @__PURE__ */ jsx2(
@@ -548,16 +750,17 @@ function SelectControl({
         style: {
           width: "100%",
           fontSize: 13,
-          border: "1px solid rgb(255 255 255 / 0.1)",
+          border: `1px solid ${isModified ? "rgb(96 165 250 / 0.3)" : "rgb(255 255 255 / 0.1)"}`,
           borderRadius: 8,
           padding: "8px 32px 8px 12px",
-          background: "rgb(255 255 255 / 0.08)",
-          color: "rgb(255 255 255 / 0.88)",
+          background: isModified ? "rgb(96 165 250 / 0.06)" : "rgb(255 255 255 / 0.08)",
+          color: isModified ? MODIFIED_BLUE : "rgb(255 255 255 / 0.88)",
           appearance: "none",
           boxSizing: "border-box",
           cursor: "pointer",
           colorScheme: "dark",
-          outline: "none"
+          outline: "none",
+          transition: "color 200ms ease, background 200ms ease, border-color 200ms ease"
         },
         children: options.map((opt) => /* @__PURE__ */ jsx2("option", { value: opt.value, children: opt.label }, opt.value))
       }
@@ -585,7 +788,8 @@ function SliderControl({
   max,
   step = 1,
   onChange,
-  formatValue
+  formatValue,
+  isModified
 }) {
   const [isDragging, setIsDragging] = React2.useState(false);
   const [isHovered, setIsHovered] = React2.useState(false);
@@ -647,10 +851,11 @@ function SliderControl({
         borderRadius: OUTER_R,
         height: 36,
         cursor: isDragging ? "grabbing" : "grab",
-        background: "rgb(255 255 255 / 0.08)",
+        background: isModified ? "rgb(96 165 250 / 0.08)" : "rgb(255 255 255 / 0.08)",
         padding: INNER_PAD,
         boxSizing: "border-box",
-        userSelect: "none"
+        userSelect: "none",
+        transition: "background 200ms ease"
       },
       children: /* @__PURE__ */ jsxs(
         "div",
@@ -671,9 +876,10 @@ function SliderControl({
                   left: 0,
                   bottom: 0,
                   width: `${pct}%`,
-                  background: "rgb(255 255 255 / 0.13)",
+                  background: isModified ? "rgb(96 165 250 / 0.25)" : "rgb(255 255 255 / 0.13)",
                   borderRadius: `${INNER_R}px`,
-                  boxShadow: "inset 0 1px 2px 0 rgb(0 0 0 / 0.4)"
+                  boxShadow: "inset 0 1px 2px 0 rgb(0 0 0 / 0.4)",
+                  transition: "background 200ms ease"
                 }
               }
             ),
@@ -686,7 +892,7 @@ function SliderControl({
                   bottom: knobInset,
                   left: knobLeft,
                   width: knobW,
-                  background: active ? "rgb(255 255 255 / 0.7)" : "rgb(255 255 255 / 0.55)",
+                  background: active ? isModified ? MODIFIED_BLUE : "rgb(255 255 255 / 0.7)" : isModified ? "rgb(96 165 250 / 0.8)" : "rgb(255 255 255 / 0.55)",
                   borderRadius: 2,
                   transition: "top 120ms ease, bottom 120ms ease, width 120ms ease, background 120ms ease"
                 }
@@ -705,7 +911,17 @@ function SliderControl({
                 },
                 children: [
                   /* @__PURE__ */ jsx2("span", { style: { flex: 1 } }),
-                  /* @__PURE__ */ jsx2("span", { style: { fontSize: 13, color: "rgb(255 255 255 / 0.65)" }, children: display })
+                  /* @__PURE__ */ jsx2(
+                    "span",
+                    {
+                      style: {
+                        fontSize: 13,
+                        color: isModified ? MODIFIED_BLUE : "rgb(255 255 255 / 0.65)",
+                        transition: "color 200ms ease"
+                      },
+                      children: display
+                    }
+                  )
                 ]
               }
             )
@@ -716,7 +932,7 @@ function SliderControl({
   );
 }
 
-// src/TweaksPanel.tsx
+// src/TogglesPanel.tsx
 import { Fragment as Fragment2, jsx as jsx3 } from "react/jsx-runtime";
 function groupByCategory(fields) {
   var _a;
@@ -730,14 +946,16 @@ function groupByCategory(fields) {
 }
 function FieldControl({ field }) {
   var _a;
-  const { getValue, setTweak } = useToggles();
+  const { getValue, setToggle, getDefaultValue } = useToggles();
   const value = getValue(field.fieldId);
+  const defaultValue = getDefaultValue(field.fieldId);
+  const isModified = value !== defaultValue;
   const selectedOption = field.type === "slider" ? field.options.reduce(
     (best, opt) => Math.abs(Number(opt.value) - Number(value)) < Math.abs(Number(best.value) - Number(value)) ? opt : best
   ) : (_a = field.options.find((o) => String(o.value) === value)) != null ? _a : field.options[0];
   const blurb = selectedOption.explanation;
   function handleChange(v) {
-    setTweak(field.fieldId, v);
+    setToggle(field.fieldId, v);
   }
   const stringOptions = field.options.map((o) => {
     var _a2;
@@ -753,7 +971,8 @@ function FieldControl({ field }) {
       {
         options: stringOptions,
         value,
-        onChange: handleChange
+        onChange: handleChange,
+        isModified
       }
     );
   } else if (field.type === "select") {
@@ -762,7 +981,8 @@ function FieldControl({ field }) {
       {
         options: stringOptions,
         value,
-        onChange: handleChange
+        onChange: handleChange,
+        isModified
       }
     );
   } else {
@@ -773,7 +993,8 @@ function FieldControl({ field }) {
         max: field.max,
         step: field.step,
         value: Number(value),
-        onChange: (v) => handleChange(String(v))
+        onChange: (v) => handleChange(String(v)),
+        isModified
       }
     );
   }
@@ -785,7 +1006,34 @@ function TogglesPanelBody() {
   return /* @__PURE__ */ jsx3(Fragment2, { children: Array.from(grouped.entries()).map(([category, categoryFields]) => /* @__PURE__ */ jsx3(Section, { label: category, children: categoryFields.map((field) => /* @__PURE__ */ jsx3(FieldControl, { field }, field.fieldId)) }, category)) });
 }
 function TogglesPanel() {
-  return /* @__PURE__ */ jsx3(TogglesPanelShell, { children: /* @__PURE__ */ jsx3(TogglesPanelBody, {}) });
+  const { toggles, fields, getDefaultValue } = useToggles();
+  const changedToggles = toggles.filter(
+    (t) => t.value !== getDefaultValue(t.fieldId)
+  );
+  const hasChanges = changedToggles.length > 0;
+  function buildSnippet() {
+    if (changedToggles.length === 0) return "";
+    const entries = changedToggles.map(({ fieldId, value }) => {
+      const field = fields.find((f) => f.fieldId === fieldId);
+      const isSlider = (field == null ? void 0 : field.type) === "slider";
+      const serialised = isSlider ? value : JSON.stringify(value);
+      return `  ${fieldId}: ${serialised}`;
+    });
+    const defaultsProp = `defaults={{
+${entries.join(",\n")}
+}}`;
+    return `Update the defaults prop on TogglesProvider to reflect these selected design options:
+
+${defaultsProp}`;
+  }
+  function handleSave() {
+    const snippet = buildSnippet();
+    if (!snippet) return;
+    navigator.clipboard.writeText(snippet).catch(() => {
+      window.prompt("Copy this snippet and paste it into TogglesProvider:", snippet);
+    });
+  }
+  return /* @__PURE__ */ jsx3(TogglesPanelShell, { hasChanges, onSave: handleSave, children: /* @__PURE__ */ jsx3(TogglesPanelBody, {}) });
 }
 
 // src/hooks.ts

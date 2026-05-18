@@ -26,28 +26,32 @@ type SliderField = BaseField & {
     step?: number;
 };
 type FieldDef = SegmentedField | SelectField | SliderField;
-type TweakState = {
+type ToggleState = {
     fieldId: string;
     value: string;
 };
-type TweaksContextValue = {
-    tweaks: TweakState[];
+type TogglesContextValue = {
+    toggles: ToggleState[];
     fields: FieldDef[];
-    setTweak: (fieldId: string, value: string) => void;
+    setToggle: (fieldId: string, value: string) => void;
     getValue: (fieldId: string) => string;
+    getDefaultValue: (fieldId: string) => string;
 };
 
-declare function TogglesProvider({ fields, children, }: {
+declare function TogglesProvider({ fields, defaults, children, }: {
     fields: FieldDef[];
+    defaults?: Record<string, string | number>;
     children: ReactNode;
 }): JSX.Element;
-declare function useToggles(): TweaksContextValue;
+declare function useToggles(): TogglesContextValue;
 
 declare function TogglesPanelBody(): JSX.Element;
 declare function TogglesPanel(): JSX.Element;
 
-declare function TogglesPanelShell({ children }: {
+declare function TogglesPanelShell({ children, hasChanges, onSave, }: {
     children: ReactNode;
+    hasChanges?: boolean;
+    onSave?: () => void;
 }): JSX.Element | null;
 declare function Section({ label, children, }: {
     label: string;
@@ -58,31 +62,34 @@ declare function Field({ label, blurb, children, }: {
     blurb: string;
     children: ReactNode;
 }): JSX.Element;
-declare function SegmentedControl({ options, value, onChange, }: {
+declare function SegmentedControl({ options, value, onChange, isModified, }: {
     options: {
         label: string;
         value: string;
     }[];
     value: string;
     onChange: (v: string) => void;
+    isModified?: boolean;
 }): JSX.Element;
-declare function SelectControl({ options, value, onChange, }: {
+declare function SelectControl({ options, value, onChange, isModified, }: {
     options: {
         label: string;
         value: string;
     }[];
     value: string;
     onChange: (v: string) => void;
+    isModified?: boolean;
 }): JSX.Element;
-declare function SliderControl({ value, min, max, step, onChange, formatValue, }: {
+declare function SliderControl({ value, min, max, step, onChange, formatValue, isModified, }: {
     value: number;
     min: number;
     max: number;
     step?: number;
     onChange: (v: number) => void;
     formatValue?: (v: number) => string;
+    isModified?: boolean;
 }): JSX.Element;
 
 declare function useVariant<T extends ComponentType<any>>(fieldId: string, variantMap: Record<string, T>): T;
 
-export { Field, type FieldDef, type FieldType, type Option, Section, SegmentedControl, type SegmentedField, SelectControl, type SelectField, SliderControl, type SliderField, TogglesPanel, TogglesPanelBody, TogglesPanelShell, TogglesProvider, type TweakState, type TweaksContextValue, useToggles, useVariant };
+export { Field, type FieldDef, type FieldType, type Option, Section, SegmentedControl, type SegmentedField, SelectControl, type SelectField, SliderControl, type SliderField, type ToggleState, type TogglesContextValue, TogglesPanel, TogglesPanelBody, TogglesPanelShell, TogglesProvider, useToggles, useVariant };

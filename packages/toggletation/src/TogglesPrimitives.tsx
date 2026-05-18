@@ -5,6 +5,8 @@ import React, {
   type CSSProperties,
 } from "react"
 
+const MODIFIED_BLUE = "#60a5fa"
+
 // Lucide sliders-horizontal icon
 function DialsIcon() {
   return (
@@ -33,10 +35,70 @@ function DialsIcon() {
   )
 }
 
+function CopyIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  )
+}
+
+function XIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  )
+}
+
 type Corner = "bottom-right" | "bottom-left" | "top-right" | "top-left"
 
 const MARGIN = 24
 const BTN_SIZE = 42
+const BTN_GAP = 10
 const PANEL_GAP = 12
 
 function cornerBtnPos(c: Corner): { x: number; y: number } {
@@ -72,14 +134,15 @@ const panelCard: CSSProperties = {
   width: 288,
   background: "#1c1c1c",
   borderRadius: 16,
-  boxShadow:
-    "0 4px 12px -2px rgb(0 0 0 / 0.3), 0 0 0 0.5px rgb(255 255 255 / 0.08)",
-  border: "1px solid rgb(255 255 255 / 0.08)",
+  border: "1px solid rgb(255 255 255 / 0.12)",
   overflow: "hidden",
+  fontFamily:
+    "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  lineHeight: "normal",
 }
 
 const panelBody: CSSProperties = {
-  padding: 16,
+  padding: "18px 16px 16px 16px",
   display: "flex",
   flexDirection: "column",
   gap: 20,
@@ -94,26 +157,32 @@ const toggleBtn: CSSProperties = {
   background: "#1c1c1c",
   color: "white",
   borderRadius: 9999,
-  boxShadow:
-    "0 2px 8px -1px rgb(0 0 0 / 0.4), 0 0 0 0.5px rgb(255 255 255 / 0.08)",
+  border: "1px solid rgb(255 255 255 / 0.12)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   cursor: "pointer",
   userSelect: "none",
-  border: "none",
   flexShrink: 0,
 }
 
-export function TogglesPanelShell({ children }: { children: ReactNode }) {
+export function TogglesPanelShell({
+  children,
+  hasChanges,
+  onSave,
+}: {
+  children: ReactNode
+  hasChanges?: boolean
+  onSave?: () => void
+}) {
   const [open, setOpen] = React.useState(false)
   const [corner, setCorner] = React.useState<Corner>("bottom-right")
-  // null until mounted so we don't render at (0,0) during SSR
   const [btnPos, setBtnPos] = React.useState<{ x: number; y: number } | null>(
     null
   )
   const [animating, setAnimating] = React.useState(false)
   const [dragging, setDragging] = React.useState(false)
+  const [copied, setCopied] = React.useState(false)
 
   const panelRef = useRef<HTMLDivElement>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
@@ -125,16 +194,15 @@ export function TogglesPanelShell({ children }: { children: ReactNode }) {
     moved: boolean
   } | null>(null)
   const snapTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Set initial position client-side, restoring saved corner if present
   useEffect(() => {
     const saved =
-      (localStorage.getItem("tweaks-corner") as Corner | null) ?? "bottom-right"
+      (localStorage.getItem("toggles-corner") as Corner | null) ?? "bottom-right"
     setCorner(saved)
     setBtnPos(cornerBtnPos(saved))
   }, [])
 
-  // Keep button in its corner when window resizes
   useEffect(() => {
     function onResize() {
       setBtnPos(cornerBtnPos(corner))
@@ -143,28 +211,20 @@ export function TogglesPanelShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("resize", onResize)
   }, [corner])
 
-  // Close panel on outside click
   useEffect(() => {
     if (!open) return
-    function onOutside(e: MouseEvent) {
-      const t = e.target as Node
-      if (
-        panelRef.current &&
-        !panelRef.current.contains(t) &&
-        btnRef.current &&
-        !btnRef.current.contains(t)
-      )
-        setOpen(false)
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false)
     }
-    document.addEventListener("mousedown", onOutside)
-    return () => document.removeEventListener("mousedown", onOutside)
+    document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
   }, [open])
 
   function snapToCorner(c: Corner) {
     setCorner(c)
     setAnimating(true)
     setBtnPos(cornerBtnPos(c))
-    localStorage.setItem("tweaks-corner", c)
+    localStorage.setItem("toggles-corner", c)
     if (snapTimer.current) clearTimeout(snapTimer.current)
     snapTimer.current = setTimeout(() => setAnimating(false), 300)
   }
@@ -213,6 +273,13 @@ export function TogglesPanelShell({ children }: { children: ReactNode }) {
     document.addEventListener("mouseup", onUp)
   }
 
+  function handleSaveClick() {
+    onSave?.()
+    setCopied(true)
+    if (copiedTimer.current) clearTimeout(copiedTimer.current)
+    copiedTimer.current = setTimeout(() => setCopied(false), 1800)
+  }
+
   if (!btnPos) return null
 
   const isBottom = corner.startsWith("bottom")
@@ -233,17 +300,82 @@ export function TogglesPanelShell({ children }: { children: ReactNode }) {
             : `scale(0.98) ${panelTranslate}`,
           transformOrigin: panelTransformOrigin,
           pointerEvents: open ? "auto" : "none",
-          transition: open
-            ? "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)"
-            : "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)",
+          transition:
+            "opacity 80ms ease, transform 180ms cubic-bezier(0.25, 0, 0, 1)",
         }}
       >
-        <div style={panelCard}>
-          <div className="st-panel-body" style={panelBody}>
-            {children}
+        <div style={{ position: "relative" }}>
+          <div style={panelCard}>
+            <div className="st-panel-body" style={panelBody}>
+              {children}
+            </div>
+          </div>
+          {/* Floating pill */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              background: "#252525",
+              border: "1px solid rgb(255 255 255 / 0.14)",
+              borderRadius: "0 16px 0 10px",
+              padding: "4px 6px 4px 8px",
+              zIndex: 1,
+              boxShadow: "0 2px 6px rgb(0 0 0 / 0.35)",
+            }}
+          >
+            <button
+              onClick={handleSaveClick}
+              onMouseEnter={(e) => { if (hasChanges) (e.currentTarget as HTMLButtonElement).style.background = "rgb(96 165 250 / 0.12)" }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "none" }}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: hasChanges ? "pointer" : "default",
+                color: hasChanges ? MODIFIED_BLUE : "rgb(255 255 255 / 0.25)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 20,
+                height: 20,
+                borderRadius: 999,
+                padding: 0,
+                pointerEvents: hasChanges ? "auto" : "none",
+                transition: "color 180ms ease, background 120ms ease",
+              }}
+              aria-label="Copy defaults snippet"
+            >
+              {copied ? <CheckIcon /> : <CopyIcon />}
+            </button>
+            <button
+              onClick={() => setOpen(false)}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgb(255 255 255 / 0.1)" }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "none" }}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "rgb(255 255 255 / 0.4)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 20,
+                height: 20,
+                borderRadius: 999,
+                padding: 0,
+                transition: "color 120ms ease, background 120ms ease",
+              }}
+              aria-label="Close panel"
+            >
+              <XIcon />
+            </button>
           </div>
         </div>
       </div>
+
       <button
         ref={btnRef}
         className="st-toggle"
@@ -253,7 +385,7 @@ export function TogglesPanelShell({ children }: { children: ReactNode }) {
           position: "fixed",
           left: btnPos.x,
           top: btnPos.y,
-          cursor: dragging ? "grabbing" : "grab",
+          cursor: dragging ? "grabbing" : "pointer",
           transition: animating
             ? "left 300ms cubic-bezier(0.25, 0, 0, 1), top 300ms cubic-bezier(0.25, 0, 0, 1)"
             : "none",
@@ -314,7 +446,7 @@ export function Field({
           key={i}
           style={{
             fontSize: 12,
-            color: "rgb(255 255 255 / 0.4)",
+            color: "rgb(255 255 255 / 0.6)",
             lineHeight: 1.625,
             margin: 0,
           }}
@@ -398,10 +530,12 @@ export function SegmentedControl({
   options,
   value,
   onChange,
+  isModified,
 }: {
   options: { label: string; value: string }[]
   value: string
   onChange: (v: string) => void
+  isModified?: boolean
 }) {
   const selectedIndex = options.findIndex((o) => o.value === value)
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([])
@@ -431,7 +565,6 @@ export function SegmentedControl({
         borderRadius: 8,
       }}
     >
-      {/* sliding pill */}
       {pillGeom && selectedIndex !== -1 && (
         <div
           style={{
@@ -440,11 +573,13 @@ export function SegmentedControl({
             bottom: 4,
             left: pillGeom.left,
             width: pillGeom.width,
-            background: "rgb(255 255 255 / 0.14)",
+            background: isModified
+              ? "rgb(96 165 250 / 0.15)"
+              : "rgb(255 255 255 / 0.14)",
             borderRadius: 6,
             boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.4)",
             transition:
-              "left 160ms cubic-bezier(0.4, 0, 0.2, 1), width 160ms cubic-bezier(0.4, 0, 0.2, 1)",
+              "left 160ms cubic-bezier(0.4, 0, 0.2, 1), width 160ms cubic-bezier(0.4, 0, 0.2, 1), background 200ms ease",
             pointerEvents: "none",
           }}
         />
@@ -467,7 +602,9 @@ export function SegmentedControl({
             background: "transparent",
             color:
               value === opt.value
-                ? "rgb(255 255 255 / 0.9)"
+                ? isModified
+                  ? MODIFIED_BLUE
+                  : "rgb(255 255 255 / 0.9)"
                 : "rgb(255 255 255 / 0.4)",
             position: "relative",
             zIndex: 1,
@@ -508,10 +645,12 @@ export function SelectControl({
   options,
   value,
   onChange,
+  isModified,
 }: {
   options: { label: string; value: string }[]
   value: string
   onChange: (v: string) => void
+  isModified?: boolean
 }) {
   return (
     <div style={{ position: "relative", width: "100%" }}>
@@ -522,16 +661,19 @@ export function SelectControl({
         style={{
           width: "100%",
           fontSize: 13,
-          border: "1px solid rgb(255 255 255 / 0.1)",
+          border: `1px solid ${isModified ? "rgb(96 165 250 / 0.3)" : "rgb(255 255 255 / 0.1)"}`,
           borderRadius: 8,
           padding: "8px 32px 8px 12px",
-          background: "rgb(255 255 255 / 0.08)",
-          color: "rgb(255 255 255 / 0.88)",
+          background: isModified
+            ? "rgb(96 165 250 / 0.06)"
+            : "rgb(255 255 255 / 0.08)",
+          color: isModified ? MODIFIED_BLUE : "rgb(255 255 255 / 0.88)",
           appearance: "none",
           boxSizing: "border-box",
           cursor: "pointer",
           colorScheme: "dark",
           outline: "none",
+          transition: "color 200ms ease, background 200ms ease, border-color 200ms ease",
         }}
       >
         {options.map((opt) => (
@@ -564,6 +706,7 @@ export function SliderControl({
   step = 1,
   onChange,
   formatValue,
+  isModified,
 }: {
   value: number
   min: number
@@ -571,6 +714,7 @@ export function SliderControl({
   step?: number
   onChange: (v: number) => void
   formatValue?: (v: number) => string
+  isModified?: boolean
 }) {
   const [isDragging, setIsDragging] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
@@ -587,7 +731,6 @@ export function SliderControl({
   const INNER_R = OUTER_R - INNER_PAD + 1
 
   const active = isDragging || isHovered
-  // subtle grow on hover/drag
   const knobInset = active ? 6 : KNOB_PAD
   const knobW = KNOB_W
 
@@ -644,13 +787,15 @@ export function SliderControl({
         borderRadius: OUTER_R,
         height: 36,
         cursor: isDragging ? "grabbing" : "grab",
-        background: "rgb(255 255 255 / 0.08)",
+        background: isModified
+          ? "rgb(96 165 250 / 0.08)"
+          : "rgb(255 255 255 / 0.08)",
         padding: INNER_PAD,
         boxSizing: "border-box",
         userSelect: "none",
+        transition: "background 200ms ease",
       }}
     >
-      {/* inner track */}
       <div
         style={{
           position: "relative",
@@ -667,12 +812,15 @@ export function SliderControl({
             left: 0,
             bottom: 0,
             width: `${pct}%`,
-            background: "rgb(255 255 255 / 0.13)",
+            background: isModified
+              ? "rgb(96 165 250 / 0.25)"
+              : "rgb(255 255 255 / 0.13)",
             borderRadius: `${INNER_R}px`,
             boxShadow: "inset 0 1px 2px 0 rgb(0 0 0 / 0.4)",
+            transition: "background 200ms ease",
           }}
         />
-        {/* knob — inset inside the fill, grows on hover/drag */}
+        {/* knob */}
         <div
           style={{
             position: "absolute",
@@ -681,14 +829,18 @@ export function SliderControl({
             left: knobLeft,
             width: knobW,
             background: active
-              ? "rgb(255 255 255 / 0.7)"
+              ? isModified
+                ? MODIFIED_BLUE
+                : "rgb(255 255 255 / 0.7)"
+              : isModified
+              ? "rgb(96 165 250 / 0.8)"
               : "rgb(255 255 255 / 0.55)",
             borderRadius: 2,
             transition:
               "top 120ms ease, bottom 120ms ease, width 120ms ease, background 120ms ease",
           }}
         />
-        {/* value label — fixed to far right */}
+        {/* value label */}
         <div
           style={{
             position: "absolute",
@@ -700,7 +852,13 @@ export function SliderControl({
           }}
         >
           <span style={{ flex: 1 }} />
-          <span style={{ fontSize: 13, color: "rgb(255 255 255 / 0.65)" }}>
+          <span
+            style={{
+              fontSize: 13,
+              color: isModified ? MODIFIED_BLUE : "rgb(255 255 255 / 0.65)",
+              transition: "color 200ms ease",
+            }}
+          >
             {display}
           </span>
         </div>

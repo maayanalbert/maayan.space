@@ -1,5 +1,5 @@
 import React from 'react'
-import { useToggles } from './TweaksContext'
+import { useToggles } from './TogglesContext'
 import {
   TogglesPanelShell,
   Section,
@@ -7,7 +7,7 @@ import {
   SegmentedControl,
   SelectControl,
   SliderControl,
-} from './TweaksPrimitives'
+} from './TogglesPrimitives'
 import type { FieldDef } from './types'
 
 function groupByCategory(fields: FieldDef[]): Map<string, FieldDef[]> {
@@ -21,8 +21,10 @@ function groupByCategory(fields: FieldDef[]): Map<string, FieldDef[]> {
 }
 
 function FieldControl({ field }: { field: FieldDef }) {
-  const { getValue, setTweak } = useToggles()
+  const { getValue, setToggle, getDefaultValue } = useToggles()
   const value = getValue(field.fieldId)
+  const defaultValue = getDefaultValue(field.fieldId)
+  const isModified = value !== defaultValue
 
   const selectedOption =
     field.type === 'slider'
@@ -36,7 +38,7 @@ function FieldControl({ field }: { field: FieldDef }) {
   const blurb = selectedOption.explanation
 
   function handleChange(v: string) {
-    setTweak(field.fieldId, v)
+    setToggle(field.fieldId, v)
   }
 
   const stringOptions = field.options.map((o) => ({
@@ -52,6 +54,7 @@ function FieldControl({ field }: { field: FieldDef }) {
         options={stringOptions}
         value={value}
         onChange={handleChange}
+        isModified={isModified}
       />
     )
   } else if (field.type === 'select') {
@@ -60,6 +63,7 @@ function FieldControl({ field }: { field: FieldDef }) {
         options={stringOptions}
         value={value}
         onChange={handleChange}
+        isModified={isModified}
       />
     )
   } else {
@@ -70,6 +74,7 @@ function FieldControl({ field }: { field: FieldDef }) {
         step={field.step}
         value={Number(value)}
         onChange={(v) => handleChange(String(v))}
+        isModified={isModified}
       />
     )
   }
@@ -99,8 +104,36 @@ export function TogglesPanelBody() {
 }
 
 export function TogglesPanel() {
+  const { toggles, fields, getDefaultValue } = useToggles()
+
+  const changedToggles = toggles.filter(
+    (t) => t.value !== getDefaultValue(t.fieldId)
+  )
+  const hasChanges = changedToggles.length > 0
+
+  function buildSnippet(): string {
+    if (changedToggles.length === 0) return ''
+    const entries = changedToggles.map(({ fieldId, value }) => {
+      const field = fields.find((f) => f.fieldId === fieldId)
+      const isSlider = field?.type === 'slider'
+      const serialised = isSlider ? value : JSON.stringify(value)
+      return `  ${fieldId}: ${serialised}`
+    })
+    const defaultsProp = `defaults={{\n${entries.join(',\n')}\n}}`
+    return `Update the defaults prop on TogglesProvider to reflect these selected design options:\n\n${defaultsProp}`
+  }
+
+  function handleSave() {
+    const snippet = buildSnippet()
+    if (!snippet) return
+    navigator.clipboard.writeText(snippet).catch(() => {
+      // fallback: prompt so the user can copy manually
+      window.prompt('Copy this snippet and paste it into TogglesProvider:', snippet)
+    })
+  }
+
   return (
-    <TogglesPanelShell>
+    <TogglesPanelShell hasChanges={hasChanges} onSave={handleSave}>
       <TogglesPanelBody />
     </TogglesPanelShell>
   )

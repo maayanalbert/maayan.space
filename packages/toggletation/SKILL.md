@@ -27,6 +27,45 @@ const fields: FieldDef[] = [ /* ... */ ]
 </TogglesProvider>
 ```
 
+### `defaults` prop — promoting panel selections to code
+
+`TogglesProvider` accepts an optional `defaults` prop that overrides `current: true` at init without touching the `fields` array:
+
+```tsx
+<TogglesProvider fields={fields} defaults={{ linkStyle: "highlight", lineHeight: 1.6 }}>
+```
+
+Only supply fields you want to change from their baseline — omitted fields fall back to `current: true`.
+
+**Workflow:** tweak in the panel → click the save button next to the dials icon → paste the copied snippet as the `defaults` prop. See [Saving selections](#saving-selections) below.
+
+## Saving selections
+
+The panel has two built-in affordances for working with state:
+
+### localStorage persistence
+
+All selections are automatically persisted to `localStorage` under the key `toggletation-state`. The panel restores your last selections on every reload. New fields added to the `fields` array start at their `current: true` value regardless.
+
+### Modified indicators
+
+Any field whose live value differs from its `current: true` baseline turns **blue** — the selected segment label, select text, or slider value label. This gives you a at-a-glance diff of what has drifted from the coded baseline.
+
+### Save button
+
+When any field is modified a save button (bookmark icon) appears to the inward side of the dials toggle button. Clicking it:
+
+1. Copies a ready-to-paste snippet to clipboard:
+   ```
+   defaults={{
+     linkStyle: "highlight",
+     lineHeight: 1.6
+   }}
+   ```
+2. Shows a brief checkmark confirmation.
+
+Paste the snippet into `TogglesProvider` as the `defaults` prop. The field definitions (`fields` array) never need to change.
+
 ## Defining fields
 
 Each field maps to one control in the panel. Three control types:

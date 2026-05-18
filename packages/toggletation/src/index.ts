@@ -1,5 +1,5 @@
-export { TogglesProvider, useToggles } from './TweaksContext'
-export { TogglesPanel, TogglesPanelBody } from './TweaksPanel'
+export { TogglesProvider, useToggles } from './TogglesContext'
+export { TogglesPanel, TogglesPanelBody } from './TogglesPanel'
 export {
   TogglesPanelShell,
   Section,
@@ -7,7 +7,7 @@ export {
   SegmentedControl,
   SelectControl,
   SliderControl,
-} from './TweaksPrimitives'
+} from './TogglesPrimitives'
 export { useVariant } from './hooks'
 export type {
   FieldDef,
@@ -16,6 +16,6 @@ export type {
   SegmentedField,
   SelectField,
   SliderField,
-  TweakState,
-  TweaksContextValue,
+  ToggleState,
+  TogglesContextValue,
 } from './types'

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['scaffold-tweaks'],
+  transpilePackages: ['toggletation'],
 }
 
 module.exports = nextConfig

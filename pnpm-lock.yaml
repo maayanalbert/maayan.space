@@ -82,7 +82,7 @@ importers:
         version: 3.12.2(@types/react-dom@18.0.11)(@types/react@18.0.28)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       toggletation:
         specifier: workspace:*
-        version: link:packages/scaffold-tweaks
+        version: link:packages/toggletation
       typescript:
         specifier: 4.9.5
         version: 4.9.5
@@ -91,7 +91,7 @@ importers:
         specifier: ^1.7.6
         version: 1.7.6
 
-  packages/scaffold-tweaks:
+  packages/toggletation:
     dependencies:
       react:
         specifier: '>=18'
@@ -6739,7 +6739,7 @@ snapshots:
 
   sucrase@3.35.0:
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.8
+      '@jridgewell/gen-mapping': 0.3.13
       commander: 4.1.1
       glob: 10.4.5
       lines-and-columns: 1.2.4
