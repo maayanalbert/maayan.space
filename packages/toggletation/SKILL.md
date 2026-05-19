@@ -154,6 +154,15 @@ useEffect(() => {
 }, [getValue("lineHeight")])
 ```
 
+**No-flash rule:** `useEffect` runs after the first paint, so the CSS variable is unset on the initial render. Whenever a Tier 3 field is promoted to `defaults`, also set the matching CSS variable in `:root` to that same value. This makes the first paint correct and eliminates the flash.
+
+```css
+/* globals.css — keep in sync with the defaults prop */
+:root {
+  --line-height: 1.6; /* matches defaults={{ lineHeight: 1.6 }} */
+}
+```
+
 ## Full example
 
 ```tsx

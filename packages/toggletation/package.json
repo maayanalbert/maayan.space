@@ -1,6 +1,6 @@
 {
   "name": "toggletation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Live design-variant panels for React apps. Define fields, get a panel for free.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -12,7 +12,10 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist", "SKILL.md"],
+  "files": [
+    "dist",
+    "SKILL.md"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"

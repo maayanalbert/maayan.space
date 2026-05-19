@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 :root {
+  --font-heading: "DM Sans", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+  --line-height: 1.6;
   font-family: var(--font-body, "Helvetica", sans-serif);
 }
 
