@@ -3,8 +3,6 @@ import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import "@/styles/moab-styles.css"
 import { useEffect } from "react"
-import LinkPreviewPrefetcher from "@/components/LinkPreviewPrefetcher"
-import LinkPreviewSidebar from "@/components/LinkPreviewGallery"
 import {
   TogglesProvider,
   TogglesPanel,
@@ -275,232 +273,6 @@ const fields: FieldDef[] = [
       },
     ],
   },
-  {
-    fieldId: "linkHoverStyle",
-    type: "select",
-    name: "Link hover",
-    category: "Typography",
-    options: [
-      {
-        value: "fade",
-        label: "Fade",
-        explanation:
-          "The quietest gesture — the link softens on hover without changing shape or colour. Keeps the reading line calm.\n\nCan feel inert if the rest of the page is already low-contrast; some users may not notice the state change.",
-        current: true,
-      },
-      {
-        value: "deepen",
-        label: "Deepen",
-        explanation:
-          "Colour and saturation intensify on hover — the link feels more present without adding decoration.\n\nFilter-based darkening can look muddy on some accent colours; less effective on underlined styles where the line already carries weight.",
-        current: false,
-      },
-      {
-        value: "fill",
-        label: "Fill",
-        explanation:
-          "Hover inverts the highlight — background becomes the accent colour and text goes white. Clear and decisive.\n\nThe strongest signal in the set; can feel loud when several links sit close together.",
-        current: false,
-      },
-      {
-        value: "pop",
-        label: "Pop",
-        explanation:
-          "A tiny lift and soft shadow on hover — tactile without shouting. Works well with the highlight wash as a base.\n\nSubtle enough that touch devices never see it; shadow can clip if the link sits near a container edge.",
-        current: false,
-      },
-      {
-        value: "fillpop",
-        label: "Fill + pop",
-        explanation:
-          "Combines the solid fill with the lift — the most expressive option, good for a single primary link.\n\nToo much motion and colour shift when many links cluster; best at low link density.",
-        current: false,
-      },
-    ],
-  },
-  {
-    fieldId: "linkPreviewStyle",
-    type: "select",
-    name: "Link preview",
-    category: "Links",
-    options: [
-      {
-        value: "none",
-        label: "None",
-        explanation:
-          "No preview — the link behaves like a plain anchor. Quietest option for dense prose.\n\nVisitors can't peek at the destination before clicking.",
-        current: true,
-      },
-      {
-        value: "tooltip",
-        label: "Tooltip — domain only",
-        explanation:
-          "A small dark tooltip with just the domain — minimal and fast to scan. Inspired by Asana field hints.\n\nNo title or description; less useful for ambiguous link text.",
-        current: false,
-      },
-      {
-        value: "card",
-        label: "Card — favicon + title",
-        explanation:
-          "Compact white card with favicon, link text, and domain. Good balance of information and restraint — similar to Maze link previews.\n\nNo thumbnail or long description; feels utilitarian rather than editorial.",
-        current: false,
-      },
-      {
-        value: "notion",
-        label: "Notion — with description",
-        explanation:
-          "Richer card with a short description and 'Link to web page' footer — feels like Notion's link mention preview.\n\nTaller popover; needs room below the link in the layout.",
-        current: false,
-      },
-      {
-        value: "gamma",
-        label: "Rich — thumbnail block",
-        explanation:
-          "Thumbnail tile plus title and description — the most visual option, inspired by Gamma embed previews.\n\nLargest footprint; can feel heavy when several links sit close together.",
-        current: false,
-      },
-      {
-        value: "linear",
-        label: "Context — status row",
-        explanation:
-          "Structured card with a status label and linked destination row — similar to Linear's dependency popovers.\n\nMore 'tool UI' than editorial; works best for external/project links.",
-        current: false,
-      },
-      {
-        value: "wikipedia",
-        label: "Wikipedia — excerpt card",
-        explanation:
-          "Horizontal card with a thumbnail slot, blue title, and multi-line excerpt — like Wikipedia's link hovercards.\n\nThe widest option; thumbnail is a placeholder unless you wire real Open Graph images.",
-        current: false,
-      },
-      {
-        value: "wikipediaStripe",
-        label: "Wikipedia — left stripe",
-        explanation:
-          "Same excerpt layout as Wikipedia, on a clean white card with a coloured spine on the left tied to the link accent.\n\nFeels integrated with the site's highlight links.",
-        current: false,
-      },
-      {
-        value: "wikipediaStripeTop",
-        label: "Wikipedia — top stripe",
-        explanation:
-          "Accent stripe along the top edge only — like a cap on the preview card.\n\nSubtle anchor to the link colour without framing the whole card.",
-        current: false,
-      },
-      {
-        value: "wikipediaStripeBottom",
-        label: "Wikipedia — bottom stripe",
-        explanation:
-          "Accent stripe along the bottom edge — sits just above the link when the preview opens.\n\nCreates a visual bridge between card and highlighted link text.",
-        current: false,
-      },
-      {
-        value: "wikipediaStripeBottomLeft",
-        label: "Wikipedia — bottom + left",
-        explanation:
-          "L-shaped accent frame: stripe on the left and along the bottom.\n\nThe most tied-to-the-link option — corner emphasis without a full border.",
-        current: false,
-      },
-      {
-        value: "sticky",
-        label: "Sticky note",
-        explanation:
-          "Yellow post-it with tape, slight tilt, and handwritten energy — like you annotated the page yourself.\n\nPlayful and human; clashes with very formal copy.",
-        current: false,
-      },
-      {
-        value: "terminal",
-        label: "Terminal — curl output",
-        explanation:
-          "Fake shell session that 'curls' the URL and prints title and description as JSON.\n\nNiche but delightful for a technical audience; reads as inside joke.",
-        current: false,
-      },
-      {
-        value: "polaroid",
-        label: "Polaroid snapshot",
-        explanation:
-          "Instant-film frame with OG image and a scrawled caption — memory-object, not UI chrome.\n\nWorks best when the destination has a strong thumbnail.",
-        current: false,
-      },
-      {
-        value: "ticket",
-        label: "Ticket stub",
-        explanation:
-          "Perforated admission ticket with accent-coloured stub — 'ADMIT ONE' to the URL.\n\nTheatrical and fun; wide footprint.",
-        current: false,
-      },
-      {
-        value: "marginalia",
-        label: "Marginalia",
-        explanation:
-          "Manuscript margin note with a curved arrow — like a scholar's aside in the page gutter.\n\nQuiet and literary; description-forward.",
-        current: false,
-      },
-      {
-        value: "receipt",
-        label: "Thermal receipt",
-        explanation:
-          "Monospaced receipt with zig-zag tear edge — prints the link as a transaction.\n\nUnexpected and deadpan; narrow and tall.",
-        current: false,
-      },
-      {
-        value: "orbit",
-        label: "Orbit portal",
-        explanation:
-          "Floating card inside a slowly spinning accent ring — sci-fi portal to the destination.\n\nThe most animated option; draws the eye.",
-        current: false,
-      },
-      {
-        value: "flip",
-        label: "Flip card",
-        explanation:
-          "Hover the preview card itself to flip it — front shows the OG image, back reveals the title and description.\n\nA tactile 3D interaction.",
-        current: false,
-      },
-      {
-        value: "tilt",
-        label: "Tilt / holographic",
-        explanation:
-          "Move your mouse across the preview card to tilt it in 3D perspective, with a sheen that follows your cursor — like a holographic trading card.",
-        current: false,
-      },
-      {
-        value: "typewriter",
-        label: "Typewriter",
-        explanation:
-          "Domain, title, and description type out character by character as the preview appears.\n\nFeels alive; monospace aesthetic.",
-        current: false,
-      },
-      {
-        value: "filmstrip",
-        label: "Filmstrip scrub",
-        explanation:
-          "Move your mouse left/right across the card to scrub through three panels: source → title → description.\n\nA novel information-reveal gesture.",
-        current: false,
-      },
-      {
-        value: "mac",
-        label: "Macintosh",
-        explanation:
-          "A tiny classic Macintosh computer — beige case, carry handle, screen bezel, Mac OS window chrome, and a floppy drive slot.\n\nFun, memorable, and unmistakably retro.",
-        current: false,
-      },
-      {
-        value: "browser",
-        label: "Browser (centered)",
-        explanation:
-          "A mini browser window with a live iframe of the site, horizontally centered above the link.",
-        current: false,
-      },
-      {
-        value: "browserLeft",
-        label: "Browser (left)",
-        explanation:
-          "Same mini browser window, but left-aligned with the link instead of centered.",
-        current: false,
-      },
-    ],
-  },
 ]
 
 function TogglesCSSSync() {
@@ -516,29 +288,15 @@ function TogglesCSSSync() {
   return null
 }
 export default function App({ Component, pageProps }: AppProps) {
-  const isDev = process.env.NODE_ENV === "development"
-
-  const page = (
-    /* @ts-ignore */
-    <PageContextProvider>
-      {/* @ts-ignore */}
-      <Component {...pageProps} />
-    </PageContextProvider>
-  )
-
   return (
     <TogglesProvider fields={fields} defaults={{ fontCombo: "friendly", linkStyle: "highlight" }}>
       <TogglesCSSSync />
-      <LinkPreviewPrefetcher />
-      {isDev ? (
-        <div className="dev-app-shell">
-          <LinkPreviewSidebar />
-          <div className="dev-app-main">{page}</div>
-        </div>
-      ) : (
-        page
-      )}
-      {isDev && <TogglesPanel />}
+      {/* @ts-ignore */}
+      <PageContextProvider>
+        {/* @ts-ignore */}
+        <Component {...pageProps} />
+      </PageContextProvider>
+      {process.env.NODE_ENV === "development" && <TogglesPanel />}
     </TogglesProvider>
   )
 }

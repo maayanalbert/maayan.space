@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "sessionId": "0727e3ca-e301-429e-b4ff-52f9c26a8cf4",
+  "contextBundlePath": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4",
+  "userContext": [
+    {
+      "id": "uc_prompt_1",
+      "transport": "prompt",
+      "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4/user/prompt.md"
+    },
+    {
+      "id": "uc_input_1",
+      "transport": "file",
+      "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4/user/uc_input_1-TextLink.tsx",
+      "originalFilename": "TextLink.tsx",
+      "label": "TextLink component"
+    },
+    {
+      "id": "uc_input_2",
+      "transport": "file",
+      "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4/user/uc_input_2-globals.css",
+      "originalFilename": "globals.css",
+      "label": "Global CSS with existing hover classes"
+    },
+    {
+      "id": "uc_input_3",
+      "transport": "file",
+      "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4/user/uc_input_3-_app.tsx",
+      "originalFilename": "_app.tsx",
+      "label": "Toggletation fields config"
+    }
+  ],
+  "rivetActions": [],
+  "rivetMetadata": [],
+  "storedUserContext": [
+    {
+      "source": {
+        "id": "uc_prompt_1",
+        "transport": "prompt",
+        "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4/user/prompt.md"
+      },
+      "storage": {
+        "sizeBytes": 379,
+        "sha256": "4c8e38695adb1746079c517c05a545c98b34323a8f120dd32591b455d1cb38f3"
+      }
+    },
+    {
+      "source": {
+        "id": "uc_input_1",
+        "transport": "file",
+        "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4/user/uc_input_1-TextLink.tsx",
+        "originalFilename": "TextLink.tsx",
+        "label": "TextLink component"
+      },
+      "storage": {
+        "sizeBytes": 1736,
+        "sha256": "2d0144310c357df042321ac1749a2d60c2bfd590417b71b8a35316c09fec0d0f",
+        "originalFilename": "TextLink.tsx"
+      }
+    },
+    {
+      "source": {
+        "id": "uc_input_2",
+        "transport": "file",
+        "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4/user/uc_input_2-globals.css",
+        "originalFilename": "globals.css",
+        "label": "Global CSS with existing hover classes"
+      },
+      "storage": {
+        "sizeBytes": 1506,
+        "sha256": "5f275d6aef765b7d656a338e8f77dfa860f0f73506bbbf8b4fc4160ac8595f50",
+        "originalFilename": "globals.css"
+      }
+    },
+    {
+      "source": {
+        "id": "uc_input_3",
+        "transport": "file",
+        "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/0727e3ca-e301-429e-b4ff-52f9c26a8cf4/user/uc_input_3-_app.tsx",
+        "originalFilename": "_app.tsx",
+        "label": "Toggletation fields config"
+      },
+      "storage": {
+        "sizeBytes": 12193,
+        "sha256": "48efbd930b1e00daa125eade4b2fb825381ee5a260337ad6b39d566b9acdfed1",
+        "originalFilename": "_app.tsx"
+      }
+    }
+  ]
+}

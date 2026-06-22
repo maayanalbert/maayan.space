@@ -1,0 +1,1 @@
+Add hover states for TextLink components across the site. The site uses a highlight-style link (colored background wash behind link text) as the current default. Each variant should implement a distinct, polished hover interaction for links in src/components/TextLink.tsx and src/styles/globals.css. Hover should feel intentional and match the site's quiet, considered aesthetic.
