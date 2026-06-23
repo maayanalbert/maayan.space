@@ -1,0 +1,12 @@
+services:
+  web:
+    image: node:22-bookworm
+    working_dir: /workspace
+    network_mode: host
+    environment:
+      NODE_ENV: development
+      IS_ALLOY: ${IS_ALLOY:-false}
+      CI: "true"
+    volumes:
+      - .:/workspace
+    command: bash -lc "corepack enable && corepack prepare pnpm@10.10.0 --activate && pnpm config set store-dir /root/.pnpm-store --global && pnpm install --frozen-lockfile --config.confirmModulesPurge=false && pnpm exec next dev -p 1997 -H 0.0.0.0"
