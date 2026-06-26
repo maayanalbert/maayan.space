@@ -2,7 +2,7 @@ import TextLink from "./TextLink"
 import { useToggles } from "toggletation"
 
 const HERO_COPY: Record<string, string> = {
-  current: "I build simple, useful, and slightly magical tools for you, the agent.",
+  current: "I make simple, useful, and slightly magical tools for humans.",
   minimal: "I make tools.",
   inevitable: "I build things that feel like they should have always existed. Small software, made with care.",
   focused:
