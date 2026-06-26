@@ -104,7 +104,7 @@ function createSketch(
 
     const pickCombo = (): { shapeType: number; clr: string } => {
       return {
-        shapeType: p5.int(p5.random(4)),
+        shapeType: p5.int(p5.random(7)),
         clr: p5.random(SHAPE_COLORS),
       }
     }
@@ -210,6 +210,28 @@ function createSketch(
         } else if (this.shapeType == 4) {
           p5.line(0, -this.size * 0.45, 0, this.size * 0.45)
           p5.line(-this.size * 0.45, 0, this.size * 0.45, 0)
+        } else if (this.shapeType == 5) {
+          p5.noStroke()
+          p5.triangle(
+            0,
+            -this.size * 0.5,
+            -this.size * 0.5,
+            this.size * 0.4,
+            this.size * 0.5,
+            this.size * 0.4
+          )
+        } else if (this.shapeType == 6) {
+          p5.noFill()
+          p5.quad(
+            0,
+            -this.size * 0.5,
+            this.size * 0.5,
+            0,
+            0,
+            this.size * 0.5,
+            -this.size * 0.5,
+            0
+          )
         }
         p5.pop()
         p5.strokeWeight(this.lineSW)
@@ -233,7 +255,7 @@ function createSketch(
               this.lineSW = p5.lerp(0, this.size / 5, p5.sin(n * Math.PI))
             } else if (this.animationType == 3) {
               if (this.changeShape == true) {
-                this.shapeType = p5.int(p5.random(5))
+                this.shapeType = p5.int(p5.random(7))
                 this.changeShape = false
               }
             }

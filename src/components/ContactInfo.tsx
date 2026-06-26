@@ -11,8 +11,9 @@ export default function ContactInfo() {
           <Mail size={20} className="text-[rgb(0,151,254)]" />
           <TextLink
             text="maayan.albert@gmail.com"
-            href="mailto:maayan.albert@gmail.com"
+            href="maayan.albert@gmail.com"
             page="CONTACT"
+            copyOnClick
           />
         </div>
         <div className="flex items-center gap-2">
@@ -68,8 +69,9 @@ export default function ContactInfo() {
             />
             <TextLink
               text="maayan.albert@gmail.com"
-              href="mailto:maayan.albert@gmail.com"
+              href="maayan.albert@gmail.com"
               page="CONTACT"
+              copyOnClick
             />
           </div>
           <div className="flex items-center gap-2">

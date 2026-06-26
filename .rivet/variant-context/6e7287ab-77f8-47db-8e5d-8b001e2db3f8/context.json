@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "sessionId": "6e7287ab-77f8-47db-8e5d-8b001e2db3f8",
+  "contextBundlePath": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8",
+  "userContext": [
+    {
+      "id": "uc_prompt_1",
+      "transport": "prompt",
+      "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8/user/prompt.md"
+    },
+    {
+      "id": "uc_input_1",
+      "transport": "file",
+      "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8/user/uc_input_1-TextLink.tsx",
+      "originalFilename": "TextLink.tsx",
+      "label": "TextLink component"
+    },
+    {
+      "id": "uc_input_2",
+      "transport": "file",
+      "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8/user/uc_input_2-globals.css",
+      "originalFilename": "globals.css",
+      "label": "Global CSS"
+    },
+    {
+      "id": "uc_input_3",
+      "transport": "file",
+      "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8/user/uc_input_3-_app.tsx",
+      "originalFilename": "_app.tsx",
+      "label": "Toggletation config"
+    }
+  ],
+  "rivetActions": [],
+  "rivetMetadata": [],
+  "storedUserContext": [
+    {
+      "source": {
+        "id": "uc_prompt_1",
+        "transport": "prompt",
+        "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8/user/prompt.md"
+      },
+      "storage": {
+        "sizeBytes": 465,
+        "sha256": "235446001ffe7a85986a16e0960eb8a8832c658219e279532281a8dd15942622"
+      }
+    },
+    {
+      "source": {
+        "id": "uc_input_1",
+        "transport": "file",
+        "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8/user/uc_input_1-TextLink.tsx",
+        "originalFilename": "TextLink.tsx",
+        "label": "TextLink component"
+      },
+      "storage": {
+        "sizeBytes": 5309,
+        "sha256": "651be92c2ad00c7ca0726e3686abeac64b06cc0e4a515043a08b23f8f88bc0d2",
+        "originalFilename": "TextLink.tsx"
+      }
+    },
+    {
+      "source": {
+        "id": "uc_input_2",
+        "transport": "file",
+        "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8/user/uc_input_2-globals.css",
+        "originalFilename": "globals.css",
+        "label": "Global CSS"
+      },
+      "storage": {
+        "sizeBytes": 38850,
+        "sha256": "7810ce3a902fe7e7c360d82b9cf6280c68c025af15337f5f4711768359c074fb",
+        "originalFilename": "globals.css"
+      }
+    },
+    {
+      "source": {
+        "id": "uc_input_3",
+        "transport": "file",
+        "path": "/Users/maayanalbert/Documents/maayan.space/.rivet/variant-context/6e7287ab-77f8-47db-8e5d-8b001e2db3f8/user/uc_input_3-_app.tsx",
+        "originalFilename": "_app.tsx",
+        "label": "Toggletation config"
+      },
+      "storage": {
+        "sizeBytes": 21762,
+        "sha256": "9e93564fc5b8cfb3bfcdd18b0c0f0d5a42cdd1b79105afa4a7c402e690deef61",
+        "originalFilename": "_app.tsx"
+      }
+    }
+  ]
+}
