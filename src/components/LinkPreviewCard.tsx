@@ -276,7 +276,7 @@ function BrowserPreviewCard({
   } | null>(null)
   const screenshotFallback = meta.screenshotUrl
   const ogImage = meta.imageUrl
-  const liveIframe = Boolean(href && !screenshotFallback)
+  const previewImage = screenshotFallback || ogImage
   const scrollable = Boolean(screenshotFallback)
   const clickable = Boolean(href) && !staticPreview
 
@@ -343,7 +343,7 @@ function BrowserPreviewCard({
 
   return (
     <div
-      className={`link-preview link-preview-browser${staticClass}${loadingClass}${liveIframe ? " link-preview-browser--live" : ""}`}
+      className={`link-preview link-preview-browser${staticClass}${loadingClass}`}
       style={vars}
       onPointerDownCapture={clickable ? handlePointerDownCapture : undefined}
     >
@@ -367,29 +367,11 @@ function BrowserPreviewCard({
       <div
         className={`link-preview-browser-viewport${scrollable ? " link-preview-browser-viewport--scrollable" : ""}`}
       >
-        {liveIframe ? (
-          <div className="link-preview-browser-iframe-wrap">
-            <iframe
-              src={href}
-              title={meta.title}
-              className="link-preview-browser-iframe"
-              sandbox="allow-scripts allow-same-origin"
-              loading="lazy"
-              tabIndex={-1}
-            />
-          </div>
-        ) : screenshotFallback ? (
+        {previewImage ? (
           <img
-            src={screenshotFallback}
-            alt=""
-            className="link-preview-browser-screenshot"
-            draggable={false}
-          />
-        ) : ogImage ? (
-          <img
-            src={ogImage}
+            src={previewImage}
             alt={meta.title}
-            className="link-preview-browser-screenshot link-preview-browser-screenshot--cover"
+            className={`link-preview-browser-screenshot${screenshotFallback ? "" : " link-preview-browser-screenshot--cover"}`}
             draggable={false}
           />
         ) : (

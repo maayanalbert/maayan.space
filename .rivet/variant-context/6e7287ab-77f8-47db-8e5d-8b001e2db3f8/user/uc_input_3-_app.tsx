@@ -4,8 +4,7 @@ import type { AppProps } from "next/app"
 import "@/styles/moab-styles.css"
 import { useEffect } from "react"
 import LinkPreviewPrefetcher from "@/components/LinkPreviewPrefetcher"
-import DevAppShell from "@/components/DevAppShell"
-import { BROWSER_PREVIEW_ANIMS } from "@/lib/browserPreviewAnims"
+import LinkPreviewSidebar from "@/components/LinkPreviewGallery"
 import {
   TogglesProvider,
   TogglesPanel,
@@ -490,29 +489,17 @@ const fields: FieldDef[] = [
         value: "browser",
         label: "Browser (centered)",
         explanation:
-          "A mini browser window with a captured screenshot of the site, horizontally centered above the link.",
+          "A mini browser window with a live iframe of the site, horizontally centered above the link.",
         current: false,
       },
       {
         value: "browserLeft",
         label: "Browser (left)",
         explanation:
-          "Same mini browser window with a screenshot preview, but left-aligned with the link instead of centered.",
+          "Same mini browser window, but left-aligned with the link instead of centered.",
         current: false,
       },
     ],
-  },
-  {
-    fieldId: "browserPreviewAnim",
-    type: "select",
-    name: "Browser enter",
-    category: "Links",
-    options: BROWSER_PREVIEW_ANIMS.map((anim, index) => ({
-      value: anim.value,
-      label: anim.label,
-      explanation: anim.explanation,
-      current: index === 0,
-    })),
   },
 ]
 
@@ -544,7 +531,10 @@ export default function App({ Component, pageProps }: AppProps) {
       <TogglesCSSSync />
       <LinkPreviewPrefetcher />
       {isDev ? (
-        <DevAppShell>{page}</DevAppShell>
+        <div className="dev-app-shell">
+          <LinkPreviewSidebar />
+          <div className="dev-app-main">{page}</div>
+        </div>
       ) : (
         page
       )}

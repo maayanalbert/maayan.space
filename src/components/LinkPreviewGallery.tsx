@@ -74,17 +74,17 @@ function LinkPreviewGalleryList() {
               className={`link-preview-gallery-item${isActive ? " is-active" : ""}`}
               onClick={() => setToggle("linkPreviewStyle", value)}
             >
-            <div className="link-preview-gallery-item-head">
-              <span className="link-preview-gallery-label">{label}</span>
-              <span className="link-preview-gallery-ref">{mobbinRef}</span>
-            </div>
-            {value !== "none" ? (
-              <div className="link-preview-gallery-demo">
-                <LinkPreviewGalleryDemo variant={value} />
+              <div className="link-preview-gallery-item-head">
+                <span className="link-preview-gallery-label">{label}</span>
+                <span className="link-preview-gallery-ref">{mobbinRef}</span>
               </div>
-            ) : (
-              <p className="link-preview-gallery-none">No preview on hover</p>
-            )}
+              {value !== "none" ? (
+                <div className="link-preview-gallery-demo">
+                  <LinkPreviewGalleryDemo variant={value} />
+                </div>
+              ) : (
+                <p className="link-preview-gallery-none">No preview on hover</p>
+              )}
             </button>
           </div>
         )
@@ -93,16 +93,50 @@ function LinkPreviewGalleryList() {
   )
 }
 
-export default function LinkPreviewSidebar() {
+type SidebarProps = {
+  collapsed?: boolean
+  onToggleCollapsed?: () => void
+}
+
+export default function LinkPreviewSidebar({
+  collapsed = false,
+  onToggleCollapsed,
+}: SidebarProps) {
   return (
-    <aside className="link-preview-sidebar" aria-label="Link preview variants">
-      <div className="link-preview-sidebar-header">
-        <p className="link-preview-sidebar-title">Link previews</p>
-        <p className="link-preview-sidebar-sub">
-          Hover links on the page, or pick a variant below.
-        </p>
-      </div>
-      <LinkPreviewGalleryList />
+    <aside
+      className={`link-preview-sidebar${collapsed ? " link-preview-sidebar--collapsed" : ""}`}
+      aria-label="Link preview variants"
+      aria-expanded={!collapsed}
+    >
+      <button
+        type="button"
+        className="link-preview-sidebar-toggle"
+        onClick={onToggleCollapsed}
+        aria-label={collapsed ? "Expand preview variants" : "Collapse preview variants"}
+        title={collapsed ? "Expand preview variants" : "Collapse preview variants"}
+      >
+        {collapsed ? "‹" : "›"}
+      </button>
+      {collapsed ? (
+        <button
+          type="button"
+          className="link-preview-sidebar-rail"
+          onClick={onToggleCollapsed}
+          aria-label="Expand preview variants"
+        >
+          <span className="link-preview-sidebar-rail-label">Previews</span>
+        </button>
+      ) : (
+        <>
+          <div className="link-preview-sidebar-header">
+            <p className="link-preview-sidebar-title">Link previews</p>
+            <p className="link-preview-sidebar-sub">
+              Hover links on the page, or pick a variant below.
+            </p>
+          </div>
+          <LinkPreviewGalleryList />
+        </>
+      )}
     </aside>
   )
 }
