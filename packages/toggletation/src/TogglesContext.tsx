@@ -3,7 +3,6 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useLayoutEffect,
   type ReactNode,
 } from 'react'
 import type { FieldDef, ToggleState, TogglesContextValue } from './types'
@@ -59,19 +58,13 @@ function saveToStorage(toggles: ToggleState[]) {
   } catch {}
 }
 
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
-
 export function TogglesProvider({
   fields,
   defaults,
-  persist = false,
   children,
 }: {
   fields: FieldDef[]
   defaults?: Record<string, string | number>
-  /** When true, read/write toggle state to localStorage (dev panel). Off in production. */
-  persist?: boolean
   children: ReactNode
 }) {
   const [toggles, setToggles] = useState<ToggleState[]>(() =>
@@ -81,9 +74,8 @@ export function TogglesProvider({
     }))
   )
 
-  // Restore persisted values before paint so SSR markup matches the first client frame.
-  useIsomorphicLayoutEffect(() => {
-    if (!persist) return
+  // Restore persisted values after hydration so SSR markup matches the client.
+  useEffect(() => {
     const stored = loadFromStorage()
     setToggles((prev) => {
       const next = prev.map((t) => ({
@@ -93,11 +85,10 @@ export function TogglesProvider({
       const changed = next.some((t, i) => t.value !== prev[i]?.value)
       return changed ? next : prev
     })
-  }, [persist])
+  }, [])
 
   // Sync any fields added after initial mount (e.g. hot-reload)
   useEffect(() => {
-    if (!persist) return
     setToggles((prev) => {
       const stored = loadFromStorage()
       const existing = new Set(prev.map((t) => t.fieldId))
@@ -109,7 +100,7 @@ export function TogglesProvider({
         }))
       return newEntries.length === 0 ? prev : [...prev, ...newEntries]
     })
-  }, [fields, persist, defaults])
+  }, [fields])
 
   useEffect(() => {
     if (document.getElementById(STYLE_ID)) return
@@ -127,7 +118,7 @@ export function TogglesProvider({
       const next = prev.map((t) =>
         t.fieldId === fieldId ? { ...t, value } : t
       )
-      if (persist) saveToStorage(next)
+      saveToStorage(next)
       return next
     })
   }

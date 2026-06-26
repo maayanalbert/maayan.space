@@ -23,8 +23,7 @@ import {
   createContext,
   useContext,
   useState,
-  useEffect,
-  useLayoutEffect
+  useEffect
 } from "react";
 import { jsx } from "react/jsx-runtime";
 var STYLE_ID = "toggletation-styles";
@@ -72,11 +71,9 @@ function saveToStorage(toggles) {
   } catch (e) {
   }
 }
-var useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 function TogglesProvider({
   fields,
   defaults,
-  persist = false,
   children
 }) {
   const [toggles, setToggles] = useState(
@@ -85,8 +82,7 @@ function TogglesProvider({
       value: getDefaultForField(f, defaults)
     }))
   );
-  useIsomorphicLayoutEffect(() => {
-    if (!persist) return;
+  useEffect(() => {
     const stored = loadFromStorage();
     setToggles((prev) => {
       const next = prev.map((t) => {
@@ -101,9 +97,8 @@ function TogglesProvider({
       });
       return changed ? next : prev;
     });
-  }, [persist]);
+  }, []);
   useEffect(() => {
-    if (!persist) return;
     setToggles((prev) => {
       const stored = loadFromStorage();
       const existing = new Set(prev.map((t) => t.fieldId));
@@ -116,7 +111,7 @@ function TogglesProvider({
       });
       return newEntries.length === 0 ? prev : [...prev, ...newEntries];
     });
-  }, [fields, persist, defaults]);
+  }, [fields]);
   useEffect(() => {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
@@ -133,7 +128,7 @@ function TogglesProvider({
       const next = prev.map(
         (t) => t.fieldId === fieldId ? __spreadProps(__spreadValues({}, t), { value }) : t
       );
-      if (persist) saveToStorage(next);
+      saveToStorage(next);
       return next;
     });
   }

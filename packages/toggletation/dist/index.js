@@ -109,11 +109,9 @@ function saveToStorage(toggles) {
   } catch (e) {
   }
 }
-var useIsomorphicLayoutEffect = typeof window !== "undefined" ? import_react.useLayoutEffect : import_react.useEffect;
 function TogglesProvider({
   fields,
   defaults,
-  persist = false,
   children
 }) {
   const [toggles, setToggles] = (0, import_react.useState)(
@@ -122,8 +120,7 @@ function TogglesProvider({
       value: getDefaultForField(f, defaults)
     }))
   );
-  useIsomorphicLayoutEffect(() => {
-    if (!persist) return;
+  (0, import_react.useEffect)(() => {
     const stored = loadFromStorage();
     setToggles((prev) => {
       const next = prev.map((t) => {
@@ -138,9 +135,8 @@ function TogglesProvider({
       });
       return changed ? next : prev;
     });
-  }, [persist]);
+  }, []);
   (0, import_react.useEffect)(() => {
-    if (!persist) return;
     setToggles((prev) => {
       const stored = loadFromStorage();
       const existing = new Set(prev.map((t) => t.fieldId));
@@ -153,7 +149,7 @@ function TogglesProvider({
       });
       return newEntries.length === 0 ? prev : [...prev, ...newEntries];
     });
-  }, [fields, persist, defaults]);
+  }, [fields]);
   (0, import_react.useEffect)(() => {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
@@ -170,7 +166,7 @@ function TogglesProvider({
       const next = prev.map(
         (t) => t.fieldId === fieldId ? __spreadProps(__spreadValues({}, t), { value }) : t
       );
-      if (persist) saveToStorage(next);
+      saveToStorage(next);
       return next;
     });
   }

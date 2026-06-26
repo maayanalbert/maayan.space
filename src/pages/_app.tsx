@@ -2,7 +2,7 @@ import { PageContextProvider } from "@/InfoContext"
 import "@/styles/globals.css"
 import type { AppProps } from "next/app"
 import "@/styles/moab-styles.css"
-import { useLayoutEffect } from "react"
+import { useEffect } from "react"
 import LinkPreviewPrefetcher from "@/components/LinkPreviewPrefetcher"
 import DevAppShell from "@/components/DevAppShell"
 import { BROWSER_PREVIEW_ANIMS } from "@/lib/browserPreviewAnims"
@@ -520,7 +520,7 @@ function TogglesCSSSync() {
   const { getValue } = useToggles()
   const fontCombo = getValue("fontCombo")
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const fonts = FONT_FAMILIES[fontCombo] ?? FONT_FAMILIES.current
     document.documentElement.style.setProperty("--font-heading", fonts.heading)
     document.documentElement.style.setProperty("--font-body", fonts.body)
@@ -542,8 +542,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <TogglesProvider
       fields={fields}
-      defaults={{ fontCombo: "friendly", linkStyle: "highlight" }}
-      persist={isDev}
+      defaults={{
+        fontCombo: "friendly",
+        linkStyle: "highlight",
+        linkHoverStyle: "fill",
+        linkPreviewStyle: "browser",
+        browserPreviewAnim: "pop",
+      }}
     >
       <TogglesCSSSync />
       <LinkPreviewPrefetcher />
