@@ -109,22 +109,38 @@ function saveToStorage(toggles) {
   } catch (e) {
   }
 }
+var useIsomorphicLayoutEffect = typeof window !== "undefined" ? import_react.useLayoutEffect : import_react.useEffect;
 function TogglesProvider({
   fields,
   defaults,
+  persist = false,
   children
 }) {
-  const [toggles, setToggles] = (0, import_react.useState)(() => {
+  const [toggles, setToggles] = (0, import_react.useState)(
+    () => fields.map((f) => ({
+      fieldId: f.fieldId,
+      value: getDefaultForField(f, defaults)
+    }))
+  );
+  useIsomorphicLayoutEffect(() => {
+    if (!persist) return;
     const stored = loadFromStorage();
-    return fields.map((f) => {
-      var _a;
-      return {
-        fieldId: f.fieldId,
-        value: (_a = stored[f.fieldId]) != null ? _a : getDefaultForField(f, defaults)
-      };
+    setToggles((prev) => {
+      const next = prev.map((t) => {
+        var _a;
+        return __spreadProps(__spreadValues({}, t), {
+          value: (_a = stored[t.fieldId]) != null ? _a : t.value
+        });
+      });
+      const changed = next.some((t, i) => {
+        var _a;
+        return t.value !== ((_a = prev[i]) == null ? void 0 : _a.value);
+      });
+      return changed ? next : prev;
     });
-  });
+  }, [persist]);
   (0, import_react.useEffect)(() => {
+    if (!persist) return;
     setToggles((prev) => {
       const stored = loadFromStorage();
       const existing = new Set(prev.map((t) => t.fieldId));
@@ -137,7 +153,7 @@ function TogglesProvider({
       });
       return newEntries.length === 0 ? prev : [...prev, ...newEntries];
     });
-  }, [fields]);
+  }, [fields, persist, defaults]);
   (0, import_react.useEffect)(() => {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
@@ -154,7 +170,7 @@ function TogglesProvider({
       const next = prev.map(
         (t) => t.fieldId === fieldId ? __spreadProps(__spreadValues({}, t), { value }) : t
       );
-      saveToStorage(next);
+      if (persist) saveToStorage(next);
       return next;
     });
   }

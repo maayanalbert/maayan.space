@@ -38,9 +38,11 @@ type TogglesContextValue = {
     getDefaultValue: (fieldId: string) => string;
 };
 
-declare function TogglesProvider({ fields, defaults, children, }: {
+declare function TogglesProvider({ fields, defaults, persist, children, }: {
     fields: FieldDef[];
     defaults?: Record<string, string | number>;
+    /** When true, read/write toggle state to localStorage (dev panel). Off in production. */
+    persist?: boolean;
     children: ReactNode;
 }): JSX.Element;
 declare function useToggles(): TogglesContextValue;

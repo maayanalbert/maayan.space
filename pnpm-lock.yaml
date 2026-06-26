@@ -81,8 +81,8 @@ importers:
         specifier: ^3.12.2
         version: 3.12.2(@types/react-dom@18.0.11)(@types/react@18.0.28)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       toggletation:
-        specifier: ^0.1.11
-        version: 0.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:packages/toggletation
       typescript:
         specifier: 4.9.5
         version: 4.9.5
@@ -3447,12 +3447,6 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
-  toggletation@0.1.11:
-    resolution: {integrity: sha512-BUzjGSlSyki/fliYBYeSIXUdrDshhW1ltvFDwfHRQ0MOuxvC/hxQUqzMgsjztyInFCvMSqwEwG5CFYWDxNWn3A==}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-
   tree-kill@1.2.2:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
@@ -5561,7 +5555,7 @@ snapshots:
       eslint: 8.35.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.31.0(eslint@8.35.0))(eslint@8.35.0)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.35.0)(typescript@4.9.5))(eslint-import-resolver-typescript@3.7.0)(eslint@8.35.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.35.0)(typescript@4.9.5))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(eslint@8.35.0))(eslint@8.35.0))(eslint@8.35.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.35.0)
       eslint-plugin-react: 7.37.2(eslint@8.35.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.35.0)
@@ -5592,7 +5586,7 @@ snapshots:
       is-glob: 4.0.3
       stable-hash: 0.0.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.35.0)(typescript@4.9.5))(eslint-import-resolver-typescript@3.7.0)(eslint@8.35.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.35.0)(typescript@4.9.5))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(eslint@8.35.0))(eslint@8.35.0))(eslint@8.35.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -5607,7 +5601,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.35.0)(typescript@4.9.5))(eslint-import-resolver-typescript@3.7.0)(eslint@8.35.0):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.35.0)(typescript@4.9.5))(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0(eslint@8.35.0))(eslint@8.35.0))(eslint@8.35.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -7151,11 +7145,6 @@ snapshots:
   to-regex-range@5.0.1:
     dependencies:
       is-number: 7.0.0
-
-  toggletation@0.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
 
   tree-kill@1.2.2: {}
 

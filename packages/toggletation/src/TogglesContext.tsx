@@ -3,6 +3,7 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useLayoutEffect,
   type ReactNode,
 } from 'react'
 import type { FieldDef, ToggleState, TogglesContextValue } from './types'
@@ -58,25 +59,45 @@ function saveToStorage(toggles: ToggleState[]) {
   } catch {}
 }
 
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect
+
 export function TogglesProvider({
   fields,
   defaults,
+  persist = false,
   children,
 }: {
   fields: FieldDef[]
   defaults?: Record<string, string | number>
+  /** When true, read/write toggle state to localStorage (dev panel). Off in production. */
+  persist?: boolean
   children: ReactNode
 }) {
-  const [toggles, setToggles] = useState<ToggleState[]>(() => {
-    const stored = loadFromStorage()
-    return fields.map((f) => ({
+  const [toggles, setToggles] = useState<ToggleState[]>(() =>
+    fields.map((f) => ({
       fieldId: f.fieldId,
-      value: stored[f.fieldId] ?? getDefaultForField(f, defaults),
+      value: getDefaultForField(f, defaults),
     }))
-  })
+  )
+
+  // Restore persisted values before paint so SSR markup matches the first client frame.
+  useIsomorphicLayoutEffect(() => {
+    if (!persist) return
+    const stored = loadFromStorage()
+    setToggles((prev) => {
+      const next = prev.map((t) => ({
+        ...t,
+        value: stored[t.fieldId] ?? t.value,
+      }))
+      const changed = next.some((t, i) => t.value !== prev[i]?.value)
+      return changed ? next : prev
+    })
+  }, [persist])
 
   // Sync any fields added after initial mount (e.g. hot-reload)
   useEffect(() => {
+    if (!persist) return
     setToggles((prev) => {
       const stored = loadFromStorage()
       const existing = new Set(prev.map((t) => t.fieldId))
@@ -88,7 +109,7 @@ export function TogglesProvider({
         }))
       return newEntries.length === 0 ? prev : [...prev, ...newEntries]
     })
-  }, [fields])
+  }, [fields, persist, defaults])
 
   useEffect(() => {
     if (document.getElementById(STYLE_ID)) return
@@ -106,7 +127,7 @@ export function TogglesProvider({
       const next = prev.map((t) =>
         t.fieldId === fieldId ? { ...t, value } : t
       )
-      saveToStorage(next)
+      if (persist) saveToStorage(next)
       return next
     })
   }
