@@ -4,6 +4,10 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from "re
 import { Check, Copy } from "react-feather"
 import LinkPreviewPopover from "./LinkPreviewPopover"
 import { type LinkPreviewVariant } from "./LinkPreviewCard"
+import {
+  prefetchLinkPreview,
+  preloadPreviewImagesForHref,
+} from "@/lib/linkPreviewCache"
 
 interface Props {
   text: string
@@ -118,11 +122,13 @@ export default function TextLink({
 
   const openPreview = useCallback(() => {
     clearTimeout(hideTimer.current)
+    preloadPreviewImagesForHref(href, text)
+    void prefetchLinkPreview(href, text)
     showTimer.current = setTimeout(() => {
       updatePreviewPosition()
       setPreviewVisible(true)
     }, SHOW_DELAY_MS)
-  }, [updatePreviewPosition])
+  }, [href, text, updatePreviewPosition])
 
   const closePreview = useCallback(() => {
     clearTimeout(showTimer.current)

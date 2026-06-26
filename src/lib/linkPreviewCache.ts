@@ -10,6 +10,29 @@ type Listener = () => void
 const cache = new Map<string, LinkPreviewMeta>()
 const pending = new Set<string>()
 const listeners = new Set<Listener>()
+const preloadedImages = new Set<string>()
+
+function preloadPreviewImages(meta: LinkPreviewMeta): void {
+  for (const src of [meta.screenshotUrl, meta.imageUrl]) {
+    if (!src || preloadedImages.has(src)) continue
+    preloadedImages.add(src)
+    const img = new Image()
+    img.src = src
+  }
+}
+
+export function preloadPreviewImagesForHref(href: string, text: string): void {
+  preloadPreviewImages(getCachedLinkPreview(href, text))
+}
+
+export function preloadAllLinkPreviewImages(paths: string[]): void {
+  for (const path of paths) {
+    if (preloadedImages.has(path)) continue
+    preloadedImages.add(path)
+    const img = new Image()
+    img.src = path
+  }
+}
 
 function canFetchPreview(href: string): boolean {
   if (!href || href.startsWith("mailto:") || href.startsWith("tel:")) return false
@@ -43,6 +66,7 @@ export async function prefetchLinkPreview(
   text: string
 ): Promise<LinkPreviewMeta> {
   const fallback = getLinkPreviewMeta(href, text)
+  preloadPreviewImages(fallback)
 
   if (!canFetchPreview(href)) return fallback
   if (cache.has(href)) return cache.get(href)!
@@ -57,6 +81,7 @@ export async function prefetchLinkPreview(
     const data = (await response.json()) as LinkPreviewApiResponse
     const merged = mergeLinkPreviewMeta(fallback, data)
     cache.set(href, merged)
+    preloadPreviewImages(merged)
     return merged
   } catch {
     return fallback
