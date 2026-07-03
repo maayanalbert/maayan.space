@@ -119,7 +119,7 @@ div {
 }
 
 .link-preview-portal--anim-pop {
-  animation: link-preview-pop-in 0.58s forwards;
+  animation: link-preview-pop-in 0.48s forwards;
 }
 
 .link-preview-portal--anim-unfold {

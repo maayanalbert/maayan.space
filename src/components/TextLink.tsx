@@ -17,7 +17,7 @@ interface Props {
   copyOnClick?: boolean
 }
 
-const SHOW_DELAY_MS = 220
+const SHOW_DELAY_MS = 150
 const HIDE_DELAY_MS = 120
 const COPIED_RESET_MS = 2000
 
