@@ -17,8 +17,8 @@ type Props = {
   variant: LinkPreviewVariant
   accent: string
   highlight: string
-  onMouseEnter: () => void
-  onMouseLeave: () => void
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }
 
 export default function LinkPreviewPopover({
@@ -67,12 +67,20 @@ export default function LinkPreviewPopover({
 
   const animClass = useGenie ? "genie" : enterAnim
 
+  const openHref = () => {
+    // Browser variants open via their own scroll-safe pointer gesture.
+    if (isBrowser) return
+    window.open(href, "_blank", "noopener,noreferrer")
+  }
+
   const node: ReactNode = (
     <div
+      data-link-preview-portal=""
       className={`link-preview-portal link-preview-portal--anim-${animClass}${centered ? " link-preview-portal--centered" : ""}`}
       style={{ top, left }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onClick={isBrowser ? undefined : openHref}
     >
       {useGenie ? (
         <GenieEnterAnimation

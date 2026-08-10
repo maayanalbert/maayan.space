@@ -21,6 +21,20 @@ const SHOW_DELAY_MS = 150
 const HIDE_DELAY_MS = 120
 const COPIED_RESET_MS = 2000
 
+function useTouchPreviewMode() {
+  const [touchPreview, setTouchPreview] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: none)")
+    const update = () => setTouchPreview(mq.matches)
+    update()
+    mq.addEventListener("change", update)
+    return () => mq.removeEventListener("change", update)
+  }, [])
+
+  return touchPreview
+}
+
 export default function TextLink({
   text,
   href,
@@ -35,6 +49,7 @@ export default function TextLink({
   const accent = getPageColor(page, true)
   const highlight = getPageHighlight(page)
   const deep = getPageDeepColor(page)
+  const touchPreview = useTouchPreviewMode()
 
   const anchorRef = useRef<HTMLAnchorElement>(null)
   const showTimer = useRef<ReturnType<typeof setTimeout>>()
@@ -47,22 +62,91 @@ export default function TextLink({
   const hover = linkHoverStyle || "fade"
   const previewVariant = linkPreviewStyle || "none"
   const showPreview = previewVariant !== "none" && !copyOnClick
+  const hoverOpensPreview = showPreview && !touchPreview
 
   useEffect(() => {
-    return () => clearTimeout(copiedTimer.current)
+    return () => {
+      clearTimeout(copiedTimer.current)
+      clearTimeout(showTimer.current)
+      clearTimeout(hideTimer.current)
+    }
   }, [])
+
+  const updatePreviewPosition = useCallback(() => {
+    const el = anchorRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const gap = 8
+    const centered = previewVariant === "browser"
+    setPreviewPos({
+      top: rect.top - gap,
+      left: centered ? rect.left + rect.width / 2 : rect.left,
+    })
+  }, [previewVariant])
+
+  const openPreview = useCallback(() => {
+    clearTimeout(hideTimer.current)
+    preloadPreviewImagesForHref(href, text)
+    void prefetchLinkPreview(href, text)
+    showTimer.current = setTimeout(() => {
+      updatePreviewPosition()
+      setPreviewVisible(true)
+    }, SHOW_DELAY_MS)
+  }, [href, text, updatePreviewPosition])
+
+  const closePreview = useCallback(() => {
+    clearTimeout(showTimer.current)
+    hideTimer.current = setTimeout(() => setPreviewVisible(false), HIDE_DELAY_MS)
+  }, [])
+
+  const dismissPreview = useCallback(() => {
+    clearTimeout(showTimer.current)
+    clearTimeout(hideTimer.current)
+    setPreviewVisible(false)
+  }, [])
+
+  // On touch, dismiss when tapping outside the link or its preview.
+  useEffect(() => {
+    if (!previewVisible || !touchPreview || !showPreview) return
+
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target
+      if (!(target instanceof Element)) return
+      if (anchorRef.current?.contains(target)) return
+      if (target.closest("[data-link-preview-portal]")) return
+      dismissPreview()
+    }
+
+    document.addEventListener("pointerdown", onPointerDown, true)
+    return () => document.removeEventListener("pointerdown", onPointerDown, true)
+  }, [dismissPreview, previewVisible, showPreview, touchPreview])
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
-      if (!copyOnClick) return
+      if (copyOnClick) {
+        event.preventDefault()
+        void navigator.clipboard.writeText(text).then(() => {
+          setCopied(true)
+          clearTimeout(copiedTimer.current)
+          copiedTimer.current = setTimeout(() => setCopied(false), COPIED_RESET_MS)
+        })
+        return
+      }
+
+      // Read live so the first tap works before the media-query state hydrates.
+      const isTouch = window.matchMedia("(hover: none)").matches
+      if (!showPreview || !isTouch) return
+
+      // First tap shows the preview; open the site from the preview itself.
       event.preventDefault()
-      void navigator.clipboard.writeText(text).then(() => {
-        setCopied(true)
-        clearTimeout(copiedTimer.current)
-        copiedTimer.current = setTimeout(() => setCopied(false), COPIED_RESET_MS)
-      })
+      clearTimeout(hideTimer.current)
+      clearTimeout(showTimer.current)
+      preloadPreviewImagesForHref(href, text)
+      void prefetchLinkPreview(href, text)
+      updatePreviewPosition()
+      setPreviewVisible(true)
     },
-    [copyOnClick, text]
+    [copyOnClick, href, showPreview, text, updatePreviewPosition]
   )
 
   const linkVars: CSSProperties = {
@@ -108,33 +192,6 @@ export default function TextLink({
 
   style = { ...style, cursor: "pointer" }
 
-  const updatePreviewPosition = useCallback(() => {
-    const el = anchorRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const gap = 8
-    const centered = previewVariant === "browser"
-    setPreviewPos({
-      top: rect.top - gap,
-      left: centered ? rect.left + rect.width / 2 : rect.left,
-    })
-  }, [previewVariant])
-
-  const openPreview = useCallback(() => {
-    clearTimeout(hideTimer.current)
-    preloadPreviewImagesForHref(href, text)
-    void prefetchLinkPreview(href, text)
-    showTimer.current = setTimeout(() => {
-      updatePreviewPosition()
-      setPreviewVisible(true)
-    }, SHOW_DELAY_MS)
-  }, [href, text, updatePreviewPosition])
-
-  const closePreview = useCallback(() => {
-    clearTimeout(showTimer.current)
-    hideTimer.current = setTimeout(() => setPreviewVisible(false), HIDE_DELAY_MS)
-  }, [])
-
   const previewNode = showPreview ? (
     <LinkPreviewPopover
       href={href}
@@ -146,8 +203,8 @@ export default function TextLink({
       variant={previewVariant}
       accent={accent}
       highlight={highlight}
-      onMouseEnter={() => clearTimeout(hideTimer.current)}
-      onMouseLeave={closePreview}
+      onMouseEnter={hoverOpensPreview ? () => clearTimeout(hideTimer.current) : undefined}
+      onMouseLeave={hoverOpensPreview ? closePreview : undefined}
     />
   ) : null
 
@@ -162,11 +219,11 @@ export default function TextLink({
         rel={copyOnClick || !newTab ? undefined : "noopener noreferrer"}
         className={className}
         style={style}
-        onClick={copyOnClick ? handleClick : undefined}
-        onMouseEnter={showPreview ? openPreview : undefined}
-        onMouseLeave={showPreview ? closePreview : undefined}
-        onFocus={showPreview ? openPreview : undefined}
-        onBlur={showPreview ? closePreview : undefined}
+        onClick={copyOnClick || showPreview ? handleClick : undefined}
+        onMouseEnter={hoverOpensPreview ? openPreview : undefined}
+        onMouseLeave={hoverOpensPreview ? closePreview : undefined}
+        onFocus={hoverOpensPreview ? openPreview : undefined}
+        onBlur={hoverOpensPreview ? closePreview : undefined}
         aria-label={copyOnClick ? `Copy ${text}` : undefined}
       >
         {text}
