@@ -102,28 +102,68 @@ function AnimOption({
   )
 }
 
-export default function BrowserPreviewAnimSidebar() {
+type SidebarProps = {
+  collapsed?: boolean
+  onToggleCollapsed?: () => void
+}
+
+export default function BrowserPreviewAnimSidebar({
+  collapsed = false,
+  onToggleCollapsed,
+}: SidebarProps) {
   const { getValue, setToggle } = useToggles()
   const active = (getValue("browserPreviewAnim") || "slide") as BrowserPreviewAnim
 
   return (
-    <aside className="browser-anim-sidebar" aria-label="Browser preview animations">
-      <div className="browser-anim-sidebar-header">
-        <p className="browser-anim-sidebar-title">Browser enter</p>
-        <p className="browser-anim-sidebar-sub">
-          Pick an animation, then hover a link with the browser preview style active.
-        </p>
-      </div>
-      <div className="browser-anim-list">
-        {BROWSER_PREVIEW_ANIMS.map((option) => (
-          <AnimOption
-            key={option.value}
-            {...option}
-            active={active === option.value}
-            onSelect={(value) => setToggle("browserPreviewAnim", value)}
-          />
-        ))}
-      </div>
+    <aside
+      className={`browser-anim-sidebar${collapsed ? " browser-anim-sidebar--collapsed" : ""}`}
+      aria-label="Browser preview animations"
+      aria-expanded={!collapsed}
+    >
+      <button
+        type="button"
+        className="browser-anim-sidebar-toggle"
+        onClick={onToggleCollapsed}
+        aria-label={collapsed ? "Expand browser enter" : "Collapse browser enter"}
+        title={collapsed ? "Expand browser enter" : "Collapse browser enter"}
+      >
+        {collapsed ? "‹" : "›"}
+      </button>
+      {collapsed ? (
+        <button
+          type="button"
+          className="browser-anim-sidebar-rail"
+          onClick={onToggleCollapsed}
+          aria-label="Expand browser enter"
+        >
+          <span className="browser-anim-sidebar-rail-label">Browser enter</span>
+        </button>
+      ) : (
+        <>
+          <div className="browser-anim-sidebar-header">
+            <p className="browser-anim-sidebar-title">Browser enter</p>
+            <p className="browser-anim-sidebar-sub">
+              Pick an animation, then hover a link with the browser preview style active.
+            </p>
+          </div>
+          <div className="browser-anim-list">
+            {BROWSER_PREVIEW_ANIMS.map((option) => (
+              <div key={option.value}>
+                {option.section ? (
+                  <p className="browser-anim-section">{option.section}</p>
+                ) : null}
+                <AnimOption
+                  value={option.value}
+                  label={option.label}
+                  description={option.description}
+                  active={active === option.value}
+                  onSelect={(value) => setToggle("browserPreviewAnim", value)}
+                />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </aside>
   )
 }

@@ -8,6 +8,12 @@ export const LINK_PREVIEW_VARIANTS: {
   mobbinRef: string
 }[] = [
   { value: "none", label: "None", mobbinRef: "Baseline" },
+  { value: "vinyl", label: "Vinyl record", mobbinRef: "Spinning" },
+  { value: "snowglobe", label: "Snow globe", mobbinRef: "Blizzard" },
+  { value: "radar", label: "Radar sweep", mobbinRef: "Sonar" },
+  { value: "ticker", label: "News ticker", mobbinRef: "Broadcast" },
+  { value: "slot", label: "Slot machine", mobbinRef: "Jackpot" },
+  { value: "confetti", label: "Confetti burst", mobbinRef: "Party" },
   { value: "tooltip", label: "Tooltip", mobbinRef: "Asana" },
   { value: "card", label: "Card", mobbinRef: "Maze" },
   { value: "notion", label: "Notion", mobbinRef: "Notion" },
@@ -63,6 +69,12 @@ function LinkPreviewGalleryList() {
         const isActive = active === value
         return (
           <div key={value}>
+            {value === "vinyl" && (
+              <p className="link-preview-gallery-section">In motion</p>
+            )}
+            {value === "tooltip" && (
+              <p className="link-preview-gallery-section">All styles</p>
+            )}
             {value === "sticky" && (
               <p className="link-preview-gallery-section">Experimental</p>
             )}

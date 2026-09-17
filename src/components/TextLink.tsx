@@ -3,7 +3,10 @@ import { useToggles } from "toggletation"
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react"
 import { Check, Copy } from "react-feather"
 import LinkPreviewPopover from "./LinkPreviewPopover"
-import { type LinkPreviewVariant } from "./LinkPreviewCard"
+import {
+  CENTERED_PREVIEW_VARIANTS,
+  type LinkPreviewVariant,
+} from "./LinkPreviewCard"
 import {
   prefetchLinkPreview,
   preloadPreviewImagesForHref,
@@ -77,7 +80,7 @@ export default function TextLink({
     if (!el) return
     const rect = el.getBoundingClientRect()
     const gap = 8
-    const centered = previewVariant === "browser"
+    const centered = CENTERED_PREVIEW_VARIANTS.has(previewVariant)
     setPreviewPos({
       top: rect.top - gap,
       left: centered ? rect.left + rect.width / 2 : rect.left,
@@ -199,7 +202,7 @@ export default function TextLink({
       visible={previewVisible}
       top={previewPos.top}
       left={previewPos.left}
-      centered={previewVariant === "browser"}
+      centered={CENTERED_PREVIEW_VARIANTS.has(previewVariant)}
       variant={previewVariant}
       accent={accent}
       highlight={highlight}

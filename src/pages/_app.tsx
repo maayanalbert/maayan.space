@@ -500,6 +500,48 @@ const fields: FieldDef[] = [
           "Same mini browser window with a screenshot preview, but left-aligned with the link instead of centered.",
         current: false,
       },
+      {
+        value: "vinyl",
+        label: "Vinyl record",
+        explanation:
+          "A record spins continuously out of its sleeve, the screenshot wrapped around the center label, tonearm resting at the edge.\n\nContinuous motion the moment it appears; the screenshot spins with the disc so it's least legible when static.",
+        current: false,
+      },
+      {
+        value: "snowglobe",
+        label: "Snow globe",
+        explanation:
+          "The screenshot sits as a tiny diorama inside a glass dome, with snow endlessly falling and drifting around it.\n\nSoft and ambient rather than informative; the scene reads small at this size.",
+        current: false,
+      },
+      {
+        value: "radar",
+        label: "Radar sweep",
+        explanation:
+          "A green phosphor sonar screen with the screenshot as ghosted terrain, a sweep arm rotating endlessly, and blips pulsing.\n\nSci-fi and technical; the screenshot is intentionally hard to read under the scan.",
+        current: false,
+      },
+      {
+        value: "ticker",
+        label: "News ticker",
+        explanation:
+          "A broadcast lower-third: the screenshot as the live feed, title and description scrolling underneath like breaking news.\n\nAlways moving, which is great for attention and bad for anyone who wants to pause and read.",
+        current: false,
+      },
+      {
+        value: "slot",
+        label: "Slot machine",
+        explanation:
+          "Three casino reels spin forever at different speeds around a jackpot tray showing the domain and a thumbnail.\n\nThe most kinetic option — never settles, so it never resolves to a calm reading state.",
+        current: false,
+      },
+      {
+        value: "confetti",
+        label: "Confetti burst",
+        explanation:
+          "A bright card fountains colored confetti outward on a loop, screenshot framed at the center like something worth celebrating.\n\nFestive and high-energy; wrong tone for a serious or technical destination.",
+        current: false,
+      },
     ],
   },
   {

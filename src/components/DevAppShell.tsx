@@ -3,11 +3,15 @@ import LinkPreviewSidebar from "./LinkPreviewGallery"
 import { useState, type ReactNode } from "react"
 
 export default function DevAppShell({ children }: { children: ReactNode }) {
-  const [previewCollapsed, setPreviewCollapsed] = useState(true)
+  const [browserAnimCollapsed, setBrowserAnimCollapsed] = useState(true)
+  const [previewCollapsed, setPreviewCollapsed] = useState(false)
 
   return (
     <div className="dev-app-shell">
-      <BrowserPreviewAnimSidebar />
+      <BrowserPreviewAnimSidebar
+        collapsed={browserAnimCollapsed}
+        onToggleCollapsed={() => setBrowserAnimCollapsed((c) => !c)}
+      />
       <LinkPreviewSidebar
         collapsed={previewCollapsed}
         onToggleCollapsed={() => setPreviewCollapsed((c) => !c)}

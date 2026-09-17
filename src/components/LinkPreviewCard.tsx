@@ -1,5 +1,9 @@
 import type { LinkPreviewMeta } from "@/lib/linkPreviewMeta"
 import { getFaviconUrl, getPreviewThumbnail } from "@/lib/linkPreviewMeta"
+import LinkPreviewObject, {
+  isObjectPreview,
+  OBJECT_PREVIEW_VARIANTS,
+} from "./LinkPreviewObjects"
 import {
   useCallback,
   useEffect,
@@ -35,6 +39,17 @@ export type LinkPreviewVariant =
   | "mac"
   | "browser"
   | "browserLeft"
+  | "vinyl"
+  | "snowglobe"
+  | "radar"
+  | "ticker"
+  | "slot"
+  | "confetti"
+
+export const CENTERED_PREVIEW_VARIANTS = new Set<LinkPreviewVariant>([
+  "browser",
+  ...OBJECT_PREVIEW_VARIANTS,
+])
 
 type Props = {
   variant: LinkPreviewVariant
@@ -907,6 +922,19 @@ export default function LinkPreviewCard({
         meta={meta}
         favicon={favicon}
         thumbnail={thumbnail}
+        vars={vars}
+        staticClass={staticClass}
+        loadingClass={loadingClass}
+      />
+    )
+  }
+
+  if (isObjectPreview(variant)) {
+    return (
+      <LinkPreviewObject
+        variant={variant}
+        meta={meta}
+        favicon={favicon}
         vars={vars}
         staticClass={staticClass}
         loadingClass={loadingClass}
