@@ -60,6 +60,14 @@ export function HomeButton() {
     <div
       className={`flex justify-start items-start sm:py-1.5 py-2 cursor-pointer relative 
       sm:w-9 w-fit text-sm sm:text-base group`}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault()
+          onPress()
+        }
+      }}
       onClick={onPress}
     >
       <p
@@ -94,6 +102,14 @@ function PageButton({ page }: PageButtonProps) {
     <div
       className={`text-center sm:py-1.5 py-2 cursor-pointer relative 
       sm:w-28 w-fit text-base group select-none`}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault()
+          onPress()
+        }
+      }}
       onClick={onPress}
     >
       <p
