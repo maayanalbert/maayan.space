@@ -6,7 +6,7 @@ export default function ContactInfo() {
   return (
     <>
       {/* Mobile layout - all in one column */}
-      <div className="flex flex-col gap-4 sm:hidden">
+      <div data-proto-id="contact-info" className="flex flex-col gap-4 sm:hidden">
         <div className="flex items-center gap-2">
           <Mail size={20} className="text-[rgb(0,151,254)]" />
           <TextLink
