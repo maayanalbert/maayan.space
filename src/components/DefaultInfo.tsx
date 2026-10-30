@@ -19,7 +19,7 @@ export function DefaultInfo() {
   const heroCopy = getValue("heroCopy") as string
 
   return (
-    <p className="sm:text-[26px] text-xl" style={{ lineHeight: "var(--line-height, 1.4)" }}>
+    <p data-proto-id="default-info" className="sm:text-[26px] text-xl" style={{ lineHeight: "var(--line-height, 1.4)" }}>
       {HERO_COPY[heroCopy] ?? HERO_COPY.current}
       {" "}Inspirations include
       <TextLink
