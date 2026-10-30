@@ -2,7 +2,7 @@ import TextLink from "./TextLink"
 
 export function PhilosophyInfo() {
   return (
-    <p>
+    <p data-proto-id="philosophy-info">
       My mom used to call me a
       <TextLink
         text="kamikaze walker,"
